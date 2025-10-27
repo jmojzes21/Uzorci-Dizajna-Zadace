@@ -1,4 +1,4 @@
-package edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici;
+package edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.csv;
 
 import java.io.BufferedReader;
 import java.io.IOException;

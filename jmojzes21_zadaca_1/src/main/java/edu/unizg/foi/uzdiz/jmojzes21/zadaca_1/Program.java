@@ -1,7 +1,7 @@
 package edu.unizg.foi.uzdiz.jmojzes21.zadaca_1;
 
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.CitacOpcija;
-import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.CsvCitac;
+import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.csv.CsvCitac;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
