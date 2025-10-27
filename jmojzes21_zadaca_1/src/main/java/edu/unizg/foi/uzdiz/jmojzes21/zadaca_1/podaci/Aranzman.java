@@ -2,6 +2,8 @@ package edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Aranzman {
 
@@ -28,6 +30,9 @@ public class Aranzman {
   private float doplataZaJednokrevetnuSobu;
 
   private String prijevoz;
+
+  private List<Rezervacija> primljeneRezervacije = new ArrayList<>();
+
 
   public Aranzman() {
 
@@ -75,9 +80,11 @@ public class Aranzman {
 
   public void setZavrsniDatum(LocalDate zavrsniDatum) {this.zavrsniDatum = zavrsniDatum;}
 
-  public void setVrijemeKretanja(LocalTime vrijemeKretanja) {this.vrijemeKretanja = vrijemeKretanja;}
+  public void setVrijemeKretanja(
+      LocalTime vrijemeKretanja) {this.vrijemeKretanja = vrijemeKretanja;}
 
-  public void setVrijemePovratka(LocalTime vrijemePovratka) {this.vrijemePovratka = vrijemePovratka;}
+  public void setVrijemePovratka(
+      LocalTime vrijemePovratka) {this.vrijemePovratka = vrijemePovratka;}
 
   public void setCijena(float cijena) {this.cijena = cijena;}
 
