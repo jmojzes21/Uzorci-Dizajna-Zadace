@@ -32,6 +32,17 @@ public class Program {
     var aranzmani = ucitajAranzmane(konfig.putanjaAranzmani());
     var rezervacije = ucitajRezervacije(konfig.putanjaRezervacije());
 
+    var agencija = TuristickaAgencija.dajInstancu();
+    agencija.ucitajAranzmane(aranzmani);
+
+    for (var r : rezervacije) {
+      try {
+        agencija.zaprimiRezervaciju(r);
+      } catch (Exception e) {
+        EvidencijaGresaka.dajInstancu().evidentiraj(e);
+      }
+    }
+
   }
 
   private List<Aranzman> ucitajAranzmane(String putanjaAranzmani) throws IOException {

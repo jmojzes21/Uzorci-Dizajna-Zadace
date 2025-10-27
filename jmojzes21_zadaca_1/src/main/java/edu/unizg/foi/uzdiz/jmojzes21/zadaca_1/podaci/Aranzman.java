@@ -2,8 +2,10 @@ package edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 public class Aranzman {
 
@@ -32,11 +34,25 @@ public class Aranzman {
   private String prijevoz;
 
   private List<Rezervacija> primljeneRezervacije = new ArrayList<>();
+  private List<Rezervacija> aktivneRezervacije = new ArrayList<>();
+  private Queue<Rezervacija> rezervacijeNaCekanju = new ArrayDeque<>();
+  private Queue<Rezervacija> otkazaneRezervacije = new ArrayDeque<>();
 
+  public Aranzman() {}
 
-  public Aranzman() {
+  public int brojPrimljenihRezervacija() {return primljeneRezervacije.size();}
 
-  }
+  public int brojAktivnihRezervacija() {return aktivneRezervacije.size();}
+
+  // region Metode za dohvaćanje i postavljanje polja
+
+  public List<Rezervacija> primljeneRezervacije() {return primljeneRezervacije;}
+
+  public List<Rezervacija> aktivneRezervacije() {return aktivneRezervacije;}
+
+  public Queue<Rezervacija> rezervacijeNaCekanju() {return rezervacijeNaCekanju;}
+
+  public Queue<Rezervacija> otkazaneRezervacije() {return otkazaneRezervacije;}
 
   public int oznaka() {return oznaka;}
 
@@ -104,5 +120,7 @@ public class Aranzman {
       float doplataZaJednokrevetnuSobu) {this.doplataZaJednokrevetnuSobu = doplataZaJednokrevetnuSobu;}
 
   public void setPrijevoz(String prijevoz) {this.prijevoz = prijevoz;}
+
+  // endregion
 
 }

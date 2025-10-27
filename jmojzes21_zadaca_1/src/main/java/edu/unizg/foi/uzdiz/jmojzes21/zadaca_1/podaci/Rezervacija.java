@@ -12,6 +12,13 @@ public class Rezervacija {
 
   public Rezervacija() {}
 
+  public Rezervacija(Rezervacija r) {
+    ime = r.ime;
+    prezime = r.prezime;
+    oznakaAranzmana = r.oznakaAranzmana;
+    datumVrijeme = r.datumVrijeme;
+  }
+
   public String ime() {return ime;}
 
   public String prezime() {return prezime;}
