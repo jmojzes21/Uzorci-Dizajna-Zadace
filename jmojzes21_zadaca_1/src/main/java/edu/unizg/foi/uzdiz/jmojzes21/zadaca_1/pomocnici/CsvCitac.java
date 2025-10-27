@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class CsvCitatelj {
+public class CsvCitac {
 
   private char znakOdvajanja = ',';
 
-  public CsvCitatelj() {}
+  public CsvCitac() {}
 
   public void ucitajCsv(String csv) {
 

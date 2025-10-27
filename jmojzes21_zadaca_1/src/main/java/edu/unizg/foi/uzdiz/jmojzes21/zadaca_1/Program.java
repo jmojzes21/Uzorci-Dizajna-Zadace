@@ -1,7 +1,7 @@
 package edu.unizg.foi.uzdiz.jmojzes21.zadaca_1;
 
-import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.CitateljOpcija;
-import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.CsvCitatelj;
+import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.CitacOpcija;
+import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.CsvCitac;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,17 +17,17 @@ public class Program {
 
     var konfig = Konfiguracija.dajKonfiguraciju();
 
-    var citateljOpcija = new CitateljOpcija();
-    citateljOpcija.ucitajOpcije(args);
+    var citacOpcija = new CitacOpcija();
+    citacOpcija.ucitajOpcije(args);
 
-    konfig.setPutanjaAranzmani(citateljOpcija.dajOpciju("ta"));
-    konfig.setPutanjaRezervacije(citateljOpcija.dajOpciju("rta"));
+    konfig.setPutanjaAranzmani(citacOpcija.dajOpciju("ta"));
+    konfig.setPutanjaRezervacije(citacOpcija.dajOpciju("rta"));
 
     String rezervacijeCsv = Files.readString(Path.of(konfig.putanjaRezervacije()));
 
-    var csvCitatelj = new CsvCitatelj();
-    csvCitatelj.ucitajCsv(rezervacijeCsv);
-    
+    var csvCitac = new CsvCitac();
+    csvCitac.ucitajCsv(rezervacijeCsv);
+
   }
 
 }

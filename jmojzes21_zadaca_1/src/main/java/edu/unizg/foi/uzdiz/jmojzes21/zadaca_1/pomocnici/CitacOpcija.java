@@ -2,7 +2,7 @@ package edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici;
 
 import java.util.HashMap;
 
-public class CitateljOpcija {
+public class CitacOpcija {
 
   private final HashMap<String, String> opcije = new HashMap<>();
 

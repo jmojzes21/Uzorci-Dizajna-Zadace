@@ -6,24 +6,21 @@ import java.util.List;
 public class CsvTablicaGraditelj {
 
   private final List<CsvRedak> csvRedci;
-  private int potrebnoPodataka = 0;
+  private final int brojElemenataRetka;
 
-  public CsvTablicaGraditelj() {
+  public CsvTablicaGraditelj(int brojElemenataRetka) {
     csvRedci = new ArrayList<>();
+    this.brojElemenataRetka = brojElemenataRetka;
   }
 
   public void dodajRedak(List<String> podaci) throws Exception {
 
     if (podaci.isEmpty()) {
-      throw new Exception("Csv redak je prazan");
+      throw new Exception("Nije moguće dodati prazak red!");
     }
 
-    if (potrebnoPodataka == 0) {
-      potrebnoPodataka = podaci.size();
-    } else {
-      if (podaci.size() != potrebnoPodataka) {
-        throw new Exception("Csv redak nema točan broj podataka");
-      }
+    if (podaci.size() != brojElemenataRetka) {
+      throw new Exception("Csv redak nema potreban broj elemenata!");
     }
 
     var csvRedak = new CsvRedak(podaci);
