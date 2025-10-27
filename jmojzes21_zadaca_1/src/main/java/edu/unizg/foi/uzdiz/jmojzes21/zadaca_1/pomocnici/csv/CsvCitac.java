@@ -8,15 +8,18 @@ import java.util.List;
 
 public class CsvCitac {
 
-  private char znakOdvajanja;
-  private List<CsvRedak> csvRedci = new ArrayList<>();
+  private final char znakOdvajanja;
+  private final boolean preskociPrviRedak;
+
+  private final List<CsvRedak> csvRedci = new ArrayList<>();
 
   public CsvCitac() {
-    this(',');
+    this(',', true);
   }
 
-  public CsvCitac(char znakOdvajanja) {
+  public CsvCitac(char znakOdvajanja, boolean preskociPrviRedak) {
     this.znakOdvajanja = znakOdvajanja;
+    this.preskociPrviRedak = preskociPrviRedak;
   }
 
   public void ucitajCsv(String csv) {
@@ -24,12 +27,19 @@ public class CsvCitac {
     BufferedReader citac = new BufferedReader(new StringReader(csv));
     List<String> linije = citac.lines().map(String::trim).toList();
 
+    boolean preskociPrviRedak = this.preskociPrviRedak;
+
     for (int i = 0; i < linije.size(); i++) {
       String linija = linije.get(i);
       int brojLinije = i + 1;
 
       try {
         CsvRedak redak = obradiLiniju(linija, brojLinije);
+        if (preskociPrviRedak) {
+          preskociPrviRedak = false;
+          continue;
+        }
+
         csvRedci.add(redak);
       } catch (CsvFormatGreska e) {
         EvidencijaGresaka.dajInstancu().evidentiraj(e);
@@ -55,7 +65,7 @@ public class CsvCitac {
     while (true) {
 
       if (trenutnaPozicija >= linija.length()) {
-        elementi.add("");
+        elementi.add(null);
         break;
       }
 
@@ -91,7 +101,7 @@ public class CsvCitac {
         String podatak = linija.substring(pocetakVrijednosti, krajVrijednosti).trim();
         elementi.add(podatak);
       } else {
-        elementi.add("");
+        elementi.add(null);
       }
 
       trenutnaPozicija = pozicijaOdvajanja + 1;

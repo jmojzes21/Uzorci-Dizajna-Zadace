@@ -8,7 +8,7 @@ public class Rezervacija {
   private String prezime;
 
   public int oznakaAranzmana;
-  public LocalDateTime vrijeme;
+  public LocalDateTime datumVrijeme;
 
   public Rezervacija() {}
 
@@ -18,7 +18,7 @@ public class Rezervacija {
 
   public int oznakaAranzmana() {return oznakaAranzmana;}
 
-  public LocalDateTime vrijeme() {return vrijeme;}
+  public LocalDateTime vrijeme() {return datumVrijeme;}
 
   public void setIme(String ime) {this.ime = ime;}
 
@@ -26,6 +26,6 @@ public class Rezervacija {
 
   public void setOznakaAranzmana(int oznakaAranzmana) {this.oznakaAranzmana = oznakaAranzmana;}
 
-  public void setVrijeme(LocalDateTime vrijeme) {this.vrijeme = vrijeme;}
+  public void setDatumVrijeme(LocalDateTime datumVrijeme) {this.datumVrijeme = datumVrijeme;}
 
 }
