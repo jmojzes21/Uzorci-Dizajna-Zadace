@@ -1,47 +1,61 @@
 package edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.csv;
 
+import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.EvidencijaGresaka;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class CsvCitac {
 
-  private char znakOdvajanja = ',';
+  private char znakOdvajanja;
+  private List<CsvRedak> csvRedci = new ArrayList<>();
 
-  public CsvCitac() {}
+  public CsvCitac() {
+    this(',');
+  }
+
+  public CsvCitac(char znakOdvajanja) {
+    this.znakOdvajanja = znakOdvajanja;
+  }
 
   public void ucitajCsv(String csv) {
 
-    try (BufferedReader citac = new BufferedReader(new StringReader(csv))) {
+    BufferedReader citac = new BufferedReader(new StringReader(csv));
+    List<String> linije = citac.lines().map(String::trim).toList();
 
-      int brojLinije = 1;
+    for (int i = 0; i < linije.size(); i++) {
+      String linija = linije.get(i);
+      int brojLinije = i + 1;
 
-      while (true) {
-        String linija = citac.readLine();
-        if (linija == null) {break;}
-
-        obradiLiniju(brojLinije, linija.trim());
-        brojLinije++;
+      try {
+        CsvRedak redak = obradiLiniju(linija, brojLinije);
+        csvRedci.add(redak);
+      } catch (CsvFormatGreska e) {
+        EvidencijaGresaka.dajInstancu().evidentiraj(e);
       }
 
-    } catch (IOException e) {
-      throw new RuntimeException(e);
     }
 
   }
 
-  private void obradiLiniju(int brojLinije, String linija) {
+  public List<CsvRedak> csvRedci() {return csvRedci;}
+
+  private CsvRedak obradiLiniju(String linija, int brojLinije) throws CsvFormatGreska {
+    List<String> elementi = parsirajElementeLinije(linija, brojLinije);
+    return new CsvRedak(linija, brojLinije, elementi);
+  }
+
+  private List<String> parsirajElementeLinije(String linija, int brojLinije)
+      throws CsvFormatGreska {
 
     int trenutnaPozicija = 0;
-    List<String> podaci = new ArrayList<>();
+    List<String> elementi = new ArrayList<>();
 
     while (true) {
 
       if (trenutnaPozicija >= linija.length()) {
-        podaci.add("");
+        elementi.add("");
         break;
       }
 
@@ -56,8 +70,8 @@ public class CsvCitac {
         krajVrijednosti = linija.indexOf('"', pocetakVrijednosti);
 
         if (krajVrijednosti == -1) {
-          System.out.println("Nije moguće pronaći kraj vrijednosti za csv liniju " + linija);
-          return;
+          String opis = "Nije moguće pronaći kraj vrijednosti!";
+          throw new CsvFormatGreska(opis, brojLinije, linija);
         }
 
         pozicijaOdvajanja = linija.indexOf(znakOdvajanja, krajVrijednosti + 1);
@@ -69,23 +83,22 @@ public class CsvCitac {
 
       if (pozicijaOdvajanja == -1) {
         String zadnjiPodatak = linija.substring(pocetakVrijednosti).trim();
-        podaci.add(zadnjiPodatak);
+        elementi.add(zadnjiPodatak);
         break;
       }
 
       if (pozicijaOdvajanja != trenutnaPozicija) {
         String podatak = linija.substring(pocetakVrijednosti, krajVrijednosti).trim();
-        podaci.add(podatak);
+        elementi.add(podatak);
       } else {
-        podaci.add("");
+        elementi.add("");
       }
 
       trenutnaPozicija = pozicijaOdvajanja + 1;
 
     }
 
-    System.out.println(Arrays.toString(podaci.toArray()));
-
+    return elementi;
   }
 
   private int preskociRazmake(String linija, int pocetnaPozicija) {

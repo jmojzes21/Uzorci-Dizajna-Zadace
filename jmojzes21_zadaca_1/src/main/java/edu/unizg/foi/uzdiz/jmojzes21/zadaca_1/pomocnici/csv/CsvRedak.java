@@ -4,11 +4,20 @@ import java.util.List;
 
 public class CsvRedak {
 
-  private List<String> podaci;
+  private final String linija;
+  private final int brojLinije;
+  private final List<String> elementi;
 
-  public CsvRedak(List<String> podaci) {
-    this.podaci = podaci;
+  public CsvRedak(String linija, int brojLinije, List<String> elementi) {
+    this.linija = linija;
+    this.brojLinije = brojLinije;
+    this.elementi = elementi;
   }
 
+  public String linija() {return linija;}
+
+  public int brojLinije() {return brojLinije;}
+
+  public List<String> elementi() {return elementi;}
 
 }
