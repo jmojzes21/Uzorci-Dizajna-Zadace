@@ -6,4 +6,9 @@ public class OtkazanaRezervacija extends Rezervacija {
     super(r);
   }
 
+  @Override
+  public String vrsta() {
+    return "Otkazana";
+  }
+
 }

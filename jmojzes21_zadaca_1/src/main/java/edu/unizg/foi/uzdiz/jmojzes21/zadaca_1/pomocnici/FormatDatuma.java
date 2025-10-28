@@ -36,14 +36,17 @@ public class FormatDatuma {
   }
 
   public String formatirajDatum(LocalDate datum) {
+    if (datum == null) {return "";}
     return datum.format(datumFormatorIspis);
   }
 
   public String formatirajVrijeme(LocalTime vrijeme) {
+    if (vrijeme == null) {return "";}
     return vrijeme.format(vrijemeFormatorIspis);
   }
 
   public String formatirajDatumVrijeme(LocalDateTime datumVrijeme) {
+    if (datumVrijeme == null) {return "";}
     return datumVrijeme.format(datumVrijemeFormatorIspis);
   }
 

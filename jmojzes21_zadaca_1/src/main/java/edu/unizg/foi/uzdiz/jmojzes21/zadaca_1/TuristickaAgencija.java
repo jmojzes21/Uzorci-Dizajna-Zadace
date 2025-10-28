@@ -3,6 +3,7 @@ package edu.unizg.foi.uzdiz.jmojzes21.zadaca_1;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Rezervacija;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -39,9 +40,40 @@ public class TuristickaAgencija {
         .toList();
   }
 
+  public Aranzman dajAranzman(int oznaka) {
+    return aranzmani.get(oznaka);
+  }
+
+  public List<Rezervacija> dajRezervacijeAranzmana(int oznaka, String filter) {
+
+    Aranzman aranzman = aranzmani.get(oznaka);
+    if (aranzman == null) {return null;}
+
+    boolean prikaziPrimljeneAktivne = filter.contains("PA");
+    boolean prikaziNaCekanju = filter.contains("Č");
+    boolean prikaziOtkazane = filter.contains("O");
+
+    List<Rezervacija> rezultat = new ArrayList<>();
+
+    if (prikaziPrimljeneAktivne) {
+      rezultat.addAll(aranzman.primljeneRezervacije());
+      rezultat.addAll(aranzman.aktivneRezervacije());
+    }
+
+    if (prikaziNaCekanju) {
+      rezultat.addAll(aranzman.rezervacijeNaCekanju());
+    }
+
+    if (prikaziOtkazane) {
+      rezultat.addAll(aranzman.otkazaneRezervacije());
+    }
+
+    return rezultat;
+  }
+
   public void zaprimiRezervaciju(Rezervacija rezervacija) throws Exception {
 
-    Aranzman aranzman = aranzmani.get(rezervacija.oznakaAranzmana);
+    Aranzman aranzman = aranzmani.get(rezervacija.oznakaAranzmana());
     if (aranzman == null) {
       throw new Exception("Nije moguće zaprimiti rezervaciju!");
     }

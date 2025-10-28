@@ -6,4 +6,9 @@ public class RezervacijaNaCekanju extends Rezervacija {
     super(r);
   }
 
+  @Override
+  public String vrsta() {
+    return "Na čekanju";
+  }
+
 }

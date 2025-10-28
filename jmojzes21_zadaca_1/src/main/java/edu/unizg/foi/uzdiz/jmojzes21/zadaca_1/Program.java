@@ -17,11 +17,13 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Program {
 
   public static void main(String[] args) throws IOException {
+    Locale.setDefault(Locale.ENGLISH);
     var program = new Program();
     program.pokreni(args);
   }
@@ -79,6 +81,12 @@ public class Program {
       case "ITAK":
         obradiKomanduPregledAranzmana(komanda);
         break;
+      case "ITAP":
+        obradiKomanduPregledPojedinogAranzmana(komanda);
+        break;
+      case "IRTA":
+        obradiKomanduPregledRezervacijaAranzmana(komanda);
+        break;
       case "Q":
         zaprimajKomandeKorisnika = false;
         break;
@@ -111,6 +119,11 @@ public class Program {
       aranzmani = agencija.dajAranzmane(datumOd, datumDo);
     }
 
+    if (aranzmani.isEmpty()) {
+      System.out.println("Nema aranžmana za prikaz.");
+      return;
+    }
+
     prikaziAranzmane(aranzmani);
   }
 
@@ -136,10 +149,108 @@ public class Program {
             Integer.toString(e.oznaka()), e.naziv(),
             formatDatuma.formatirajDatum(e.pocetniDatum()),
             formatDatuma.formatirajDatum(e.zavrsniDatum()),
-            e.vrijemeKretanja() != null ? formatDatuma.formatirajVrijeme(e.vrijemeKretanja()) : "",
-            e.vrijemePovratka() != null ? formatDatuma.formatirajVrijeme(e.vrijemePovratka()) : "",
-            Float.toString(e.cijena()),
+            formatDatuma.formatirajVrijeme(e.vrijemeKretanja()),
+            formatDatuma.formatirajVrijeme(e.vrijemePovratka()),
+            String.format("%.2f", e.cijena()),
             Integer.toString(e.minBrojPutnika()), Integer.toString(e.maxBrojPutnika())
+        })
+        .toList());
+
+  }
+
+  private void obradiKomanduPregledPojedinogAranzmana(String komanda) throws Exception {
+
+    TuristickaAgencija agencija = TuristickaAgencija.dajInstancu();
+
+    var uzorak = new RegexKomandeGraditelj("ITAP")
+        .dodajBroj("oznaka")
+        .dajUzorak();
+
+    var matcher = uzorak.matcher(komanda);
+    if (!matcher.matches()) {
+      throw new NeispravnaKomandaGreska();
+    }
+
+    int oznaka = Integer.parseInt(matcher.group("oznaka"));
+
+    Aranzman aranzman = agencija.dajAranzman(oznaka);
+
+    if (aranzman == null) {
+      System.out.println("Aranžman ne postoji.");
+      return;
+    }
+
+    prikaziDetaljeAranzmana(aranzman);
+  }
+
+  private void prikaziDetaljeAranzmana(Aranzman a) {
+
+    var formatDatuma = FormatDatuma.dajInstancu();
+
+    System.out.printf("Oznaka: %d\n", a.oznaka());
+    System.out.printf("Naziv: %s\n", a.naziv());
+    System.out.printf("Program: %s\n", a.program().replace("\\n", "\n"));
+    System.out.printf("Početni datum: %s\n", formatDatuma.formatirajDatum(a.pocetniDatum()));
+    System.out.printf("Završni datum: %s\n", formatDatuma.formatirajDatum(a.zavrsniDatum()));
+    System.out.printf("Vrijeme kretanja: %s\n",
+        formatDatuma.formatirajVrijeme(a.vrijemeKretanja()));
+    System.out.printf("Vrijeme povratka: %s\n",
+        formatDatuma.formatirajVrijeme(a.vrijemePovratka()));
+    System.out.printf("Cijena: %.2f\n", a.cijena());
+    System.out.printf("Min broj putnika: %d\n", a.minBrojPutnika());
+    System.out.printf("Max broj putnika: %d\n", a.maxBrojPutnika());
+    System.out.printf("Broj noćenja: %d\n", a.brojNocenja());
+    System.out.printf("Doplata za jednokrevetnu sobu: %.2f\n", a.doplataZaJednokrevetnuSobu());
+    System.out.printf("Prijevoz: %s\n", a.prijevoz());
+    System.out.printf("Broj doručka: %d\n", a.brojDorucka());
+    System.out.printf("Broj ručkova: %d\n", a.brojRuckova());
+    System.out.printf("Broj večera: %d\n", a.brojVecera());
+
+  }
+
+  private void obradiKomanduPregledRezervacijaAranzmana(String komanda) throws Exception {
+
+    TuristickaAgencija agencija = TuristickaAgencija.dajInstancu();
+
+    var uzorak = new RegexKomandeGraditelj("IRTA")
+        .dodajBroj("oznaka")
+        .dodajTekst("filter")
+        .dajUzorak();
+
+    var matcher = uzorak.matcher(komanda);
+    if (!matcher.matches()) {
+      throw new NeispravnaKomandaGreska();
+    }
+
+    int oznaka = Integer.parseInt(matcher.group("oznaka"));
+    String filter = matcher.group("filter");
+
+    List<Rezervacija> rezervacije = agencija.dajRezervacijeAranzmana(oznaka, filter);
+    if (rezervacije == null) {
+      System.out.println("Aranžman ne postoji.");
+      return;
+    }
+
+    prikaziRezervacije(rezervacije);
+  }
+
+  private void prikaziRezervacije(List<Rezervacija> rezervacije) {
+
+    var formatDatuma = FormatDatuma.dajInstancu();
+
+    var tablicniIspis = new TablicniIspisGraditelj()
+        .dodajStupac("Ime", 18)
+        .dodajStupac("Prezime", 18)
+        .dodajStupac("Datum i vrijeme", 24)
+        .dodajStupac("Vrsta", 18)
+        .napravi();
+
+    tablicniIspis.ispisiZaglavlje();
+    tablicniIspis.ispisi(rezervacije.stream()
+        .map(e -> new String[]{
+            e.ime(), e.prezime(),
+            formatDatuma.formatirajDatumVrijeme(e.datumVrijeme()),
+            e.vrsta()
         })
         .toList());
 
