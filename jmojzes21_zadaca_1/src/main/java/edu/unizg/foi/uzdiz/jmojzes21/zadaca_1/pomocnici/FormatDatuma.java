@@ -21,10 +21,30 @@ public class FormatDatuma {
   private final DateTimeFormatter vrijemeFormator;
   private final DateTimeFormatter datumVrijemeFormator;
 
+  private final DateTimeFormatter datumFormatorIspis;
+  private final DateTimeFormatter vrijemeFormatorIspis;
+  private final DateTimeFormatter datumVrijemeFormatorIspis;
+
   private FormatDatuma() {
     datumFormator = DateTimeFormatter.ofPattern("d.M.yyyy[.]");
     vrijemeFormator = DateTimeFormatter.ofPattern("H:m[:s]");
     datumVrijemeFormator = DateTimeFormatter.ofPattern("d.M.yyyy[.] H:m[:s]");
+
+    datumFormatorIspis = DateTimeFormatter.ofPattern("dd.MM.yyyy.");
+    vrijemeFormatorIspis = DateTimeFormatter.ofPattern("HH:mm");
+    datumVrijemeFormatorIspis = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm");
+  }
+
+  public String formatirajDatum(LocalDate datum) {
+    return datum.format(datumFormatorIspis);
+  }
+
+  public String formatirajVrijeme(LocalTime vrijeme) {
+    return vrijeme.format(vrijemeFormatorIspis);
+  }
+
+  public String formatirajDatumVrijeme(LocalDateTime datumVrijeme) {
+    return datumVrijeme.format(datumVrijemeFormatorIspis);
   }
 
   public LocalDate parsirajDatum(String datum) {

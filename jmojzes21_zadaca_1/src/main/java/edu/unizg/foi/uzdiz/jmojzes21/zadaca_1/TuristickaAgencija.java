@@ -2,6 +2,8 @@ package edu.unizg.foi.uzdiz.jmojzes21.zadaca_1;
 
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Rezervacija;
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +23,20 @@ public class TuristickaAgencija {
 
   public TuristickaAgencija() {
 
+  }
+
+  public List<Aranzman> dajAranzmane() {
+    return aranzmani.values().stream()
+        .sorted(Comparator.comparing(Aranzman::pocetniDatum))
+        .toList();
+  }
+
+  public List<Aranzman> dajAranzmane(LocalDate datumOd, LocalDate datumDo) {
+    return aranzmani.values().stream()
+        .filter(e -> e.pocetniDatum().compareTo(datumOd) >= 0
+            && e.pocetniDatum().compareTo(datumDo) <= 0)
+        .sorted(Comparator.comparing(Aranzman::pocetniDatum))
+        .toList();
   }
 
   public void zaprimiRezervaciju(Rezervacija rezervacija) throws Exception {
