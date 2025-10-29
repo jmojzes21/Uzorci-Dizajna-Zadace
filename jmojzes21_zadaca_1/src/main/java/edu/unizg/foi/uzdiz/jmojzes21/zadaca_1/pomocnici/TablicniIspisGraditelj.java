@@ -14,9 +14,14 @@ public class TablicniIspisGraditelj {
   public TablicniIspisGraditelj dodajStupac(String naziv, int sirina) {
     return dodajStupac(naziv, sirina, StupacTablice.PORAVNANJE_LIJEVO);
   }
-  
+
   public TablicniIspisGraditelj dodajStupac(String naziv, int sirina, int poravnanje) {
     stupci.add(new StupacTablice(naziv, sirina, poravnanje));
+    return this;
+  }
+
+  public TablicniIspisGraditelj prikazujStupac(boolean prikazi) {
+    stupci.getLast().setPrikaziStupac(prikazi);
     return this;
   }
 

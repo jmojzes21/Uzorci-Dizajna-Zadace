@@ -46,6 +46,7 @@ public class TuristickiAgent {
       aktivneRezervacije.addAll(primljeneRezervacije.stream()
           .map(r -> kreatorRezervacije.napraviRezervaciju(r))
           .toList());
+      primljeneRezervacije.clear();
 
       var novaRezervacija = kreatorRezervacije.napraviRezervaciju(rezervacija);
       aktivneRezervacije.add(novaRezervacija);

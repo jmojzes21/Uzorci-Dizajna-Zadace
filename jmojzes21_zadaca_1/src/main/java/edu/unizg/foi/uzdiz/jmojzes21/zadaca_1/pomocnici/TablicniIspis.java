@@ -12,6 +12,7 @@ public class TablicniIspis {
 
   public void ispisiZaglavlje() {
     for (var stupac : stupci) {
+      if (!stupac.prikaziStupac()) {continue;}
       String sadrzaj = formatirajSadrzaj(stupac, stupac.naziv());
       System.out.print(sadrzaj);
     }
@@ -31,6 +32,7 @@ public class TablicniIspis {
     }
 
     for (int i = 0; i < stupci.size(); i++) {
+      if (!stupci.get(i).prikaziStupac()) {continue;}
       String sadrzaj = formatirajSadrzaj(stupci.get(i), red[i]);
       System.out.print(sadrzaj);
     }

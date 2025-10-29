@@ -4,6 +4,7 @@ import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Rezervacija;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -70,6 +71,26 @@ public class TuristickaAgencija {
 
     return rezultat;
   }
+
+  public List<Rezervacija> dajRezervacijeKorisnika(String ime, String prezime) {
+    List<Rezervacija> rezultat = new ArrayList<>();
+
+    for (var aranzman : aranzmani.values()) {
+      rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.primljeneRezervacije(), ime, prezime));
+      rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.aktivneRezervacije(), ime, prezime));
+      rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.rezervacijeNaCekanju(), ime, prezime));
+      rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.otkazaneRezervacije(), ime, prezime));
+    }
+
+    return rezultat;
+  }
+
+  private List<Rezervacija> filtrirajRezervacijeKorisnika(Collection<Rezervacija> rezervacije,
+      String ime, String prezime) {
+    return rezervacije.stream().filter(e -> e.ime().equals(ime) && e.prezime().equals(prezime))
+        .toList();
+  }
+
 
   public void zaprimiRezervaciju(Rezervacija rezervacija) throws Exception {
 

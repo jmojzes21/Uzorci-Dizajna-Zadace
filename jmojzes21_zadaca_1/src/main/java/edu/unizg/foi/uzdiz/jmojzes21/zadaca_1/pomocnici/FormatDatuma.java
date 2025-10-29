@@ -62,4 +62,10 @@ public class FormatDatuma {
     return LocalDateTime.parse(datumVrijeme, datumVrijemeFormator);
   }
 
+  public LocalDateTime parsirajDatumVrijeme(String datumTekst, String vrijemeTekst) {
+    var datum = parsirajDatum(datumTekst);
+    var vrijeme = parsirajVrijeme(vrijemeTekst);
+    return LocalDateTime.of(datum, vrijeme);
+  }
+
 }

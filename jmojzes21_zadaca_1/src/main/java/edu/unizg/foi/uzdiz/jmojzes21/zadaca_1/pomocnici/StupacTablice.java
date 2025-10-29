@@ -9,6 +9,8 @@ public class StupacTablice {
   private final int sirina;
   private final int poravnanje;
 
+  private boolean prikaziStupac = true;
+
   public StupacTablice(String naziv, int sirina, int poravnanje) {
     if (sirina < 4) {
       throw new IllegalArgumentException("Širina stupca mora biti barem 4!");
@@ -28,5 +30,9 @@ public class StupacTablice {
   public int sirina() {return sirina;}
 
   public int poravnanje() {return poravnanje;}
+
+  public boolean prikaziStupac() {return prikaziStupac;}
+
+  public void setPrikaziStupac(boolean prikaziStupac) {this.prikaziStupac = prikaziStupac;}
 
 }

@@ -1,6 +1,7 @@
 package edu.unizg.foi.uzdiz.jmojzes21.zadaca_1;
 
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Aranzman;
+import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.OtkazanaRezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Rezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.CitacOpcija;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.FormatDatuma;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -86,6 +88,12 @@ public class Program {
         break;
       case "IRTA":
         obradiKomanduPregledRezervacijaAranzmana(komanda);
+        break;
+      case "IRO":
+        obradiKomanduPregledRezervacijaKorisnika(komanda);
+        break;
+      case "DRTA":
+        obradiKomanduDodavanjeRezervacije(komanda);
         break;
       case "Q":
         zaprimajKomandeKorisnika = false;
@@ -231,10 +239,37 @@ public class Program {
       return;
     }
 
-    prikaziRezervacije(rezervacije);
+    boolean prikaziOtkazane = filter.contains("O");
+    prikaziRezervacije(rezervacije, prikaziOtkazane);
   }
 
-  private void prikaziRezervacije(List<Rezervacija> rezervacije) {
+  private void obradiKomanduPregledRezervacijaKorisnika(String komanda) throws Exception {
+
+    TuristickaAgencija agencija = TuristickaAgencija.dajInstancu();
+
+    var uzorak = new RegexKomandeGraditelj("IRO")
+        .dodajTekst("ime")
+        .dodajTekst("prezime")
+        .dajUzorak();
+
+    var matcher = uzorak.matcher(komanda);
+    if (!matcher.matches()) {
+      throw new NeispravnaKomandaGreska();
+    }
+
+    String ime = matcher.group("ime");
+    String prezime = matcher.group("prezime");
+
+    List<Rezervacija> rezervacije = agencija.dajRezervacijeKorisnika(ime, prezime);
+    if (rezervacije.isEmpty()) {
+      System.out.println("Korisnik nema rezervacija.");
+      return;
+    }
+
+    prikaziRezervacijeKorisnika(rezervacije);
+  }
+
+  private void prikaziRezervacije(List<Rezervacija> rezervacije, boolean prikaziOtkazane) {
 
     var formatDatuma = FormatDatuma.dajInstancu();
 
@@ -243,16 +278,87 @@ public class Program {
         .dodajStupac("Prezime", 18)
         .dodajStupac("Datum i vrijeme", 24)
         .dodajStupac("Vrsta", 18)
+        .dodajStupac("Datum vrijeme otkaza", 24)
+        .prikazujStupac(prikaziOtkazane)
         .napravi();
 
     tablicniIspis.ispisiZaglavlje();
     tablicniIspis.ispisi(rezervacije.stream()
-        .map(e -> new String[]{
-            e.ime(), e.prezime(),
-            formatDatuma.formatirajDatumVrijeme(e.datumVrijeme()),
-            e.vrsta()
+        .map(e -> {
+          String datumVrijmeOtkaza = "";
+          if (prikaziOtkazane && e instanceof OtkazanaRezervacija) {
+            datumVrijmeOtkaza = formatDatuma.formatirajDatumVrijeme(
+                ((OtkazanaRezervacija) e).datumVrijemeOtkaza());
+          }
+          return new String[]{
+              e.ime(), e.prezime(),
+              formatDatuma.formatirajDatumVrijeme(e.datumVrijeme()),
+              e.vrsta(), datumVrijmeOtkaza
+          };
         })
         .toList());
+
+  }
+
+  private void prikaziRezervacijeKorisnika(List<Rezervacija> rezervacije) {
+
+    var formatDatuma = FormatDatuma.dajInstancu();
+    var agencija = TuristickaAgencija.dajInstancu();
+
+    var tablicniIspis = new TablicniIspisGraditelj()
+        .dodajStupac("Datum i vrijeme", 24)
+        .dodajStupac("Oznaka aranžmana", 16)
+        .dodajStupac("Naziv aranžmana", 20)
+        .dodajStupac("Vrsta", 18)
+        .napravi();
+
+    tablicniIspis.ispisiZaglavlje();
+    tablicniIspis.ispisi(rezervacije.stream()
+        .map(e -> {
+          String nazivAranzmana = agencija.dajAranzman(e.oznakaAranzmana()).naziv();
+          return new String[]{
+              formatDatuma.formatirajDatumVrijeme(e.datumVrijeme()),
+              Integer.toString(e.oznakaAranzmana()), nazivAranzmana, e.vrsta()
+          };
+        })
+        .toList());
+
+  }
+
+  private void obradiKomanduDodavanjeRezervacije(String komanda) throws Exception {
+
+    TuristickaAgencija agencija = TuristickaAgencija.dajInstancu();
+    FormatDatuma formatDatuma = FormatDatuma.dajInstancu();
+
+    var uzorak = new RegexKomandeGraditelj("DRTA")
+        .dodajTekst("ime")
+        .dodajTekst("prezime")
+        .dodajBroj("oznaka")
+        .dodajDatum("datum")
+        .dodajVrijeme("vrijeme")
+        .dajUzorak();
+
+    var matcher = uzorak.matcher(komanda);
+    if (!matcher.matches()) {
+      throw new NeispravnaKomandaGreska();
+    }
+
+    String ime = matcher.group("ime");
+    String prezime = matcher.group("prezime");
+    int oznaka = Integer.parseInt(matcher.group("oznaka"));
+    String datum = matcher.group("datum");
+    String vrijeme = matcher.group("vrijeme");
+    LocalDateTime datumVrijeme = formatDatuma.parsirajDatumVrijeme(datum, vrijeme);
+
+    var rezervacija = new RezervacijaGraditelj()
+        .setIme(ime)
+        .setPrezime(prezime)
+        .setOznakaAranzmana(oznaka)
+        .setDatumVrijeme(datumVrijeme)
+        .dajRezervaciju();
+
+    agencija.zaprimiRezervaciju(rezervacija);
+    System.out.println("Rezervacija je uspješno zaprimljena.");
 
   }
 
