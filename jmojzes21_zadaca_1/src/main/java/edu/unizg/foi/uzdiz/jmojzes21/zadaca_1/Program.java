@@ -95,6 +95,9 @@ public class Program {
       case "DRTA":
         obradiKomanduDodavanjeRezervacije(komanda);
         break;
+      case "ORTA":
+        obradiKomanduOtkaziRezervaciju(komanda);
+        break;
       case "Q":
         zaprimajKomandeKorisnika = false;
         break;
@@ -359,6 +362,31 @@ public class Program {
 
     agencija.zaprimiRezervaciju(rezervacija);
     System.out.println("Rezervacija je uspješno zaprimljena.");
+
+  }
+
+  private void obradiKomanduOtkaziRezervaciju(String komanda) throws Exception {
+
+    TuristickaAgencija agencija = TuristickaAgencija.dajInstancu();
+    FormatDatuma formatDatuma = FormatDatuma.dajInstancu();
+
+    var uzorak = new RegexKomandeGraditelj("ORTA")
+        .dodajTekst("ime")
+        .dodajTekst("prezime")
+        .dodajBroj("oznaka")
+        .dajUzorak();
+
+    var matcher = uzorak.matcher(komanda);
+    if (!matcher.matches()) {
+      throw new NeispravnaKomandaGreska();
+    }
+
+    String ime = matcher.group("ime");
+    String prezime = matcher.group("prezime");
+    int oznaka = Integer.parseInt(matcher.group("oznaka"));
+
+    agencija.otkaziRezervaciju(ime, prezime, oznaka);
+    System.out.println("Rezervacija je uspješno otkazana.");
 
   }
 

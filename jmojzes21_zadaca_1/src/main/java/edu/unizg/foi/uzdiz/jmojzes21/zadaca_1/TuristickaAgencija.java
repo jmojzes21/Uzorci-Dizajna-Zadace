@@ -104,6 +104,10 @@ public class TuristickaAgencija {
 
   }
 
+  public void otkaziRezervaciju(String ime, String prezime, int oznaka) {
+    
+  }
+
   public void ucitajAranzmane(List<Aranzman> aranzmani) {
     this.aranzmani.clear();
 
