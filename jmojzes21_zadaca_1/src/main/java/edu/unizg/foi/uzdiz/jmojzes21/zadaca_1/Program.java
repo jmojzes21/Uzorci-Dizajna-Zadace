@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Program {
@@ -29,13 +30,6 @@ public class Program {
     var program = new Program();
     program.pokreni(args);
   }
-
-  private static final String KOMANDA_PREGLED_ARANZMANA = "a";
-  private static final String KOMANDA_PREGLED_DETALJA_ARANZMANA = "da";
-  private static final String KOMANDA_PREGLED_REZERVACIJA_ARANZMANA = "ra";
-  private static final String KOMANDA_PREGLED_REZERVACIJA_KORISNIKA = "rk";
-  private static final String KOMANDA_DODAJ_REZERVACIJU = "dr";
-  private static final String KOMANDA_OTKAZI_REZERVACIJU = "or";
 
   private boolean zaprimajKomandeKorisnika = true;
 
@@ -75,6 +69,8 @@ public class Program {
 
         try {
           obradiKomanduKorisnika(linija.trim());
+        } catch (NeispravnaKomandaGreska e) {
+          System.out.println("Neispravan format komande! Ispravan format: " + e.getMessage());
         } catch (Exception e) {
           System.out.println(e.getMessage());
         }
@@ -84,32 +80,63 @@ public class Program {
 
   private void obradiKomanduKorisnika(String komanda) throws Exception {
 
+    Map<String, String> alternativeKomandi = Map.ofEntries(
+        Map.entry("a", "ITAK"),
+        Map.entry("da", "ITAP"),
+        Map.entry("ra", "IRTA"),
+        Map.entry("rk", "IRO"),
+        Map.entry("dr", "DRTA"),
+        Map.entry("or", "ORTA")
+    );
+
     String naziv = dajNazivKomande(komanda);
 
+    for (var e : alternativeKomandi.entrySet()) {
+      if (naziv.equals(e.getKey())) {
+        naziv = e.getValue();
+        komanda = komanda.replaceFirst(e.getKey(), e.getValue());
+      }
+    }
+
     switch (naziv) {
-      case KOMANDA_PREGLED_ARANZMANA:
+      case "ITAK":
         obradiKomanduPregledAranzmana(komanda);
         break;
-      case KOMANDA_PREGLED_DETALJA_ARANZMANA:
+      case "ITAP":
         obradiKomanduPregledPojedinogAranzmana(komanda);
         break;
-      case KOMANDA_PREGLED_REZERVACIJA_ARANZMANA:
+      case "IRTA":
         obradiKomanduPregledRezervacijaAranzmana(komanda);
         break;
-      case KOMANDA_PREGLED_REZERVACIJA_KORISNIKA:
+      case "IRO":
         obradiKomanduPregledRezervacijaKorisnika(komanda);
         break;
-      case KOMANDA_DODAJ_REZERVACIJU:
+      case "DRTA":
         obradiKomanduDodavanjeRezervacije(komanda);
         break;
-      case KOMANDA_OTKAZI_REZERVACIJU:
+      case "ORTA":
         obradiKomanduOtkaziRezervaciju(komanda);
         break;
       case "Q":
         zaprimajKomandeKorisnika = false;
         break;
+      default:
+        System.out.println("Nepoznata komanda.");
+        pregledKomandi();
+        break;
     }
 
+  }
+
+  private void pregledKomandi() {
+    System.out.println("Komande:");
+    System.out.println("  ITAK - Pregled svih aranžmana");
+    System.out.println("  ITAP - Pregled pojedinog aranžmana");
+    System.out.println("  IRTA - Pregled rezervacija za aranžman");
+    System.out.println("  IRO  - Pregled rezervacija za korisnika");
+    System.out.println("  DRTA - Dodaj rezervaciju");
+    System.out.println("  ORTA - Otkaži rezervacije");
+    System.out.println("  Q    - Izlaz");
   }
 
   private void obradiKomanduPregledAranzmana(String komanda) throws Exception {
@@ -117,7 +144,7 @@ public class Program {
     TuristickaAgencija agencija = TuristickaAgencija.dajInstancu();
     List<Aranzman> aranzmani;
 
-    if (komanda.equals(KOMANDA_PREGLED_ARANZMANA)) {
+    if (komanda.equals("ITAK")) {
       aranzmani = agencija.dajAranzmane();
     } else {
 
@@ -128,7 +155,8 @@ public class Program {
 
       var matcher = uzorak.matcher(komanda);
       if (!matcher.matches()) {
-        throw new NeispravnaKomandaGreska();
+        String opis = "ITAK [od do]";
+        throw new NeispravnaKomandaGreska(opis);
       }
 
       LocalDate datumOd = FormatDatuma.dajInstancu().parsirajDatum(matcher.group("od"));
@@ -180,13 +208,14 @@ public class Program {
 
     TuristickaAgencija agencija = TuristickaAgencija.dajInstancu();
 
-    var uzorak = new RegexKomandeGraditelj(KOMANDA_PREGLED_DETALJA_ARANZMANA)
+    var uzorak = new RegexKomandeGraditelj("ITAP")
         .dodajBroj("oznaka")
         .dajUzorak();
 
     var matcher = uzorak.matcher(komanda);
     if (!matcher.matches()) {
-      throw new NeispravnaKomandaGreska();
+      String opis = "ITAP oznaka";
+      throw new NeispravnaKomandaGreska(opis);
     }
 
     int oznaka = Integer.parseInt(matcher.group("oznaka"));
@@ -230,14 +259,15 @@ public class Program {
 
     TuristickaAgencija agencija = TuristickaAgencija.dajInstancu();
 
-    var uzorak = new RegexKomandeGraditelj(KOMANDA_PREGLED_REZERVACIJA_ARANZMANA)
+    var uzorak = new RegexKomandeGraditelj("IRTA")
         .dodajBroj("oznaka")
         .dodajTekst("filter")
         .dajUzorak();
 
     var matcher = uzorak.matcher(komanda);
     if (!matcher.matches()) {
-      throw new NeispravnaKomandaGreska();
+      String opis = "IRTA oznaka [PA|Č|O]";
+      throw new NeispravnaKomandaGreska(opis);
     }
 
     int oznaka = Integer.parseInt(matcher.group("oznaka"));
@@ -257,14 +287,15 @@ public class Program {
 
     TuristickaAgencija agencija = TuristickaAgencija.dajInstancu();
 
-    var uzorak = new RegexKomandeGraditelj(KOMANDA_PREGLED_REZERVACIJA_KORISNIKA)
+    var uzorak = new RegexKomandeGraditelj("IRO")
         .dodajTekst("ime")
         .dodajTekst("prezime")
         .dajUzorak();
 
     var matcher = uzorak.matcher(komanda);
     if (!matcher.matches()) {
-      throw new NeispravnaKomandaGreska();
+      String opis = "IRO ime prezime";
+      throw new NeispravnaKomandaGreska(opis);
     }
 
     String ime = matcher.group("ime");
@@ -340,7 +371,7 @@ public class Program {
     TuristickaAgencija agencija = TuristickaAgencija.dajInstancu();
     FormatDatuma formatDatuma = FormatDatuma.dajInstancu();
 
-    var uzorak = new RegexKomandeGraditelj(KOMANDA_DODAJ_REZERVACIJU)
+    var uzorak = new RegexKomandeGraditelj("DRTA")
         .dodajTekst("ime")
         .dodajTekst("prezime")
         .dodajBroj("oznaka")
@@ -350,7 +381,8 @@ public class Program {
 
     var matcher = uzorak.matcher(komanda);
     if (!matcher.matches()) {
-      throw new NeispravnaKomandaGreska();
+      String opis = "DRTA ime prezime oznaka datum vrijeme";
+      throw new NeispravnaKomandaGreska(opis);
     }
 
     String ime = matcher.group("ime");
@@ -377,7 +409,7 @@ public class Program {
     TuristickaAgencija agencija = TuristickaAgencija.dajInstancu();
     FormatDatuma formatDatuma = FormatDatuma.dajInstancu();
 
-    var uzorak = new RegexKomandeGraditelj(KOMANDA_OTKAZI_REZERVACIJU)
+    var uzorak = new RegexKomandeGraditelj("ORTA")
         .dodajTekst("ime")
         .dodajTekst("prezime")
         .dodajBroj("oznaka")
@@ -385,7 +417,8 @@ public class Program {
 
     var matcher = uzorak.matcher(komanda);
     if (!matcher.matches()) {
-      throw new NeispravnaKomandaGreska();
+      String opis = "ORTA ime prezime oznaka";
+      throw new NeispravnaKomandaGreska(opis);
     }
 
     String ime = matcher.group("ime");
