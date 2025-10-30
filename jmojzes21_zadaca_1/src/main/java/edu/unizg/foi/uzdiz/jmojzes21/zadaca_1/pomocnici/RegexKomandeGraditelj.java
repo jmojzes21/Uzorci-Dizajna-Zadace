@@ -37,7 +37,7 @@ public class RegexKomandeGraditelj {
   }
 
   public Pattern dajUzorak() {
-    return Pattern.compile(regex.toString());
+    return Pattern.compile(regex.toString(), Pattern.UNICODE_CHARACTER_CLASS);
   }
 
 }

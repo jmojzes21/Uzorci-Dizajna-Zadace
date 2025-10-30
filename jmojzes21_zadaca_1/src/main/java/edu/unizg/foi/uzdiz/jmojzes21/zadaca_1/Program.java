@@ -279,6 +279,11 @@ public class Program {
       return;
     }
 
+    if (rezervacije.isEmpty()) {
+      System.out.println("Nema rezervacija za prikaz.");
+      return;
+    }
+
     boolean prikaziOtkazane = filter.contains("O");
     prikaziRezervacije(rezervacije, prikaziOtkazane);
   }
@@ -392,12 +397,8 @@ public class Program {
     String vrijeme = matcher.group("vrijeme");
     LocalDateTime datumVrijeme = formatDatuma.parsirajDatumVrijeme(datum, vrijeme);
 
-    var rezervacija = new RezervacijaGraditelj()
-        .setIme(ime)
-        .setPrezime(prezime)
-        .setOznakaAranzmana(oznaka)
-        .setDatumVrijeme(datumVrijeme)
-        .dajRezervaciju();
+    KreatorRezervacije kreatorRezervacije = new KreatorPrimljeneRezervacije();
+    Rezervacija rezervacija = kreatorRezervacije.napraviRezervaciju(ime, prezime, oznaka, datumVrijeme);
 
     agencija.zaprimiRezervaciju(rezervacija);
     System.out.println("Rezervacija je uspješno zaprimljena.");
@@ -519,15 +520,15 @@ public class Program {
       throw new CsvFormatGreska(opis, csvRedak);
     }
 
-    var graditelj = new RezervacijaGraditelj();
-
     int indeks = 0;
-    graditelj.setIme(csvRedak.dajString(indeks++))
-        .setPrezime(csvRedak.dajString(indeks++))
-        .setOznakaAranzmana(csvRedak.dajInt(indeks++))
-        .setDatumVrijeme(csvRedak.dajDatumVrijeme(indeks));
+    String ime = csvRedak.dajString(indeks++);
+    String prezime = csvRedak.dajString(indeks++);
+    int oznaka = csvRedak.dajInt(indeks++);
+    LocalDateTime datumVrijeme = csvRedak.dajDatumVrijeme(indeks);
 
-    return graditelj.dajRezervaciju();
+    KreatorRezervacije kreatorRezervacije = new KreatorPrimljeneRezervacije();
+
+    return kreatorRezervacije.napraviRezervaciju(ime, prezime, oznaka, datumVrijeme);
   }
 
 }

@@ -44,17 +44,17 @@ public class TuristickiAgent {
       KreatorRezervacije kreatorRezervacije = new KreatorAktivneRezervacije();
 
       aktivneRezervacije.addAll(primljeneRezervacije.stream()
-          .map(r -> kreatorRezervacije.napraviRezervaciju(r))
+          .map(r -> kreatorRezervacije.promijeniVrstu(r))
           .toList());
       primljeneRezervacije.clear();
 
-      var novaRezervacija = kreatorRezervacije.napraviRezervaciju(rezervacija);
+      var novaRezervacija = kreatorRezervacije.promijeniVrstu(rezervacija);
       aktivneRezervacije.add(novaRezervacija);
 
     } else {
       KreatorRezervacije kreatorRezervacije = new KreatorPrimljeneRezervacije();
 
-      var novaRezervacija = kreatorRezervacije.napraviRezervaciju(rezervacija);
+      var novaRezervacija = kreatorRezervacije.promijeniVrstu(rezervacija);
       primljeneRezervacije.add(novaRezervacija);
     }
 
@@ -63,14 +63,14 @@ public class TuristickiAgent {
   private void dodajAktivnuRezervaciju(Rezervacija rezervacija) {
     KreatorRezervacije kreatorRezervacije = new KreatorAktivneRezervacije();
 
-    var novaRezervacija = kreatorRezervacije.napraviRezervaciju(rezervacija);
+    var novaRezervacija = kreatorRezervacije.promijeniVrstu(rezervacija);
     aranzman.aktivneRezervacije().add(novaRezervacija);
   }
 
   private void dodajRezervacijuNaCekanje(Rezervacija rezervacija) {
     KreatorRezervacije kreatorRezervacije = new KreatorRezervacijeNaCekanju();
 
-    var novaRezervacija = kreatorRezervacije.napraviRezervaciju(rezervacija);
+    var novaRezervacija = kreatorRezervacije.promijeniVrstu(rezervacija);
     aranzman.rezervacijeNaCekanju().add(novaRezervacija);
 
   }

@@ -10,7 +10,12 @@ public class Rezervacija {
   private int oznakaAranzmana;
   private LocalDateTime datumVrijeme;
 
-  public Rezervacija() {}
+  public Rezervacija(String ime, String prezime, int oznakaAranzmana, LocalDateTime datumVrijeme) {
+    this.ime = ime;
+    this.prezime = prezime;
+    this.oznakaAranzmana = oznakaAranzmana;
+    this.datumVrijeme = datumVrijeme;
+  }
 
   public Rezervacija(Rezervacija r) {
     ime = r.ime;
