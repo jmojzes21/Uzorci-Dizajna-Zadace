@@ -30,6 +30,13 @@ public class Program {
     program.pokreni(args);
   }
 
+  private static final String KOMANDA_PREGLED_ARANZMANA = "a";
+  private static final String KOMANDA_PREGLED_DETALJA_ARANZMANA = "da";
+  private static final String KOMANDA_PREGLED_REZERVACIJA_ARANZMANA = "ra";
+  private static final String KOMANDA_PREGLED_REZERVACIJA_KORISNIKA = "rk";
+  private static final String KOMANDA_DODAJ_REZERVACIJU = "dr";
+  private static final String KOMANDA_OTKAZI_REZERVACIJU = "or";
+
   private boolean zaprimajKomandeKorisnika = true;
 
   public void pokreni(String[] args) throws IOException {
@@ -80,22 +87,22 @@ public class Program {
     String naziv = dajNazivKomande(komanda);
 
     switch (naziv) {
-      case "ITAK":
+      case KOMANDA_PREGLED_ARANZMANA:
         obradiKomanduPregledAranzmana(komanda);
         break;
-      case "ITAP":
+      case KOMANDA_PREGLED_DETALJA_ARANZMANA:
         obradiKomanduPregledPojedinogAranzmana(komanda);
         break;
-      case "IRTA":
+      case KOMANDA_PREGLED_REZERVACIJA_ARANZMANA:
         obradiKomanduPregledRezervacijaAranzmana(komanda);
         break;
-      case "IRO":
+      case KOMANDA_PREGLED_REZERVACIJA_KORISNIKA:
         obradiKomanduPregledRezervacijaKorisnika(komanda);
         break;
-      case "DRTA":
+      case KOMANDA_DODAJ_REZERVACIJU:
         obradiKomanduDodavanjeRezervacije(komanda);
         break;
-      case "ORTA":
+      case KOMANDA_OTKAZI_REZERVACIJU:
         obradiKomanduOtkaziRezervaciju(komanda);
         break;
       case "Q":
@@ -110,7 +117,7 @@ public class Program {
     TuristickaAgencija agencija = TuristickaAgencija.dajInstancu();
     List<Aranzman> aranzmani;
 
-    if (komanda.equals("ITAK")) {
+    if (komanda.equals(KOMANDA_PREGLED_ARANZMANA)) {
       aranzmani = agencija.dajAranzmane();
     } else {
 
@@ -173,7 +180,7 @@ public class Program {
 
     TuristickaAgencija agencija = TuristickaAgencija.dajInstancu();
 
-    var uzorak = new RegexKomandeGraditelj("ITAP")
+    var uzorak = new RegexKomandeGraditelj(KOMANDA_PREGLED_DETALJA_ARANZMANA)
         .dodajBroj("oznaka")
         .dajUzorak();
 
@@ -223,7 +230,7 @@ public class Program {
 
     TuristickaAgencija agencija = TuristickaAgencija.dajInstancu();
 
-    var uzorak = new RegexKomandeGraditelj("IRTA")
+    var uzorak = new RegexKomandeGraditelj(KOMANDA_PREGLED_REZERVACIJA_ARANZMANA)
         .dodajBroj("oznaka")
         .dodajTekst("filter")
         .dajUzorak();
@@ -250,7 +257,7 @@ public class Program {
 
     TuristickaAgencija agencija = TuristickaAgencija.dajInstancu();
 
-    var uzorak = new RegexKomandeGraditelj("IRO")
+    var uzorak = new RegexKomandeGraditelj(KOMANDA_PREGLED_REZERVACIJA_KORISNIKA)
         .dodajTekst("ime")
         .dodajTekst("prezime")
         .dajUzorak();
@@ -333,7 +340,7 @@ public class Program {
     TuristickaAgencija agencija = TuristickaAgencija.dajInstancu();
     FormatDatuma formatDatuma = FormatDatuma.dajInstancu();
 
-    var uzorak = new RegexKomandeGraditelj("DRTA")
+    var uzorak = new RegexKomandeGraditelj(KOMANDA_DODAJ_REZERVACIJU)
         .dodajTekst("ime")
         .dodajTekst("prezime")
         .dodajBroj("oznaka")
@@ -370,7 +377,7 @@ public class Program {
     TuristickaAgencija agencija = TuristickaAgencija.dajInstancu();
     FormatDatuma formatDatuma = FormatDatuma.dajInstancu();
 
-    var uzorak = new RegexKomandeGraditelj("ORTA")
+    var uzorak = new RegexKomandeGraditelj(KOMANDA_OTKAZI_REZERVACIJU)
         .dodajTekst("ime")
         .dodajTekst("prezime")
         .dodajBroj("oznaka")
