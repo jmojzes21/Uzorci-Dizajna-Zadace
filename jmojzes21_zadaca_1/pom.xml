@@ -17,6 +17,72 @@
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <maven.compiler.release>${java.version}</maven.compiler.release>
+
+    <maven.clean>3.4.1</maven.clean>
+    <maven.resources>3.3.1</maven.resources>
+    <maven.compiler>3.14.0</maven.compiler>
+    <maven.javadoc>3.11.2</maven.javadoc>
+    <maven.jar>3.4.2</maven.jar>
+    <maven.install>3.1.4</maven.install>
+
   </properties>
+
+  <build>
+
+    <finalName>jmojzes21_zadaca_1</finalName>
+
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>${maven.clean}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>${maven.resources}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven.compiler}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>${maven.javadoc}</version>
+        <configuration>
+          <show>private</show>
+          <nohelp>true</nohelp>
+          <doctitle>UZDIZ API ${project.name} ${project.version}</doctitle>
+          <windowtitle>UZDIZ API za ${project.name} ${project.version}
+          </windowtitle>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-install-plugin</artifactId>
+        <version>${maven.install}</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>${maven.jar}</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <classpathPrefix>libs/</classpathPrefix>
+              <mainClass>edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.Program</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
 
 </project>
