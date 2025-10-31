@@ -12,6 +12,10 @@ public class KreatorOtkazaneRezervacije extends KreatorRezervacije {
     this.datumVrijemeOtkaza = datumVrijemeOtkaza;
   }
 
+  public KreatorOtkazaneRezervacije() {
+    datumVrijemeOtkaza = LocalDateTime.now();
+  }
+
   @Override
   protected Rezervacija napraviRezervaciju(String ime, String prezime, int oznaka, LocalDateTime datumVrijeme) {
     return new OtkazanaRezervacija(ime, prezime, oznaka, datumVrijeme, datumVrijemeOtkaza);

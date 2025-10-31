@@ -74,7 +74,7 @@ public class TuristickaAgencija {
 
   public List<Rezervacija> dajRezervacijeKorisnika(String ime, String prezime) {
     List<Rezervacija> rezultat = new ArrayList<>();
-    var agent = new TuristickiAgent();
+    var agent = new TuristickiAgent(aranzmani);
 
     for (Aranzman aranzman : aranzmani.values()) {
       rezultat.addAll(agent.dajRezervacijeKorisnika(aranzman, ime, prezime));
@@ -89,17 +89,26 @@ public class TuristickaAgencija {
 
     Aranzman aranzman = aranzmani.get(rezervacija.oznakaAranzmana());
     if (aranzman == null) {
-      String opis = String.format("Nije moguće zaprimiti rezervaciju! Ne postoji aranžam oznake %d.\n",
+      String opis = String.format("Ne postoji aranžam oznake %d.\n",
           rezervacija.oznakaAranzmana());
       throw new Exception(opis);
     }
 
-    var agent = new TuristickiAgent();
+    var agent = new TuristickiAgent(aranzmani);
     agent.zaprimiRezervaciju(aranzman, rezervacija);
 
   }
 
-  public void otkaziRezervaciju(String ime, String prezime, int oznaka) {
+  public void otkaziRezervaciju(String ime, String prezime, int oznaka) throws Exception {
+
+    Aranzman aranzman = aranzmani.get(oznaka);
+    if (aranzman == null) {
+      String opis = String.format("Ne postoji aranžam oznake %d.\n", oznaka);
+      throw new Exception(opis);
+    }
+
+    var agent = new TuristickiAgent(aranzmani);
+    agent.otkaziRezervaciju(aranzman, ime, prezime);
 
   }
 
