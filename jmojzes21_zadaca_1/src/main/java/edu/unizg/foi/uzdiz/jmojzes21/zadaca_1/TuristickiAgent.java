@@ -2,77 +2,109 @@ package edu.unizg.foi.uzdiz.jmojzes21.zadaca_1;
 
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Rezervacija;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 public class TuristickiAgent {
 
-  private final Aranzman aranzman;
+  public TuristickiAgent() {}
 
-  public TuristickiAgent(Aranzman aranzman) {
-    this.aranzman = aranzman;
-  }
+  public void zaprimiRezervaciju(Aranzman aranzman, Rezervacija rezervacija) throws Exception {
 
-  public void zaprimiRezervaciju(Rezervacija rezervacija) {
+    if (korisnikImaRezervaciju(aranzman, rezervacija.ime(), rezervacija.prezime())) {
+      String opis = "Korisnik već ima rezervaciju za navedeni aranžman!";
+      throw new Exception(opis);
+    }
 
-    int brojAktivnihRezervacija = aranzman.brojAktivnihRezervacija();
+    int brojRezervacija = aranzman.brojRezervacija();
     int minPutnika = aranzman.minBrojPutnika();
     int maxPutnika = aranzman.maxBrojPutnika();
 
-    if (brojAktivnihRezervacija >= maxPutnika) {
-      dodajRezervacijuNaCekanje(rezervacija);
+    if (brojRezervacija >= maxPutnika) {
+      dodajRezervacijuNaCekanje(aranzman, rezervacija);
       return;
     }
 
-    if (brojAktivnihRezervacija >= minPutnika) {
-      dodajAktivnuRezervaciju(rezervacija);
+    if (brojRezervacija >= minPutnika) {
+      dodajAktivnuRezervaciju(aranzman, rezervacija);
       return;
     }
 
-    dodajPrimljenuRezervaciju(rezervacija);
+    dodajPrimljenuRezervaciju(aranzman, rezervacija);
 
   }
 
-  private void dodajPrimljenuRezervaciju(Rezervacija rezervacija) {
+  public boolean korisnikImaRezervaciju(Aranzman aranzman, String ime, String prezime) {
+    List<Rezervacija> rezervacijeKorisnika = dajRezervacijeKorisnika(aranzman, ime, prezime);
+    return !rezervacijeKorisnika.isEmpty();
+  }
 
-    List<Rezervacija> primljeneRezervacije = aranzman.primljeneRezervacije();
-    List<Rezervacija> aktivneRezervacije = aranzman.aktivneRezervacije();
+  public List<Rezervacija> dajRezervacijeKorisnika(Aranzman aranzman, String ime, String prezime) {
+    List<Rezervacija> rezultat = new ArrayList<>();
 
-    int brojPrimljenihRezervacija = aranzman.brojPrimljenihRezervacija();
+    rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.rezervacije(), ime, prezime));
+    rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.rezervacijeNaCekanju(), ime, prezime));
+    rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.otkazaneRezervacije(), ime, prezime));
+
+    return rezultat.stream()
+        .sorted(Comparator.comparing(Rezervacija::datumVrijeme))
+        .toList();
+  }
+
+  private void dodajPrimljenuRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
+
+    List<Rezervacija> rezervacije = aranzman.rezervacije();
+
+    int brojRezervacija = aranzman.brojRezervacija();
     int minPutnika = aranzman.minBrojPutnika();
 
-    if (brojPrimljenihRezervacija + 1 >= minPutnika) {
+    if (brojRezervacija + 1 >= minPutnika) {
+
       KreatorRezervacije kreatorRezervacije = new KreatorAktivneRezervacije();
 
-      aktivneRezervacije.addAll(primljeneRezervacije.stream()
-          .map(r -> kreatorRezervacije.promijeniVrstu(r))
-          .toList());
-      primljeneRezervacije.clear();
+      List<Rezervacija> trenutneRezervacije = rezervacije.stream()
+          .map(e -> kreatorRezervacije.promijeniVrstu(e))
+          .toList();
+
+      rezervacije.clear();
+      rezervacije.addAll(trenutneRezervacije);
 
       var novaRezervacija = kreatorRezervacije.promijeniVrstu(rezervacija);
-      aktivneRezervacije.add(novaRezervacija);
+      rezervacije.add(novaRezervacija);
 
     } else {
+
       KreatorRezervacije kreatorRezervacije = new KreatorPrimljeneRezervacije();
 
       var novaRezervacija = kreatorRezervacije.promijeniVrstu(rezervacija);
-      primljeneRezervacije.add(novaRezervacija);
+      rezervacije.add(novaRezervacija);
+
     }
 
   }
 
-  private void dodajAktivnuRezervaciju(Rezervacija rezervacija) {
+  private void dodajAktivnuRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
     KreatorRezervacije kreatorRezervacije = new KreatorAktivneRezervacije();
 
     var novaRezervacija = kreatorRezervacije.promijeniVrstu(rezervacija);
-    aranzman.aktivneRezervacije().add(novaRezervacija);
+    aranzman.rezervacije().add(novaRezervacija);
   }
 
-  private void dodajRezervacijuNaCekanje(Rezervacija rezervacija) {
+  private void dodajRezervacijuNaCekanje(Aranzman aranzman, Rezervacija rezervacija) {
     KreatorRezervacije kreatorRezervacije = new KreatorRezervacijeNaCekanju();
 
     var novaRezervacija = kreatorRezervacije.promijeniVrstu(rezervacija);
     aranzman.rezervacijeNaCekanju().add(novaRezervacija);
 
+  }
+
+  private List<Rezervacija> filtrirajRezervacijeKorisnika(Collection<Rezervacija> rezervacije, String ime,
+      String prezime) {
+    return rezervacije.stream()
+        .filter(e -> e.ime().equals(ime) && e.prezime().equals(prezime))
+        .toList();
   }
 
 }

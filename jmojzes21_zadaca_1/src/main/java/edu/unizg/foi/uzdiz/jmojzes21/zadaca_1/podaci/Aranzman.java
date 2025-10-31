@@ -33,22 +33,24 @@ public class Aranzman {
 
   private String prijevoz;
 
-  private List<Rezervacija> primljeneRezervacije = new ArrayList<>();
-  private List<Rezervacija> aktivneRezervacije = new ArrayList<>();
+  private List<Rezervacija> rezervacije = new ArrayList<>();
+
   private Queue<Rezervacija> rezervacijeNaCekanju = new ArrayDeque<>();
   private Queue<Rezervacija> otkazaneRezervacije = new ArrayDeque<>();
 
   public Aranzman() {}
 
-  public int brojPrimljenihRezervacija() {return primljeneRezervacije.size();}
+  public int brojRezervacija() {
+    return rezervacije.size();
+  }
 
-  public int brojAktivnihRezervacija() {return aktivneRezervacije.size();}
+  public boolean rezervacijeAktivne() {
+    return rezervacije.size() >= minBrojPutnika;
+  }
 
   // region Metode za dohvaćanje i postavljanje polja
 
-  public List<Rezervacija> primljeneRezervacije() {return primljeneRezervacije;}
-
-  public List<Rezervacija> aktivneRezervacije() {return aktivneRezervacije;}
+  public List<Rezervacija> rezervacije() {return rezervacije;}
 
   public Queue<Rezervacija> rezervacijeNaCekanju() {return rezervacijeNaCekanju;}
 

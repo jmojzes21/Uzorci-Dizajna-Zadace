@@ -4,7 +4,6 @@ import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Rezervacija;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -57,8 +56,7 @@ public class TuristickaAgencija {
     List<Rezervacija> rezultat = new ArrayList<>();
 
     if (prikaziPrimljeneAktivne) {
-      rezultat.addAll(aranzman.primljeneRezervacije());
-      rezultat.addAll(aranzman.aktivneRezervacije());
+      rezultat.addAll(aranzman.rezervacije());
     }
 
     if (prikaziNaCekanju) {
@@ -69,43 +67,40 @@ public class TuristickaAgencija {
       rezultat.addAll(aranzman.otkazaneRezervacije());
     }
 
-    return rezultat;
+    return rezultat.stream()
+        .sorted(Comparator.comparing(Rezervacija::datumVrijeme))
+        .toList();
   }
 
   public List<Rezervacija> dajRezervacijeKorisnika(String ime, String prezime) {
     List<Rezervacija> rezultat = new ArrayList<>();
+    var agent = new TuristickiAgent();
 
-    for (var aranzman : aranzmani.values()) {
-      rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.primljeneRezervacije(), ime, prezime));
-      rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.aktivneRezervacije(), ime, prezime));
-      rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.rezervacijeNaCekanju(), ime, prezime));
-      rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.otkazaneRezervacije(), ime, prezime));
+    for (Aranzman aranzman : aranzmani.values()) {
+      rezultat.addAll(agent.dajRezervacijeKorisnika(aranzman, ime, prezime));
     }
 
-    return rezultat;
-  }
-
-  private List<Rezervacija> filtrirajRezervacijeKorisnika(Collection<Rezervacija> rezervacije,
-      String ime, String prezime) {
-    return rezervacije.stream().filter(e -> e.ime().equals(ime) && e.prezime().equals(prezime))
+    return rezultat.stream()
+        .sorted(Comparator.comparing(Rezervacija::datumVrijeme))
         .toList();
   }
-
 
   public void zaprimiRezervaciju(Rezervacija rezervacija) throws Exception {
 
     Aranzman aranzman = aranzmani.get(rezervacija.oznakaAranzmana());
     if (aranzman == null) {
-      throw new Exception("Nije moguće zaprimiti rezervaciju!");
+      String opis = String.format("Nije moguće zaprimiti rezervaciju! Ne postoji aranžam oznake %d.\n",
+          rezervacija.oznakaAranzmana());
+      throw new Exception(opis);
     }
 
-    var agent = new TuristickiAgent(aranzman);
-    agent.zaprimiRezervaciju(rezervacija);
+    var agent = new TuristickiAgent();
+    agent.zaprimiRezervaciju(aranzman, rezervacija);
 
   }
 
   public void otkaziRezervaciju(String ime, String prezime, int oznaka) {
-    
+
   }
 
   public void ucitajAranzmane(List<Aranzman> aranzmani) {
