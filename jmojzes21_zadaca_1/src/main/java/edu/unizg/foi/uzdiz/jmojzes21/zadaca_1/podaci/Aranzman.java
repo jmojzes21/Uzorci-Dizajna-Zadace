@@ -38,7 +38,10 @@ public class Aranzman {
   private Queue<Rezervacija> rezervacijeNaCekanju = new ArrayDeque<>();
   private Queue<Rezervacija> otkazaneRezervacije = new ArrayDeque<>();
 
-  public Aranzman() {}
+  public Aranzman(int oznaka, String naziv) {
+    this.oznaka = oznaka;
+    this.naziv = naziv;
+  }
 
   public int brojRezervacija() {
     return rezervacije.size();

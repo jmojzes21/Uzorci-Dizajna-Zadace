@@ -6,22 +6,15 @@ import java.time.LocalTime;
 
 public class AranzmanGraditelj {
 
-  private final Aranzman aranzman;
+  private Aranzman aranzman;
 
-  public AranzmanGraditelj() {
-    aranzman = new Aranzman();
-  }
+  public AranzmanGraditelj() {}
 
-  public AranzmanGraditelj setOznaka(int oznaka) {
-    aranzman.setOznaka(oznaka);
+  public AranzmanGraditelj napraviAranzman(int oznaka, String naziv) {
+    aranzman = new Aranzman(oznaka, naziv);
     return this;
   }
-
-  public AranzmanGraditelj setNaziv(String naziv) {
-    aranzman.setNaziv(naziv);
-    return this;
-  }
-
+ 
   public AranzmanGraditelj setProgram(String program) {
     aranzman.setProgram(program);
     return this;

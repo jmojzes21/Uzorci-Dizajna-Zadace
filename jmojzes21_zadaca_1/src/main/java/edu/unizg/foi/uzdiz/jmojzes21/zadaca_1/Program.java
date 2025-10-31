@@ -470,8 +470,10 @@ public class Program {
     var graditelj = new AranzmanGraditelj();
 
     int indeks = 0;
-    graditelj.setOznaka(csvRedak.dajInt(indeks++))
-        .setNaziv(csvRedak.dajString(indeks++))
+    int oznaka = csvRedak.dajInt(indeks++);
+    String naziv = csvRedak.dajString(indeks++);
+
+    graditelj.napraviAranzman(oznaka, naziv)
         .setProgram(csvRedak.dajString(indeks++))
         .setPocetniDatum(csvRedak.dajDatum(indeks++))
         .setZavrsniDatum(csvRedak.dajDatum(indeks++))
