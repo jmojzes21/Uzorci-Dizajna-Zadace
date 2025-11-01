@@ -21,6 +21,8 @@ public class TuristickiAgent {
     this.aranzmani = aranzmani;
   }
 
+  // region Zaprimi i otkaži rezervaciju
+
   public void zaprimiRezervaciju(Aranzman aranzman, Rezervacija rezervacija) throws Exception {
 
     if (korisnikImaRezervaciju(aranzman, rezervacija.ime(), rezervacija.prezime())) {
@@ -74,6 +76,103 @@ public class TuristickiAgent {
 
   }
 
+  private void dodajPrimljenuRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
+
+    List<Rezervacija> rezervacije = aranzman.rezervacije();
+    int minPutnika = aranzman.minBrojPutnika();
+
+    var novaRezervacija = promijeniVrstuRezervacije(rezervacija, new KreatorPrimljeneRezervacije());
+    aranzman.rezervacije().add(novaRezervacija);
+
+    if (aranzman.brojRezervacija() >= minPutnika) {
+
+      var kreatorRezervacije = new KreatorAktivneRezervacije();
+
+      List<Rezervacija> trenutneRezervacije = rezervacije.stream()
+          .map(e -> promijeniVrstuRezervacije(e, kreatorRezervacije))
+          .toList();
+
+      rezervacije.clear();
+      rezervacije.addAll(trenutneRezervacije);
+
+    }
+
+  }
+
+  private void dodajAktivnuRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
+    var novaRezervacija = promijeniVrstuRezervacije(rezervacija, new KreatorAktivneRezervacije());
+    aranzman.rezervacije().add(novaRezervacija);
+  }
+
+  private void dodajRezervacijuNaCekanje(Aranzman aranzman, Rezervacija rezervacija) {
+    var novaRezervacija = promijeniVrstuRezervacije(rezervacija, new KreatorRezervacijeNaCekanju());
+    aranzman.rezervacijeNaCekanju().add(novaRezervacija);
+  }
+
+  private void otkaziPrimljenuRezervaciju(Aranzman aranzman, PrimljenaRezervacija rezervacija) throws Exception {
+
+    if (!aranzman.rezervacije().remove(rezervacija)) {
+      throw new Exception("Nije moguće otkazati rezervaciju!");
+    }
+
+    var otkazanaRezervacija = promijeniVrstuRezervacije(rezervacija, new KreatorOtkazaneRezervacije());
+    aranzman.otkazaneRezervacije().add(otkazanaRezervacija);
+
+  }
+
+  private void otkaziAktivnuRezervaciju(Aranzman aranzman, AktivnaRezervacija rezervacija) throws Exception {
+
+    if (!aranzman.rezervacije().remove(rezervacija)) {
+      throw new Exception("Nije moguće otkazati rezervaciju!");
+    }
+
+    List<Rezervacija> rezervacije = aranzman.rezervacije();
+    Queue<Rezervacija> rezervacijeNaCekanju = aranzman.rezervacijeNaCekanju();
+
+    var otkazanaRezervacija = promijeniVrstuRezervacije(rezervacija, new KreatorOtkazaneRezervacije());
+    aranzman.otkazaneRezervacije().add(otkazanaRezervacija);
+
+    if (!rezervacijeNaCekanju.isEmpty()) {
+
+      var novaRezervacija = promijeniVrstuRezervacije(rezervacijeNaCekanju.poll(), new KreatorAktivneRezervacije());
+      rezervacije.add(novaRezervacija);
+
+    }
+
+    if (aranzman.brojRezervacija() < aranzman.minBrojPutnika()) {
+
+      var kreatorRezervacije = new KreatorPrimljeneRezervacije();
+
+      List<Rezervacija> trenutneRezervacije = rezervacije.stream()
+          .map(e -> promijeniVrstuRezervacije(e, kreatorRezervacije))
+          .toList();
+
+      rezervacije.clear();
+      rezervacije.addAll(trenutneRezervacije);
+
+    }
+
+  }
+
+  private void otkaziRezervacijuNaCekanju(Aranzman aranzman, RezervacijaNaCekanju rezervacija) throws Exception {
+
+    if (!aranzman.rezervacijeNaCekanju().remove(rezervacija)) {
+      throw new Exception("Nije moguće otkazati rezervaciju!");
+    }
+
+    var otkazanaRezervacija = promijeniVrstuRezervacije(rezervacija, new KreatorOtkazaneRezervacije());
+    aranzman.otkazaneRezervacije().add(otkazanaRezervacija);
+
+  }
+
+  private Rezervacija promijeniVrstuRezervacije(Rezervacija rezervacija, KreatorRezervacije kreatorRezervacije) {
+    return kreatorRezervacije.promijeniVrstu(rezervacija);
+  }
+
+  // endregion
+
+  // region Dohvaćanje rezervacija korisnika
+
   public boolean korisnikImaRezervaciju(Aranzman aranzman, String ime, String prezime) {
     List<Rezervacija> rezervacijeKorisnika = dajRezervacijeKorisnika(aranzman, ime, prezime);
     return !rezervacijeKorisnika.isEmpty();
@@ -97,122 +196,13 @@ public class TuristickiAgent {
         .toList();
   }
 
-  private void dodajPrimljenuRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
-
-    List<Rezervacija> rezervacije = aranzman.rezervacije();
-
-    int brojRezervacija = aranzman.brojRezervacija();
-    int minPutnika = aranzman.minBrojPutnika();
-
-    if (brojRezervacija + 1 >= minPutnika) {
-
-      KreatorRezervacije kreatorRezervacije = new KreatorAktivneRezervacije();
-
-      List<Rezervacija> trenutneRezervacije = rezervacije.stream()
-          .map(e -> kreatorRezervacije.promijeniVrstu(e))
-          .toList();
-
-      rezervacije.clear();
-      rezervacije.addAll(trenutneRezervacije);
-
-      var novaRezervacija = kreatorRezervacije.promijeniVrstu(rezervacija);
-      rezervacije.add(novaRezervacija);
-
-    } else {
-
-      KreatorRezervacije kreatorRezervacije = new KreatorPrimljeneRezervacije();
-
-      var novaRezervacija = kreatorRezervacije.promijeniVrstu(rezervacija);
-      rezervacije.add(novaRezervacija);
-
-    }
-
-  }
-
-  private void dodajAktivnuRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
-    KreatorRezervacije kreatorRezervacije = new KreatorAktivneRezervacije();
-
-    var novaRezervacija = kreatorRezervacije.promijeniVrstu(rezervacija);
-    aranzman.rezervacije().add(novaRezervacija);
-  }
-
-  private void dodajRezervacijuNaCekanje(Aranzman aranzman, Rezervacija rezervacija) {
-    KreatorRezervacije kreatorRezervacije = new KreatorRezervacijeNaCekanju();
-
-    var novaRezervacija = kreatorRezervacije.promijeniVrstu(rezervacija);
-    aranzman.rezervacijeNaCekanju().add(novaRezervacija);
-
-  }
-
-  private void otkaziPrimljenuRezervaciju(Aranzman aranzman, PrimljenaRezervacija rezervacija) throws Exception {
-
-    if (!aranzman.rezervacije().remove(rezervacija)) {
-      throw new Exception("Nije moguće otkazati rezervaciju!");
-    }
-
-    KreatorRezervacije kreatorRezervacije = new KreatorOtkazaneRezervacije();
-    var otkazanaRezervacija = kreatorRezervacije.promijeniVrstu(rezervacija);
-
-    aranzman.otkazaneRezervacije().add(otkazanaRezervacija);
-
-  }
-
-  private void otkaziAktivnuRezervaciju(Aranzman aranzman, AktivnaRezervacija rezervacija) throws Exception {
-
-    if (!aranzman.rezervacije().remove(rezervacija)) {
-      throw new Exception("Nije moguće otkazati rezervaciju!");
-    }
-
-    List<Rezervacija> rezervacije = aranzman.rezervacije();
-    Queue<Rezervacija> rezervacijeNaCekanju = aranzman.rezervacijeNaCekanju();
-
-    KreatorRezervacije kreatorOtkazaneRezervacije = new KreatorOtkazaneRezervacije();
-    var otkazanaRezervacija = kreatorOtkazaneRezervacije.promijeniVrstu(rezervacija);
-
-    aranzman.otkazaneRezervacije().add(otkazanaRezervacija);
-
-    if (!rezervacijeNaCekanju.isEmpty()) {
-
-      var kreatorRezervacije = new KreatorAktivneRezervacije();
-      var novaRezervacija = kreatorRezervacije.promijeniVrstu(rezervacijeNaCekanju.poll());
-
-      rezervacije.add(novaRezervacija);
-
-    }
-
-    if (aranzman.brojRezervacija() < aranzman.minBrojPutnika()) {
-
-      var kreatorRezervacije = new KreatorPrimljeneRezervacije();
-
-      List<Rezervacija> trenutneRezervacije = rezervacije.stream()
-          .map(e -> kreatorRezervacije.promijeniVrstu(e))
-          .toList();
-
-      rezervacije.clear();
-      rezervacije.addAll(trenutneRezervacije);
-
-    }
-
-  }
-
-  private void otkaziRezervacijuNaCekanju(Aranzman aranzman, RezervacijaNaCekanju rezervacija) throws Exception {
-
-    if (!aranzman.rezervacijeNaCekanju().remove(rezervacija)) {
-      throw new Exception("Nije moguće otkazati rezervaciju!");
-    }
-
-    KreatorRezervacije kreatorRezervacije = new KreatorOtkazaneRezervacije();
-    var otkazanaRezervacija = kreatorRezervacije.promijeniVrstu(rezervacija);
-
-    aranzman.otkazaneRezervacije().add(otkazanaRezervacija);
-
-  }
-
   private List<Rezervacija> filtrirajRezervacijeKorisnika(Collection<Rezervacija> rezervacije, String ime,
       String prezime) {
     return rezervacije.stream()
         .filter(e -> e.ime().equals(ime) && e.prezime().equals(prezime))
         .toList();
   }
+
+  // endregion
 
 }
