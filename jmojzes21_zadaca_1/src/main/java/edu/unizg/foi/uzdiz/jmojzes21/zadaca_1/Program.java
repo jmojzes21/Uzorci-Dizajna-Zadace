@@ -27,23 +27,30 @@ public class Program {
 
   // region Početak
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) {
     Locale.setDefault(Locale.ENGLISH);
     var program = new Program();
-    program.pokreni(args);
+
+    try {
+      program.pokreni(args);
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   private boolean zaprimajKomandeKorisnika = true;
 
-  public void pokreni(String[] args) throws IOException {
+  public void pokreni(String[] args) throws Exception {
+
+    if (args.length == 0) {
+      System.out.println("Potrebno je unijeti argumente za pokretanje!");
+      System.out.println("Primjer: --ta [datoteka aranžmani] --rta [datoteka rezervacije]");
+      return;
+    }
+
+    ucitajOpcije(args);
 
     var konfig = Konfiguracija.dajKonfiguraciju();
-
-    var citacOpcija = new CitacOpcija();
-    citacOpcija.ucitajOpcije(args);
-
-    konfig.setPutanjaAranzmani(citacOpcija.dajOpciju("ta"));
-    konfig.setPutanjaRezervacije(citacOpcija.dajOpciju("rta"));
 
     var aranzmani = ucitajAranzmane(konfig.putanjaAranzmani());
     var rezervacije = ucitajRezervacije(konfig.putanjaRezervacije());
@@ -445,6 +452,30 @@ public class Program {
     int i = komanda.indexOf(' ');
     if (i == -1) {return komanda;}
     return komanda.substring(0, i);
+  }
+
+  private void ucitajOpcije(String[] args) throws Exception {
+
+    var konfig = Konfiguracija.dajKonfiguraciju();
+
+    var citacOpcija = new CitacOpcija();
+    citacOpcija.ucitajOpcije(args);
+
+    var opcije = citacOpcija.opcije();
+
+    for (var opcija : opcije.keySet()) {
+      switch (opcija) {
+        case "--ta":
+          konfig.setPutanjaAranzmani(citacOpcija.dajVrijednost(opcija));
+          break;
+        case "--rta":
+          konfig.setPutanjaRezervacije(citacOpcija.dajVrijednost(opcija));
+          break;
+        default:
+          throw new Exception(String.format("Nepoznata opcija %s!", opcija));
+      }
+    }
+
   }
 
   // endregion
