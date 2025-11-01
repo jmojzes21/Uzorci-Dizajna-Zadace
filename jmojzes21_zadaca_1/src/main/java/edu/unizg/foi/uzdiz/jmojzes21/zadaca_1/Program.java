@@ -25,6 +25,8 @@ import java.util.Scanner;
 
 public class Program {
 
+  // region Početak
+
   public static void main(String[] args) throws IOException {
     Locale.setDefault(Locale.ENGLISH);
     var program = new Program();
@@ -138,6 +140,10 @@ public class Program {
     System.out.println("  ORTA - Otkaži rezervacije");
     System.out.println("  Q    - Izlaz");
   }
+
+  // endregion
+
+  // region Komande korisnika
 
   private void obradiKomanduPregledAranzmana(String komanda) throws Exception {
 
@@ -431,11 +437,19 @@ public class Program {
 
   }
 
+  // endregion
+
+  // region Pomoćne metode
+
   private String dajNazivKomande(String komanda) {
     int i = komanda.indexOf(' ');
     if (i == -1) {return komanda;}
     return komanda.substring(0, i);
   }
+
+  // endregion
+
+  // region Učitavanje podataka
 
   private List<Aranzman> ucitajAranzmane(String putanjaAranzmani) throws IOException {
 
@@ -532,5 +546,7 @@ public class Program {
 
     return kreatorRezervacije.napraviRezervaciju(ime, prezime, oznaka, datumVrijeme);
   }
+
+  // endregion
 
 }
