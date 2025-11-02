@@ -4,29 +4,24 @@ import java.time.LocalDateTime;
 
 public class Rezervacija {
 
-  private String ime;
-  private String prezime;
+  private Korisnik korisnik;
 
   private int oznakaAranzmana;
   private LocalDateTime datumVrijeme;
 
-  public Rezervacija(String ime, String prezime, int oznakaAranzmana, LocalDateTime datumVrijeme) {
-    this.ime = ime;
-    this.prezime = prezime;
+  public Rezervacija(Korisnik korisnik, int oznakaAranzmana, LocalDateTime datumVrijeme) {
+    this.korisnik = korisnik;
     this.oznakaAranzmana = oznakaAranzmana;
     this.datumVrijeme = datumVrijeme;
   }
 
   public Rezervacija(Rezervacija r) {
-    ime = r.ime;
-    prezime = r.prezime;
+    korisnik = r.korisnik;
     oznakaAranzmana = r.oznakaAranzmana;
     datumVrijeme = r.datumVrijeme;
   }
 
-  public String ime() {return ime;}
-
-  public String prezime() {return prezime;}
+  public Korisnik korisnik() {return korisnik;}
 
   public int oznakaAranzmana() {return oznakaAranzmana;}
 
@@ -34,9 +29,7 @@ public class Rezervacija {
 
   public String vrsta() {return null;}
 
-  public void setIme(String ime) {this.ime = ime;}
-
-  public void setPrezime(String prezime) {this.prezime = prezime;}
+  public void setKorisnik(Korisnik korisnik) {this.korisnik = korisnik;}
 
   public void setOznakaAranzmana(int oznakaAranzmana) {this.oznakaAranzmana = oznakaAranzmana;}
 

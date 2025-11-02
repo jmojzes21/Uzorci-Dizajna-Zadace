@@ -6,9 +6,9 @@ public class OtkazanaRezervacija extends Rezervacija {
 
   private LocalDateTime datumVrijemeOtkaza;
 
-  public OtkazanaRezervacija(String ime, String prezime, int oznakaAranzmana, LocalDateTime datumVrijeme,
+  public OtkazanaRezervacija(Korisnik korisnik, int oznakaAranzmana, LocalDateTime datumVrijeme,
       LocalDateTime datumVrijemeOtkaza) {
-    super(ime, prezime, oznakaAranzmana, datumVrijeme);
+    super(korisnik, oznakaAranzmana, datumVrijeme);
     this.datumVrijemeOtkaza = datumVrijemeOtkaza;
   }
 
@@ -21,7 +21,7 @@ public class OtkazanaRezervacija extends Rezervacija {
   public String vrsta() {
     return "Otkazana";
   }
-  
+
   public LocalDateTime datumVrijemeOtkaza() {return datumVrijemeOtkaza;}
 
   public void setDatumVrijemeOtkaza(LocalDateTime datumVrijemeOtkaza) {

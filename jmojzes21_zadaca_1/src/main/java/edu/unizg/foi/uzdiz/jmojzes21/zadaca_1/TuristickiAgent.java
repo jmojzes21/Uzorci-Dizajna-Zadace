@@ -2,6 +2,7 @@ package edu.unizg.foi.uzdiz.jmojzes21.zadaca_1;
 
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.AktivnaRezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Aranzman;
+import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.PrimljenaRezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Rezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.RezervacijaNaCekanju;
@@ -23,7 +24,7 @@ public class TuristickiAgent {
 
   public void zaprimiRezervaciju(Aranzman aranzman, Rezervacija rezervacija) throws Exception {
 
-    if (korisnikImaRezervaciju(aranzman, rezervacija.ime(), rezervacija.prezime())) {
+    if (korisnikImaRezervaciju(aranzman, rezervacija.korisnik())) {
       String opis = "Korisnik već ima rezervaciju za navedeni aranžman!";
       throw new Exception(opis);
     }
@@ -46,9 +47,9 @@ public class TuristickiAgent {
 
   }
 
-  public void otkaziRezervaciju(Aranzman aranzman, String ime, String prezime) throws Exception {
+  public void otkaziRezervaciju(Aranzman aranzman, Korisnik korisnik) throws Exception {
 
-    Rezervacija rezervacija = dajRezervacijuKorisnika(aranzman, ime, prezime);
+    Rezervacija rezervacija = dajRezervacijuKorisnika(aranzman, korisnik);
 
     if (rezervacija == null) {
       String opis = "Korisnik nema rezervaciju za navedeni aranžman!";
@@ -168,50 +169,48 @@ public class TuristickiAgent {
 
   // region Dohvaćanje rezervacija korisnika
 
-  public boolean korisnikImaRezervaciju(Aranzman aranzman, String ime, String prezime) {
-    List<Rezervacija> rezervacijeKorisnika = dajRezervacijeKorisnika(aranzman, ime, prezime, false);
+  public boolean korisnikImaRezervaciju(Aranzman aranzman, Korisnik korisnik) {
+    List<Rezervacija> rezervacijeKorisnika = dajRezervacijeKorisnika(aranzman, korisnik, false);
     return !rezervacijeKorisnika.isEmpty();
   }
 
-  public Rezervacija dajRezervacijuKorisnika(Aranzman aranzman, String ime, String prezime) {
-    var rezervacije = dajRezervacijeKorisnika(aranzman, ime, prezime, false);
+  public Rezervacija dajRezervacijuKorisnika(Aranzman aranzman, Korisnik korisnik) {
+    var rezervacije = dajRezervacijeKorisnika(aranzman, korisnik, false);
     if (rezervacije.isEmpty()) {return null;}
     return rezervacije.getFirst();
   }
 
-  public List<Rezervacija> dajRezervacijeKorisnika(Aranzman aranzman, String ime, String prezime,
-      boolean prikaziOtkazane) {
+  public List<Rezervacija> dajRezervacijeKorisnika(Aranzman aranzman, Korisnik korisnik, boolean prikaziOtkazane) {
     List<Rezervacija> rezultat = new ArrayList<>();
 
-    rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.rezervacije(), ime, prezime));
-    rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.rezervacijeNaCekanju(), ime, prezime));
+    rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.rezervacije(), korisnik));
+    rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.rezervacijeNaCekanju(), korisnik));
 
     if (prikaziOtkazane) {
-      rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.otkazaneRezervacije(), ime, prezime));
+      rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.otkazaneRezervacije(), korisnik));
     }
 
     return rezultat;
   }
 
-  public List<Rezervacija> dajSveRezervacijeKorisnika(String ime, String prezime, boolean prikaziOtkazane) {
+  public List<Rezervacija> dajSveRezervacijeKorisnika(Korisnik korisnik, boolean prikaziOtkazane) {
     List<Rezervacija> rezultat = new ArrayList<>();
 
     for (Aranzman aranzman : aranzmani.values()) {
-      rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.rezervacije(), ime, prezime));
-      rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.rezervacijeNaCekanju(), ime, prezime));
+      rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.rezervacije(), korisnik));
+      rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.rezervacijeNaCekanju(), korisnik));
 
       if (prikaziOtkazane) {
-        rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.otkazaneRezervacije(), ime, prezime));
+        rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.otkazaneRezervacije(), korisnik));
       }
     }
 
     return rezultat;
   }
 
-  private List<Rezervacija> filtrirajRezervacijeKorisnika(Collection<Rezervacija> rezervacije, String ime,
-      String prezime) {
+  private List<Rezervacija> filtrirajRezervacijeKorisnika(Collection<Rezervacija> rezervacije, Korisnik korisnik) {
     return rezervacije.stream()
-        .filter(e -> e.ime().equals(ime) && e.prezime().equals(prezime))
+        .filter(e -> e.korisnik().equals(korisnik))
         .toList();
   }
 

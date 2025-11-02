@@ -1,6 +1,7 @@
 package edu.unizg.foi.uzdiz.jmojzes21.zadaca_1;
 
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Aranzman;
+import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Rezervacija;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -69,8 +70,10 @@ public class TuristickaAgencija {
 
   public List<Rezervacija> dajRezervacijeKorisnika(String ime, String prezime) {
 
+    var korisnik = new Korisnik(ime, prezime);
+
     var agent = new TuristickiAgent(aranzmani);
-    var rezervacije = agent.dajSveRezervacijeKorisnika(ime, prezime, true);
+    var rezervacije = agent.dajSveRezervacijeKorisnika(korisnik, true);
 
     return rezervacije.stream()
         .sorted(Comparator.comparing(Rezervacija::datumVrijeme))
@@ -99,8 +102,10 @@ public class TuristickaAgencija {
       throw new Exception(opis);
     }
 
+    var korisnik = new Korisnik(ime, prezime);
+
     var agent = new TuristickiAgent(aranzmani);
-    agent.otkaziRezervaciju(aranzman, ime, prezime);
+    agent.otkaziRezervaciju(aranzman, korisnik);
 
   }
 

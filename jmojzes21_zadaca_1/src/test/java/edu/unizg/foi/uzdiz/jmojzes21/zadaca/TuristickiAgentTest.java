@@ -12,6 +12,7 @@ import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.KreatorRezervacijeNaCekanju;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.TuristickiAgent;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.AktivnaRezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Aranzman;
+import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.OtkazanaRezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.PrimljenaRezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Rezervacija;
@@ -155,7 +156,7 @@ public class TuristickiAgentTest {
     var a = aranzmani.get(1);
     dodajAktivneRezervacije(a, List.of("K1", "K2"));
 
-    agent.otkaziRezervaciju(a, "K2", "K2");
+    agent.otkaziRezervaciju(a, dajKorisnika("K2"));
 
     provjeriVrstuRezervacija(a);
     provjeriRezervacije(a.rezervacije(), 1, List.of("K1"));
@@ -169,7 +170,7 @@ public class TuristickiAgentTest {
     var a = aranzmani.get(1);
     dodajAktivneRezervacije(a, List.of("K1", "K2", "K3", "K4"));
 
-    agent.otkaziRezervaciju(a, "K4", "K4");
+    agent.otkaziRezervaciju(a, dajKorisnika("K4"));
 
     provjeriVrstuRezervacija(a);
     provjeriRezervacije(a.rezervacije(), 3, List.of("K1", "K2", "K3"));
@@ -183,7 +184,7 @@ public class TuristickiAgentTest {
     var a = aranzmani.get(1);
     dodajAktivneRezervacije(a, List.of("K1", "K2", "K3"));
 
-    agent.otkaziRezervaciju(a, "K3", "K3");
+    agent.otkaziRezervaciju(a, dajKorisnika("K3"));
 
     provjeriVrstuRezervacija(a);
     provjeriRezervacije(a.rezervacije(), 2, List.of("K1", "K2"));
@@ -198,7 +199,7 @@ public class TuristickiAgentTest {
     dodajAktivneRezervacije(a, List.of("K1", "K2", "K3", "K4", "K5"));
     dodajRezervacijeNaCekanju(a, List.of("K6", "K7"));
 
-    agent.otkaziRezervaciju(a, "K5", "K5");
+    agent.otkaziRezervaciju(a, dajKorisnika("K5"));
 
     provjeriVrstuRezervacija(a);
     provjeriRezervacije(a.rezervacije(), 5, List.of("K1", "K2", "K3", "K4", "K6"));
@@ -214,7 +215,7 @@ public class TuristickiAgentTest {
     dodajAktivneRezervacije(a, List.of("K1", "K2", "K3", "K4", "K5"));
     dodajRezervacijeNaCekanju(a, List.of("K6", "K7"));
 
-    agent.otkaziRezervaciju(a, "K7", "K7");
+    agent.otkaziRezervaciju(a, dajKorisnika("K7"));
 
     provjeriVrstuRezervacija(a);
     provjeriRezervacije(a.rezervacije(), 5, List.of("K1", "K2", "K3", "K4", "K5"));
@@ -230,7 +231,7 @@ public class TuristickiAgentTest {
     dodajAktivneRezervacije(a, List.of("K1", "K2", "K3"));
 
     assertThrows(Exception.class, () -> {
-      agent.otkaziRezervaciju(a, "K4", "K4");
+      agent.otkaziRezervaciju(a, dajKorisnika("K4"));
     });
 
     provjeriVrstuRezervacija(a);
@@ -246,7 +247,7 @@ public class TuristickiAgentTest {
     dodajAktivneRezervacije(a, List.of("K1", "K2", "K3", "K4"));
     dodajOtkazaneRezervacije(a, List.of("K4"));
 
-    agent.otkaziRezervaciju(a, "K4", "K4");
+    agent.otkaziRezervaciju(a, dajKorisnika("K4"));
 
     provjeriVrstuRezervacija(a);
     provjeriRezervacije(a.rezervacije(), 3, List.of("K1", "K2", "K3"));
@@ -263,8 +264,8 @@ public class TuristickiAgentTest {
     agent.zaprimiRezervaciju(a, dajRezervaciju("K3", a.oznaka()));
     agent.zaprimiRezervaciju(a, dajRezervaciju("K4", a.oznaka()));
 
-    agent.otkaziRezervaciju(a, "K1", "K1");
-    agent.otkaziRezervaciju(a, "K2", "K2");
+    agent.otkaziRezervaciju(a, dajKorisnika("K1"));
+    agent.otkaziRezervaciju(a, dajKorisnika("K2"));
 
     agent.zaprimiRezervaciju(a, dajRezervaciju("K5", a.oznaka()));
     agent.zaprimiRezervaciju(a, dajRezervaciju("K6", a.oznaka()));
@@ -278,11 +279,11 @@ public class TuristickiAgentTest {
     provjeriRezervacije(a.rezervacijeNaCekanju(), 3, List.of("K8", "K9", "K10"));
     provjeriRezervacije(a.otkazaneRezervacije(), 2, List.of("K1", "K2"));
 
-    agent.otkaziRezervaciju(a, "K9", "K9");
-    agent.otkaziRezervaciju(a, "K4", "K4");
-    agent.otkaziRezervaciju(a, "K6", "K6");
+    agent.otkaziRezervaciju(a, dajKorisnika("K9"));
+    agent.otkaziRezervaciju(a, dajKorisnika("K4"));
+    agent.otkaziRezervaciju(a, dajKorisnika("K6"));
     agent.zaprimiRezervaciju(a, dajRezervaciju("K11", a.oznaka()));
-    agent.otkaziRezervaciju(a, "K3", "K3");
+    agent.otkaziRezervaciju(a, dajKorisnika("K3"));
 
     provjeriVrstuRezervacija(a);
     provjeriRezervacije(a.rezervacije(), 5, List.of("K5", "K7", "K8", "K10", "K11"));
@@ -297,8 +298,9 @@ public class TuristickiAgentTest {
 
   private void provjeriRezervacije(Collection<Rezervacija> rezervacije, int brojRezervacija, List<String> korisnici) {
     assertEquals(brojRezervacija, rezervacije.size());
-    for (var korisnik : korisnici) {
-      boolean postoji = rezervacije.stream().anyMatch(e -> e.ime().equals(korisnik) && e.prezime().equals(korisnik));
+    for (String imeKorisnika : korisnici) {
+      var korisnik = dajKorisnika(imeKorisnika);
+      boolean postoji = rezervacije.stream().anyMatch(e -> e.korisnik().equals(korisnik));
       assertTrue(postoji);
     }
   }
@@ -355,10 +357,14 @@ public class TuristickiAgentTest {
     }
   }
 
+  private Korisnik dajKorisnika(String ime) {
+    return new Korisnik(ime, ime);
+  }
+
   private Rezervacija dajRezervaciju(String korisnik, int oznaka) {
     var kreatorRezervacije = new KreatorPrimljeneRezervacije();
     LocalDateTime vrijeme = LocalDateTime.of(2025, 10, 1, 10, 0, 0);
-    return kreatorRezervacije.napraviRezervaciju(korisnik, korisnik, oznaka, vrijeme);
+    return kreatorRezervacije.napraviRezervaciju(dajKorisnika(korisnik), oznaka, vrijeme);
   }
 
   private Aranzman dajAranzman(int oznaka, int minPutnika, int maxPutnika) {

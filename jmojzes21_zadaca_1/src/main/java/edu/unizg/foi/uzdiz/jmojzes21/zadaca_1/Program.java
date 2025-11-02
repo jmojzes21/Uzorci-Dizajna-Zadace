@@ -1,6 +1,7 @@
 package edu.unizg.foi.uzdiz.jmojzes21.zadaca_1;
 
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Aranzman;
+import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.OtkazanaRezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Rezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.CitacOpcija;
@@ -356,7 +357,7 @@ public class Program {
                 ((OtkazanaRezervacija) e).datumVrijemeOtkaza());
           }
           return new String[]{
-              e.ime(), e.prezime(),
+              e.korisnik().ime(), e.korisnik().prezime(),
               formatDatuma.formatirajDatumVrijeme(e.datumVrijeme()),
               e.vrsta(), datumVrijmeOtkaza
           };
@@ -416,8 +417,10 @@ public class Program {
     String vrijeme = matcher.group("vrijeme");
     LocalDateTime datumVrijeme = formatDatuma.parsirajDatumVrijeme(datum, vrijeme);
 
+    var korisnik = new Korisnik(ime, prezime);
+
     KreatorRezervacije kreatorRezervacije = new KreatorPrimljeneRezervacije();
-    Rezervacija rezervacija = kreatorRezervacije.napraviRezervaciju(ime, prezime, oznaka, datumVrijeme);
+    Rezervacija rezervacija = kreatorRezervacije.napraviRezervaciju(korisnik, oznaka, datumVrijeme);
 
     agencija.zaprimiRezervaciju(rezervacija);
     System.out.println("Rezervacija je uspješno zaprimljena.");
@@ -624,9 +627,10 @@ public class Program {
     int oznaka = csvRedak.dajInt(indeks++);
     LocalDateTime datumVrijeme = csvRedak.dajDatumVrijeme(indeks);
 
-    KreatorRezervacije kreatorRezervacije = new KreatorPrimljeneRezervacije();
+    var korisnik = new Korisnik(ime, prezime);
 
-    return kreatorRezervacije.napraviRezervaciju(ime, prezime, oznaka, datumVrijeme);
+    KreatorRezervacije kreatorRezervacije = new KreatorPrimljeneRezervacije();
+    return kreatorRezervacije.napraviRezervaciju(korisnik, oznaka, datumVrijeme);
   }
 
   private void provjeriCsvInfoRedak(CsvRedak infoRedak, String[] stupci) throws CsvFormatGreska {

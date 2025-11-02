@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 
 public class AktivnaRezervacija extends Rezervacija {
 
-  public AktivnaRezervacija(String ime, String prezime, int oznakaAranzmana, LocalDateTime datumVrijeme) {
-    super(ime, prezime, oznakaAranzmana, datumVrijeme);
+  public AktivnaRezervacija(Korisnik korisnik, int oznakaAranzmana, LocalDateTime datumVrijeme) {
+    super(korisnik, oznakaAranzmana, datumVrijeme);
   }
 
   public AktivnaRezervacija(Rezervacija r) {
