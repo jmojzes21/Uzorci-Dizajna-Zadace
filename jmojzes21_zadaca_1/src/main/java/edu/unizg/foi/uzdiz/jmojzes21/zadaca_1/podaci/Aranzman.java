@@ -31,7 +31,7 @@ public class Aranzman {
 
   private float doplataZaJednokrevetnuSobu;
 
-  private String prijevoz;
+  private List<String> prijevoz;
 
   private List<Rezervacija> rezervacije = new ArrayList<>();
 
@@ -89,7 +89,7 @@ public class Aranzman {
 
   public float doplataZaJednokrevetnuSobu() {return doplataZaJednokrevetnuSobu;}
 
-  public String prijevoz() {return prijevoz;}
+  public List<String> prijevoz() {return prijevoz;}
 
   public void setOznaka(int oznaka) {this.oznaka = oznaka;}
 
@@ -124,7 +124,7 @@ public class Aranzman {
   public void setDoplataZaJednokrevetnuSobu(
       float doplataZaJednokrevetnuSobu) {this.doplataZaJednokrevetnuSobu = doplataZaJednokrevetnuSobu;}
 
-  public void setPrijevoz(String prijevoz) {this.prijevoz = prijevoz;}
+  public void setPrijevoz(List<String> prijevoz) {this.prijevoz = prijevoz;}
 
   // endregion
 

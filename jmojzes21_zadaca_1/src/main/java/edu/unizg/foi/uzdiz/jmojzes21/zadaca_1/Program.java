@@ -19,6 +19,7 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -262,7 +263,7 @@ public class Program {
     System.out.printf("Max broj putnika: %d\n", a.maxBrojPutnika());
     System.out.printf("Broj noćenja: %d\n", a.brojNocenja());
     System.out.printf("Doplata za jednokrevetnu sobu: %.2f\n", a.doplataZaJednokrevetnuSobu());
-    System.out.printf("Prijevoz: %s\n", a.prijevoz());
+    System.out.printf("Prijevoz: %s\n", String.join(", ", a.prijevoz()));
     System.out.printf("Broj doručka: %d\n", a.brojDorucka());
     System.out.printf("Broj ručkova: %d\n", a.brojRuckova());
     System.out.printf("Broj večera: %d\n", a.brojVecera());
@@ -550,12 +551,20 @@ public class Program {
         .setMaxBrojPutnika(csvRedak.dajInt(indeks++))
         .setBrojNocenja(csvRedak.dajInt(indeks++))
         .setDoplataZaJednokrevetnuSobu(csvRedak.dajFloat(indeks++, 0))
-        .setPrijevoz(csvRedak.dajString(indeks++, null))
+        .setPrijevoz(parsirajPrijevozAranzmana(csvRedak.dajString(indeks++, null)))
         .setBrojDorucka(csvRedak.dajInt(indeks++, 0))
         .setBrojRuckova(csvRedak.dajInt(indeks++, 0))
         .setBrojVecera(csvRedak.dajInt(indeks, 0));
 
     return graditelj.dajAranzman();
+  }
+
+  private List<String> parsirajPrijevozAranzmana(String prijevozTekst) {
+    if (prijevozTekst == null) {return null;}
+    return Arrays.stream(prijevozTekst.split(";"))
+        .map(e -> e.trim())
+        .filter(e -> !e.isEmpty())
+        .toList();
   }
 
   private List<Rezervacija> ucitajRezervacije(Path putanjaRezervacije) throws IOException {

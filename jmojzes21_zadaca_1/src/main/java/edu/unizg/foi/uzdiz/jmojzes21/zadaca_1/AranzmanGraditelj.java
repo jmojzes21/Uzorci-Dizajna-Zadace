@@ -3,6 +3,7 @@ package edu.unizg.foi.uzdiz.jmojzes21.zadaca_1;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Aranzman;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 public class AranzmanGraditelj {
 
@@ -14,7 +15,7 @@ public class AranzmanGraditelj {
     aranzman = new Aranzman(oznaka, naziv);
     return this;
   }
- 
+
   public AranzmanGraditelj setProgram(String program) {
     aranzman.setProgram(program);
     return this;
@@ -80,7 +81,7 @@ public class AranzmanGraditelj {
     return this;
   }
 
-  public AranzmanGraditelj setPrijevoz(String prijevoz) {
+  public AranzmanGraditelj setPrijevoz(List<String> prijevoz) {
     aranzman.setPrijevoz(prijevoz);
     return this;
   }
