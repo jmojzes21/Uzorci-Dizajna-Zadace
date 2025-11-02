@@ -529,7 +529,7 @@ public class Program {
   private Aranzman parsirajAranzman(CsvRedak csvRedak) throws CsvFormatGreska {
 
     if (csvRedak.brojElemenata() != 16) {
-      String opis = String.format("Csv redak za aranžmane treba imati 16 elemenata, trenutno: %d!",
+      String opis = String.format("Csv redak za aranžmane treba imati 16 stupaca, trenutno: %d!",
           csvRedak.brojElemenata());
       throw new CsvFormatGreska(opis, csvRedak);
     }
@@ -549,7 +549,7 @@ public class Program {
         .setCijena(csvRedak.dajFloat(indeks++))
         .setMinBrojPutnika(csvRedak.dajInt(indeks++))
         .setMaxBrojPutnika(csvRedak.dajInt(indeks++))
-        .setBrojNocenja(csvRedak.dajInt(indeks++))
+        .setBrojNocenja(csvRedak.dajInt(indeks++, 0))
         .setDoplataZaJednokrevetnuSobu(csvRedak.dajFloat(indeks++, 0))
         .setPrijevoz(parsirajPrijevozAranzmana(csvRedak.dajString(indeks++, null)))
         .setBrojDorucka(csvRedak.dajInt(indeks++, 0))
@@ -609,7 +609,7 @@ public class Program {
   private Rezervacija parsirajRezervaciju(CsvRedak csvRedak) throws CsvFormatGreska {
 
     if (csvRedak.brojElemenata() != 4) {
-      String opis = String.format("Csv redak za rezervacije treba imati 4 elemenata, trenutno: %d!",
+      String opis = String.format("Csv redak za rezervacije treba imati 4 stupca, trenutno: %d!",
           csvRedak.brojElemenata());
       throw new CsvFormatGreska(opis, csvRedak);
     }

@@ -253,7 +253,7 @@ public class TuristickiAgentTest {
     LocalDate pocetniDatum = LocalDate.of(2025, 10, 1);
     LocalDate zavrsniDatum = LocalDate.of(2025, 10, 10);
     var direktor = new AranzmanDirektor();
-    return direktor.napraviAranzman(oznaka, naziv, pocetniDatum, zavrsniDatum, minPutnika, maxPutnika);
+    return direktor.napraviAranzman(oznaka, naziv, "", pocetniDatum, zavrsniDatum, 0, minPutnika, maxPutnika);
   }
 
 }

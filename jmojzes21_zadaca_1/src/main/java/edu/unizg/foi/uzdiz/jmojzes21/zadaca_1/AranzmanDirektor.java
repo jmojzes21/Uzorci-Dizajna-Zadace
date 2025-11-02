@@ -11,11 +11,13 @@ public class AranzmanDirektor {
     graditelj = new AranzmanGraditelj();
   }
 
-  public Aranzman napraviAranzman(int oznaka, String naziv, LocalDate pocetniDatum, LocalDate zavrsniDatum,
-      int minPutnika, int maxPutnika) {
+  public Aranzman napraviAranzman(int oznaka, String naziv, String program, LocalDate pocetniDatum,
+      LocalDate zavrsniDatum, float cijena, int minPutnika, int maxPutnika) {
     return graditelj.napraviAranzman(oznaka, naziv)
+        .setProgram(program)
         .setPocetniDatum(pocetniDatum)
         .setZavrsniDatum(zavrsniDatum)
+        .setCijena(cijena)
         .setMinBrojPutnika(minPutnika)
         .setMaxBrojPutnika(maxPutnika)
         .dajAranzman();
