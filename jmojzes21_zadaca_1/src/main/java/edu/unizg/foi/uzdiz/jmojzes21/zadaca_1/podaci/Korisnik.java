@@ -23,6 +23,11 @@ public class Korisnik {
     return Objects.hash(ime, prezime);
   }
 
+  @Override
+  public String toString() {
+    return ime + " " + prezime;
+  }
+
   public String ime() {return ime;}
 
   public String prezime() {return prezime;}

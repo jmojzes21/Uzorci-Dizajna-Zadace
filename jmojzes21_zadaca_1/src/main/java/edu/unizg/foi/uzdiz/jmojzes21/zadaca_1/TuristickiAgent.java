@@ -25,7 +25,8 @@ public class TuristickiAgent {
   public void zaprimiRezervaciju(Aranzman aranzman, Rezervacija rezervacija) throws Exception {
 
     if (korisnikImaRezervaciju(aranzman, rezervacija.korisnik())) {
-      String opis = "Korisnik već ima rezervaciju za navedeni aranžman!";
+      String opis = String.format("Korisnik %s već ima rezervaciju za aranžman %d!", rezervacija.korisnik(),
+          aranzman.oznaka());
       throw new Exception(opis);
     }
 
@@ -52,7 +53,7 @@ public class TuristickiAgent {
     Rezervacija rezervacija = dajRezervacijuKorisnika(aranzman, korisnik);
 
     if (rezervacija == null) {
-      String opis = "Korisnik nema rezervaciju za navedeni aranžman!";
+      String opis = String.format("Korisnik %s nema rezervaciju za aranžman %d!", korisnik, aranzman.oznaka());
       throw new Exception(opis);
     }
 

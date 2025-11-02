@@ -64,7 +64,7 @@ public class TuristickaAgencija {
     }
 
     return rezultat.stream()
-        .sorted(Comparator.comparing(Rezervacija::datumVrijeme))
+        .sorted(Comparator.comparing(Rezervacija::vrsta).thenComparing(Rezervacija::datumVrijeme))
         .toList();
   }
 
@@ -76,7 +76,7 @@ public class TuristickaAgencija {
     var rezervacije = agent.dajSveRezervacijeKorisnika(korisnik, true);
 
     return rezervacije.stream()
-        .sorted(Comparator.comparing(Rezervacija::datumVrijeme))
+        .sorted(Comparator.comparing(Rezervacija::vrsta).thenComparing(Rezervacija::datumVrijeme))
         .toList();
   }
 
