@@ -22,13 +22,11 @@ public class TuristickaAgencija {
 
   private final Map<Integer, Aranzman> aranzmani = new HashMap<>();
 
-  public TuristickaAgencija() {
-
-  }
+  public TuristickaAgencija() {}
 
   public List<Aranzman> dajAranzmane() {
     return aranzmani.values().stream()
-        .sorted(Comparator.comparing(Aranzman::pocetniDatum))
+        .sorted(Comparator.comparing(Aranzman::oznaka))
         .toList();
   }
 
@@ -36,7 +34,7 @@ public class TuristickaAgencija {
     return aranzmani.values().stream()
         .filter(e -> e.pocetniDatum().compareTo(datumOd) >= 0
             && e.pocetniDatum().compareTo(datumDo) <= 0)
-        .sorted(Comparator.comparing(Aranzman::pocetniDatum))
+        .sorted(Comparator.comparing(Aranzman::oznaka))
         .toList();
   }
 
@@ -44,18 +42,15 @@ public class TuristickaAgencija {
     return aranzmani.get(oznaka);
   }
 
-  public List<Rezervacija> dajRezervacijeAranzmana(int oznaka, String filter) {
+  public List<Rezervacija> dajRezervacijeAranzmana(int oznaka, boolean prikaziGlavne, boolean prikaziNaCekanju,
+      boolean prikaziOtkazane) {
 
     Aranzman aranzman = aranzmani.get(oznaka);
     if (aranzman == null) {return null;}
 
-    boolean prikaziPrimljeneAktivne = filter.contains("PA");
-    boolean prikaziNaCekanju = filter.contains("Č");
-    boolean prikaziOtkazane = filter.contains("O");
-
     List<Rezervacija> rezultat = new ArrayList<>();
 
-    if (prikaziPrimljeneAktivne) {
+    if (prikaziGlavne) {
       rezultat.addAll(aranzman.rezervacije());
     }
 
@@ -73,14 +68,11 @@ public class TuristickaAgencija {
   }
 
   public List<Rezervacija> dajRezervacijeKorisnika(String ime, String prezime) {
-    List<Rezervacija> rezultat = new ArrayList<>();
+
     var agent = new TuristickiAgent(aranzmani);
+    var rezervacije = agent.dajSveRezervacijeKorisnika(ime, prezime, true);
 
-    for (Aranzman aranzman : aranzmani.values()) {
-      rezultat.addAll(agent.dajRezervacijeKorisnika(aranzman, ime, prezime, true));
-    }
-
-    return rezultat.stream()
+    return rezervacije.stream()
         .sorted(Comparator.comparing(Rezervacija::datumVrijeme))
         .toList();
   }

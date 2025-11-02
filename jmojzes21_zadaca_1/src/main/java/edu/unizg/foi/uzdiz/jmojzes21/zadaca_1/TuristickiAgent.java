@@ -7,7 +7,6 @@ import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Rezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.RezervacijaNaCekanju;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -191,9 +190,22 @@ public class TuristickiAgent {
       rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.otkazaneRezervacije(), ime, prezime));
     }
 
-    return rezultat.stream()
-        .sorted(Comparator.comparing(Rezervacija::datumVrijeme))
-        .toList();
+    return rezultat;
+  }
+
+  public List<Rezervacija> dajSveRezervacijeKorisnika(String ime, String prezime, boolean prikaziOtkazane) {
+    List<Rezervacija> rezultat = new ArrayList<>();
+
+    for (Aranzman aranzman : aranzmani.values()) {
+      rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.rezervacije(), ime, prezime));
+      rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.rezervacijeNaCekanju(), ime, prezime));
+
+      if (prikaziOtkazane) {
+        rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.otkazaneRezervacije(), ime, prezime));
+      }
+    }
+
+    return rezultat;
   }
 
   private List<Rezervacija> filtrirajRezervacijeKorisnika(Collection<Rezervacija> rezervacije, String ime,

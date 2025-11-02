@@ -288,7 +288,12 @@ public class Program {
     int oznaka = Integer.parseInt(matcher.group("oznaka"));
     String filter = matcher.group("filter");
 
-    List<Rezervacija> rezervacije = agencija.dajRezervacijeAranzmana(oznaka, filter);
+    boolean prikaziGlavne = filter.contains("PA");
+    boolean prikaziNaCekanju = filter.contains("Č");
+    boolean prikaziOtkazane = filter.contains("O");
+
+    List<Rezervacija> rezervacije = agencija.dajRezervacijeAranzmana(oznaka, prikaziGlavne, prikaziNaCekanju,
+        prikaziOtkazane);
     if (rezervacije == null) {
       System.out.println("Aranžman ne postoji.");
       return;
@@ -299,7 +304,6 @@ public class Program {
       return;
     }
 
-    boolean prikaziOtkazane = filter.contains("O");
     prikaziRezervacije(rezervacije, prikaziOtkazane);
   }
 
