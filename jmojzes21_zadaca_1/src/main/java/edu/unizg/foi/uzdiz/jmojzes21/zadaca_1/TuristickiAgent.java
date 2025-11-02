@@ -2,7 +2,6 @@ package edu.unizg.foi.uzdiz.jmojzes21.zadaca_1;
 
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.AktivnaRezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Aranzman;
-import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.OtkazanaRezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.PrimljenaRezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Rezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.RezervacijaNaCekanju;
@@ -67,11 +66,8 @@ public class TuristickiAgent {
       case RezervacijaNaCekanju r:
         otkaziRezervacijuNaCekanju(aranzman, r);
         break;
-      case OtkazanaRezervacija r:
-        String opis = "Rezervacija za navedeni aranžman je već otkazana!";
-        throw new Exception(opis);
       default:
-        throw new IllegalStateException("Rezervacija nije valjana!");
+        throw new Exception("Nije moguće otkazati rezervaciju!");
     }
 
   }
@@ -174,22 +170,26 @@ public class TuristickiAgent {
   // region Dohvaćanje rezervacija korisnika
 
   public boolean korisnikImaRezervaciju(Aranzman aranzman, String ime, String prezime) {
-    List<Rezervacija> rezervacijeKorisnika = dajRezervacijeKorisnika(aranzman, ime, prezime);
+    List<Rezervacija> rezervacijeKorisnika = dajRezervacijeKorisnika(aranzman, ime, prezime, false);
     return !rezervacijeKorisnika.isEmpty();
   }
 
   public Rezervacija dajRezervacijuKorisnika(Aranzman aranzman, String ime, String prezime) {
-    var rezervacije = dajRezervacijeKorisnika(aranzman, ime, prezime);
+    var rezervacije = dajRezervacijeKorisnika(aranzman, ime, prezime, false);
     if (rezervacije.isEmpty()) {return null;}
     return rezervacije.getFirst();
   }
 
-  public List<Rezervacija> dajRezervacijeKorisnika(Aranzman aranzman, String ime, String prezime) {
+  public List<Rezervacija> dajRezervacijeKorisnika(Aranzman aranzman, String ime, String prezime,
+      boolean prikaziOtkazane) {
     List<Rezervacija> rezultat = new ArrayList<>();
 
     rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.rezervacije(), ime, prezime));
     rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.rezervacijeNaCekanju(), ime, prezime));
-    rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.otkazaneRezervacije(), ime, prezime));
+
+    if (prikaziOtkazane) {
+      rezultat.addAll(filtrirajRezervacijeKorisnika(aranzman.otkazaneRezervacije(), ime, prezime));
+    }
 
     return rezultat.stream()
         .sorted(Comparator.comparing(Rezervacija::datumVrijeme))

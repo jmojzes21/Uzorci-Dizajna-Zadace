@@ -1,10 +1,12 @@
 package edu.unizg.foi.uzdiz.jmojzes21.zadaca;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.AranzmanDirektor;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.KreatorAktivneRezervacije;
+import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.KreatorOtkazaneRezervacije;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.KreatorPrimljeneRezervacije;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.KreatorRezervacijeNaCekanju;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.TuristickiAgent;
@@ -39,6 +41,8 @@ public class TuristickiAgentTest {
 
     agent = new TuristickiAgent(aranzmani);
   }
+
+  // region Zaprimi rezervaciju
 
   @Test
   public void zaprimiRezervaciju_nemaRezervacija_rezervacijaPrimljena() throws Exception {
@@ -78,6 +82,72 @@ public class TuristickiAgentTest {
     provjeriRezervacije(a.rezervacijeNaCekanju(), 1, List.of("K6"));
 
   }
+
+  @Test
+  public void zaprimiRezervaciju_rezervacijaVecPrimljena_greska() {
+
+    var a = aranzmani.get(1);
+    dodajPrimljeneRezervacije(a, List.of("K1", "K2"));
+
+    assertThrows(Exception.class, () -> {
+      agent.zaprimiRezervaciju(a, dajRezervaciju("K2", a.oznaka()));
+    });
+
+    provjeriVrstuRezervacija(a);
+    provjeriRezervacije(a.rezervacije(), 2, List.of("K1", "K2"));
+
+  }
+
+  @Test
+  public void zaprimiRezervaciju_rezervacijaVecAktivna_greska() {
+
+    var a = aranzmani.get(1);
+    dodajAktivneRezervacije(a, List.of("K1", "K2", "K3"));
+
+    assertThrows(Exception.class, () -> {
+      agent.zaprimiRezervaciju(a, dajRezervaciju("K3", a.oznaka()));
+    });
+
+    provjeriVrstuRezervacija(a);
+    provjeriRezervacije(a.rezervacije(), 3, List.of("K1", "K2", "K3"));
+
+  }
+
+  @Test
+  public void zaprimiRezervaciju_rezervacijaNaCekanju_greska() {
+
+    var a = aranzmani.get(1);
+    dodajAktivneRezervacije(a, List.of("K1", "K2", "k3", "K4", "K5"));
+    dodajRezervacijeNaCekanju(a, List.of("K8"));
+
+    assertThrows(Exception.class, () -> {
+      agent.zaprimiRezervaciju(a, dajRezervaciju("K8", a.oznaka()));
+    });
+
+    provjeriVrstuRezervacija(a);
+    provjeriRezervacije(a.rezervacije(), 5, List.of("K1", "K2", "k3", "K4", "K5"));
+    provjeriRezervacije(a.rezervacijeNaCekanju(), 1, List.of("K8"));
+
+  }
+
+  @Test
+  public void zaprimiRezervaciju_rezervacijaOtkazana_rezervacijaZaprimljena() throws Exception {
+
+    var a = aranzmani.get(1);
+    dodajAktivneRezervacije(a, List.of("K1", "K2", "k3", "K4"));
+    dodajOtkazaneRezervacije(a, List.of("K5"));
+
+    agent.zaprimiRezervaciju(a, dajRezervaciju("K5", a.oznaka()));
+
+    provjeriVrstuRezervacija(a);
+    provjeriRezervacije(a.rezervacije(), 5, List.of("K1", "K2", "k3", "K4", "K5"));
+    provjeriRezervacije(a.otkazaneRezervacije(), 1, List.of("K5"));
+
+  }
+
+  // endregion
+
+  // region Otkaži rezervaciju
 
   @Test
   public void otkaziRezervaciju_otkaziPrimljenu_rezervacijaOtkazana() throws Exception {
@@ -122,6 +192,22 @@ public class TuristickiAgentTest {
   }
 
   @Test
+  public void otkaziRezervaciju_otkaziAktivnuImaNaCekanju_rezervacijaOtkazana() throws Exception {
+
+    var a = aranzmani.get(1);
+    dodajAktivneRezervacije(a, List.of("K1", "K2", "K3", "K4", "K5"));
+    dodajRezervacijeNaCekanju(a, List.of("K6", "K7"));
+
+    agent.otkaziRezervaciju(a, "K5", "K5");
+
+    provjeriVrstuRezervacija(a);
+    provjeriRezervacije(a.rezervacije(), 5, List.of("K1", "K2", "K3", "K4", "K6"));
+    provjeriRezervacije(a.rezervacijeNaCekanju(), 1, List.of("K7"));
+    provjeriRezervacije(a.otkazaneRezervacije(), 1, List.of("K5"));
+
+  }
+
+  @Test
   public void otkaziRezervaciju_otkaziNaCekanju_rezervacijaOtkazana() throws Exception {
 
     var a = aranzmani.get(1);
@@ -138,18 +224,33 @@ public class TuristickiAgentTest {
   }
 
   @Test
-  public void otkaziRezervaciju_otkaziAktivnuImaNaCekanju_rezervacijaOtkazana() throws Exception {
+  public void otkaziRezervaciju_nemaRezervaciju_greska() {
 
     var a = aranzmani.get(1);
-    dodajAktivneRezervacije(a, List.of("K1", "K2", "K3", "K4", "K5"));
-    dodajRezervacijeNaCekanju(a, List.of("K6", "K7"));
+    dodajAktivneRezervacije(a, List.of("K1", "K2", "K3"));
 
-    agent.otkaziRezervaciju(a, "K5", "K5");
+    assertThrows(Exception.class, () -> {
+      agent.otkaziRezervaciju(a, "K4", "K4");
+    });
 
     provjeriVrstuRezervacija(a);
-    provjeriRezervacije(a.rezervacije(), 5, List.of("K1", "K2", "K3", "K4", "K6"));
-    provjeriRezervacije(a.rezervacijeNaCekanju(), 1, List.of("K7"));
-    provjeriRezervacije(a.otkazaneRezervacije(), 1, List.of("K5"));
+    provjeriRezervacije(a.rezervacije(), 3, List.of("K1", "K2", "K3"));
+    provjeriRezervacije(a.otkazaneRezervacije(), 0, List.of());
+
+  }
+
+  @Test
+  public void otkaziRezervaciju_otkaziAktivnuImaOtkazanu_rezervacijaOtkazana() throws Exception {
+
+    var a = aranzmani.get(1);
+    dodajAktivneRezervacije(a, List.of("K1", "K2", "K3", "K4"));
+    dodajOtkazaneRezervacije(a, List.of("K4"));
+
+    agent.otkaziRezervaciju(a, "K4", "K4");
+
+    provjeriVrstuRezervacija(a);
+    provjeriRezervacije(a.rezervacije(), 3, List.of("K1", "K2", "K3"));
+    provjeriRezervacije(a.otkazaneRezervacije(), 2, List.of("K4", "K4"));
 
   }
 
@@ -189,6 +290,10 @@ public class TuristickiAgentTest {
     provjeriRezervacije(a.otkazaneRezervacije(), 6, List.of("K1", "K2", "K9", "K4", "K6", "K3"));
 
   }
+
+  // endregion
+
+  // region Pomoćne metode
 
   private void provjeriRezervacije(Collection<Rezervacija> rezervacije, int brojRezervacija, List<String> korisnici) {
     assertEquals(brojRezervacija, rezervacije.size());
@@ -242,6 +347,14 @@ public class TuristickiAgentTest {
     }
   }
 
+  private void dodajOtkazaneRezervacije(Aranzman a, List<String> korisnici) {
+    var kreatorRezervacije = new KreatorOtkazaneRezervacije();
+    for (var korisnik : korisnici) {
+      var r = dajRezervaciju(korisnik, a.oznaka());
+      a.otkazaneRezervacije().add(kreatorRezervacije.promijeniVrstu(r));
+    }
+  }
+
   private Rezervacija dajRezervaciju(String korisnik, int oznaka) {
     var kreatorRezervacije = new KreatorPrimljeneRezervacije();
     LocalDateTime vrijeme = LocalDateTime.of(2025, 10, 1, 10, 0, 0);
@@ -255,5 +368,7 @@ public class TuristickiAgentTest {
     var direktor = new AranzmanDirektor();
     return direktor.napraviAranzman(oznaka, naziv, "", pocetniDatum, zavrsniDatum, 0, minPutnika, maxPutnika);
   }
+
+  // endregion
 
 }

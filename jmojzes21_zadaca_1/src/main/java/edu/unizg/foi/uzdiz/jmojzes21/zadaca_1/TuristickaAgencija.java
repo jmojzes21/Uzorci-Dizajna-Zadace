@@ -77,7 +77,7 @@ public class TuristickaAgencija {
     var agent = new TuristickiAgent(aranzmani);
 
     for (Aranzman aranzman : aranzmani.values()) {
-      rezultat.addAll(agent.dajRezervacijeKorisnika(aranzman, ime, prezime));
+      rezultat.addAll(agent.dajRezervacijeKorisnika(aranzman, ime, prezime, true));
     }
 
     return rezultat.stream()
