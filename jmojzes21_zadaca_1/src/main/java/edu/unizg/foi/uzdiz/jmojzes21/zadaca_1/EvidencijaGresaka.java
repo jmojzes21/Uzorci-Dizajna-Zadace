@@ -16,10 +16,14 @@ public class EvidencijaGresaka {
   private EvidencijaGresaka() {}
 
   public void evidentiraj(Exception e) {
+    evidentiraj(e.getMessage());
+  }
+
+  public void evidentiraj(String poruka) {
     brojGresaka++;
 
     System.out.printf("Greška %d\n", brojGresaka);
-    System.out.println(e.getMessage());
+    System.out.println(poruka);
   }
 
 }
