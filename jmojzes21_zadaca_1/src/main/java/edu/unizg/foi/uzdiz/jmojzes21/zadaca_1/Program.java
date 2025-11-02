@@ -13,6 +13,7 @@ import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.csv.CsvCitac;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.csv.CsvFormatGreska;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.csv.CsvRedak;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -52,8 +53,8 @@ public class Program {
 
     var konfig = Konfiguracija.dajKonfiguraciju();
 
-    var aranzmani = ucitajAranzmane(konfig.putanjaAranzmani());
-    var rezervacije = ucitajRezervacije(konfig.putanjaRezervacije());
+    var aranzmani = ucitajAranzmane(Path.of(konfig.putanjaAranzmani()));
+    var rezervacije = ucitajRezervacije(Path.of(konfig.putanjaRezervacije()));
 
     var agencija = TuristickaAgencija.dajInstancu();
     agencija.ucitajAranzmane(aranzmani);
@@ -482,9 +483,14 @@ public class Program {
 
   // region Učitavanje podataka
 
-  private List<Aranzman> ucitajAranzmane(String putanjaAranzmani) throws IOException {
+  private List<Aranzman> ucitajAranzmane(Path putanjaAranzmani) throws IOException {
 
-    String csv = Files.readString(Path.of(putanjaAranzmani));
+    if (Files.notExists(putanjaAranzmani)) {
+      String opis = String.format("Datoteka ne postoji! Putanja: %s\n", putanjaAranzmani.toString());
+      throw new IOException(opis);
+    }
+
+    String csv = Files.readString(putanjaAranzmani, StandardCharsets.UTF_8);
 
     var csvCitac = new CsvCitac();
     csvCitac.ucitajCsv(csv);
@@ -492,7 +498,22 @@ public class Program {
     List<CsvRedak> redci = csvCitac.csvRedci();
     List<Aranzman> aranzmani = new ArrayList<>();
 
-    for (CsvRedak redak : redci) {
+    if (redci.isEmpty()) {
+      String opis = "Ne postoji informativni redak za aranžmane!";
+      EvidencijaGresaka.dajInstancu().evidentiraj(opis);
+    }
+
+    try {
+      provjeriCsvInfoRedak(redci.getFirst(),
+          new String[]{"Oznaka", "Naziv", "Program", "Početni datum", "Završni datum", "Vrijeme kretanja",
+              "Vrijeme povratka", "Cijena", "Min broj putnika", "Maks broj putnika", "Broj noćenja",
+              "Doplata za jednokrevetnu sobu", "Prijevoz", "Broj doručka", "Broj ručkova", "Broj večera"});
+    } catch (CsvFormatGreska e) {
+      EvidencijaGresaka.dajInstancu().evidentiraj(e);
+    }
+
+    for (int i = 1; i < redci.size(); i++) {
+      CsvRedak redak = redci.get(i);
       try {
         var aranzman = parsirajAranzman(redak);
         aranzmani.add(aranzman);
@@ -537,9 +558,14 @@ public class Program {
     return graditelj.dajAranzman();
   }
 
-  private List<Rezervacija> ucitajRezervacije(String putanjaRezervacije) throws IOException {
+  private List<Rezervacija> ucitajRezervacije(Path putanjaRezervacije) throws IOException {
 
-    String csv = Files.readString(Path.of(putanjaRezervacije));
+    if (Files.notExists(putanjaRezervacije)) {
+      String opis = String.format("Datoteka ne postoji! Putanja: %s\n", putanjaRezervacije.toString());
+      throw new IOException(opis);
+    }
+
+    String csv = Files.readString(putanjaRezervacije, StandardCharsets.UTF_8);
 
     var csvCitac = new CsvCitac();
     csvCitac.ucitajCsv(csv);
@@ -547,7 +573,19 @@ public class Program {
     List<CsvRedak> redci = csvCitac.csvRedci();
     List<Rezervacija> rezervacije = new ArrayList<>();
 
-    for (CsvRedak redak : redci) {
+    if (redci.isEmpty()) {
+      String opis = "Ne postoji informativni redak za rezervacije!";
+      EvidencijaGresaka.dajInstancu().evidentiraj(opis);
+    }
+
+    try {
+      provjeriCsvInfoRedak(redci.getFirst(), new String[]{"Ime", "Prezime", "Oznaka aranžmana", "Datum i vrijeme"});
+    } catch (CsvFormatGreska e) {
+      EvidencijaGresaka.dajInstancu().evidentiraj(e);
+    }
+
+    for (int i = 1; i < redci.size(); i++) {
+      CsvRedak redak = redci.get(i);
       try {
         var rezervacija = parsirajRezervaciju(redak);
         rezervacije.add(rezervacija);
@@ -576,6 +614,28 @@ public class Program {
     KreatorRezervacije kreatorRezervacije = new KreatorPrimljeneRezervacije();
 
     return kreatorRezervacije.napraviRezervaciju(ime, prezime, oznaka, datumVrijeme);
+  }
+
+  private void provjeriCsvInfoRedak(CsvRedak infoRedak, String[] stupci) throws CsvFormatGreska {
+
+    if (infoRedak.brojElemenata() != stupci.length) {
+      String opis = String.format("Informacijski redak ne sadrži točan broj stupaca! Očekivano: %d, stvarno: %d",
+          stupci.length, infoRedak.brojElemenata());
+      throw new CsvFormatGreska(opis, infoRedak);
+    }
+
+    List<String> elementi = infoRedak.elementi();
+    for (int i = 0; i < stupci.length; i++) {
+      String stupac = stupci[i].trim();
+      String infoStupac = infoRedak.dajString(i, "").trim();
+
+      if (!stupac.equalsIgnoreCase(infoStupac)) {
+        String opis = String.format("Informacijski redak ne sadrži točan stupac! Očekivano: %s, stvarno: %s", stupac,
+            infoStupac);
+        throw new CsvFormatGreska(opis, infoRedak);
+      }
+    }
+
   }
 
   // endregion

@@ -1,6 +1,5 @@
 package edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.csv;
 
-import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.EvidencijaGresaka;
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -9,114 +8,123 @@ import java.util.List;
 public class CsvCitac {
 
   private final char znakOdvajanja;
-  private final boolean preskociPrviRedak;
 
   private final List<CsvRedak> csvRedci = new ArrayList<>();
 
+  String linija = null;
+  int brojLinije = 0;
+  int pozicija = 0;
+
   public CsvCitac() {
-    this(',', true);
+    this(',');
   }
 
-  public CsvCitac(char znakOdvajanja, boolean preskociPrviRedak) {
+  public CsvCitac(char znakOdvajanja) {
     this.znakOdvajanja = znakOdvajanja;
-    this.preskociPrviRedak = preskociPrviRedak;
   }
 
   public void ucitajCsv(String csv) {
 
+    csvRedci.clear();
+    linija = null;
+    brojLinije = 0;
+    pozicija = 0;
+
+    if (csv.startsWith("\uFEFF")) {
+      csv = csv.substring(1);
+    }
+
     BufferedReader citac = new BufferedReader(new StringReader(csv));
     List<String> linije = citac.lines().map(String::trim).toList();
 
-    boolean preskociPrviRedak = this.preskociPrviRedak;
-
     for (int i = 0; i < linije.size(); i++) {
-      String linija = linije.get(i);
-      int brojLinije = i + 1;
+      linija = linije.get(i);
+      brojLinije = i + 1;
 
-      try {
-        CsvRedak redak = obradiLiniju(linija, brojLinije);
-        if (preskociPrviRedak) {
-          preskociPrviRedak = false;
-          continue;
-        }
-
-        csvRedci.add(redak);
-      } catch (CsvFormatGreska e) {
-        EvidencijaGresaka.dajInstancu().evidentiraj(e);
-      }
-
+      obradiLiniju();
     }
 
+    linija = null;
+    brojLinije = 0;
+    pozicija = 0;
   }
 
   public List<CsvRedak> csvRedci() {return csvRedci;}
 
-  private CsvRedak obradiLiniju(String linija, int brojLinije) throws CsvFormatGreska {
-    List<String> elementi = parsirajElementeLinije(linija, brojLinije);
-    return new CsvRedak(linija, brojLinije, elementi);
+  private void obradiLiniju() {
+
+    pozicija = 0;
+
+    if (linija.isEmpty() || linija.startsWith("#")) {
+      return;
+    }
+
+    List<String> elementi = parsirajElementeLinije();
+
+    CsvRedak redak = new CsvRedak(linija, brojLinije, elementi);
+    csvRedci.add(redak);
   }
 
-  private List<String> parsirajElementeLinije(String linija, int brojLinije)
-      throws CsvFormatGreska {
-
-    int trenutnaPozicija = 0;
+  private List<String> parsirajElementeLinije() {
     List<String> elementi = new ArrayList<>();
 
-    while (true) {
+    pozicija = 0;
+    String element = null;
 
-      if (trenutnaPozicija >= linija.length()) {
-        elementi.add(null);
-        break;
-      }
-
-      trenutnaPozicija = preskociRazmake(linija, trenutnaPozicija);
-
-      int pozicijaOdvajanja = -1;
-      int pocetakVrijednosti = trenutnaPozicija;
-      int krajVrijednosti = -1;
-
-      if (linija.charAt(trenutnaPozicija) == '"') {
-        pocetakVrijednosti = trenutnaPozicija + 1;
-        krajVrijednosti = linija.indexOf('"', pocetakVrijednosti);
-
-        if (krajVrijednosti == -1) {
-          String opis = "Nije moguće pronaći kraj vrijednosti!";
-          throw new CsvFormatGreska(opis, brojLinije, linija);
-        }
-
-        pozicijaOdvajanja = linija.indexOf(znakOdvajanja, krajVrijednosti + 1);
-
-      } else {
-        pozicijaOdvajanja = linija.indexOf(znakOdvajanja, trenutnaPozicija);
-        krajVrijednosti = pozicijaOdvajanja;
-      }
-
-      if (pozicijaOdvajanja == -1) {
-        String zadnjiPodatak = linija.substring(pocetakVrijednosti).trim();
-        elementi.add(zadnjiPodatak);
-        break;
-      }
-
-      if (pozicijaOdvajanja != trenutnaPozicija) {
-        String podatak = linija.substring(pocetakVrijednosti, krajVrijednosti).trim();
-        elementi.add(podatak);
-      } else {
-        elementi.add(null);
-      }
-
-      trenutnaPozicija = pozicijaOdvajanja + 1;
-
+    while (pozicija != -1) {
+      elementi.add(dajSljedeciElement());
     }
 
     return elementi;
   }
 
-  private int preskociRazmake(String linija, int pocetnaPozicija) {
-    int pozicija = pocetnaPozicija;
+  private String dajSljedeciElement() {
+
+    if (pozicija >= linija.length()) {
+      pozicija = -1;
+      return null;
+    }
+
+    preskociRazmake();
+
+    int pozicijaOdvajanja;
+    int pocetakElementa;
+    int krajElementa;
+
+    if (linija.charAt(pozicija) == '"') {
+      pocetakElementa = pozicija + 1;
+      krajElementa = linija.indexOf('"', pocetakElementa);
+
+      if (krajElementa == -1) {
+        krajElementa = linija.length();
+        pozicijaOdvajanja = -1;
+      } else {
+        pozicijaOdvajanja = linija.indexOf(znakOdvajanja, krajElementa + 1);
+      }
+
+    } else {
+      pozicijaOdvajanja = linija.indexOf(znakOdvajanja, pozicija);
+
+      pocetakElementa = pozicija;
+      krajElementa = pozicijaOdvajanja != -1 ? pozicijaOdvajanja : linija.length();
+    }
+
+    String element = linija.substring(pocetakElementa, krajElementa).trim();
+    if (element.isEmpty()) {element = null;}
+
+    if (pozicijaOdvajanja == -1) {
+      pozicija = -1;
+    } else {
+      pozicija = pozicijaOdvajanja + 1;
+    }
+
+    return element;
+  }
+
+  private void preskociRazmake() {
     while (linija.charAt(pozicija) == ' ') {
       pozicija++;
     }
-    return pozicija;
   }
 
 }
