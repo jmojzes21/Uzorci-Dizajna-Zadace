@@ -12,6 +12,8 @@ public class Korisnik {
     this.prezime = prezime;
   }
 
+  public String punoIme() {return ime + " " + prezime;}
+
   @Override
   public final boolean equals(Object o) {
     if (!(o instanceof Korisnik korisnik)) {return false;}
@@ -25,7 +27,7 @@ public class Korisnik {
 
   @Override
   public String toString() {
-    return ime + " " + prezime;
+    return punoIme();
   }
 
   public String ime() {return ime;}

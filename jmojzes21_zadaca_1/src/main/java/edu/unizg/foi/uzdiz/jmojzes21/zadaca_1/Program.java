@@ -289,12 +289,12 @@ public class Program {
     int oznaka = Integer.parseInt(matcher.group("oznaka"));
     String filter = matcher.group("filter");
 
-    boolean prikaziGlavne = filter.contains("PA");
+    boolean prikaziPrimljeneAktivne = filter.contains("PA");
     boolean prikaziNaCekanju = filter.contains("Č");
     boolean prikaziOtkazane = filter.contains("O");
 
-    List<Rezervacija> rezervacije = agencija.dajRezervacijeAranzmana(oznaka, prikaziGlavne, prikaziNaCekanju,
-        prikaziOtkazane);
+    List<Rezervacija> rezervacije = agencija.dajRezervacijeAranzmana(oznaka,
+        prikaziPrimljeneAktivne, prikaziNaCekanju, prikaziOtkazane);
     if (rezervacije == null) {
       System.out.println("Aranžman ne postoji.");
       return;
@@ -422,8 +422,12 @@ public class Program {
     KreatorRezervacije kreatorRezervacije = new KreatorPrimljeneRezervacije();
     Rezervacija rezervacija = kreatorRezervacije.napraviRezervaciju(korisnik, oznaka, datumVrijeme);
 
-    agencija.zaprimiRezervaciju(rezervacija);
-    System.out.println("Rezervacija je uspješno zaprimljena.");
+    try {
+      agencija.zaprimiRezervaciju(rezervacija);
+      System.out.println("Rezervacija je uspješno zaprimljena.");
+    } catch (Exception e) {
+      System.out.println("Dodavanje rezervacije nije uspjelo. " + e.getMessage());
+    }
 
   }
 
@@ -448,8 +452,12 @@ public class Program {
     String prezime = matcher.group("prezime");
     int oznaka = Integer.parseInt(matcher.group("oznaka"));
 
-    agencija.otkaziRezervaciju(ime, prezime, oznaka);
-    System.out.println("Rezervacija je uspješno otkazana.");
+    try {
+      agencija.otkaziRezervaciju(ime, prezime, oznaka);
+      System.out.println("Rezervacija je uspješno otkazana.");
+    } catch (Exception e) {
+      System.out.println("Otkazivanje rezervacije nije uspjelo. " + e.getMessage());
+    }
 
   }
 
@@ -494,7 +502,8 @@ public class Program {
   private List<Aranzman> ucitajAranzmane(Path putanjaAranzmani) throws IOException {
 
     if (Files.notExists(putanjaAranzmani)) {
-      String opis = String.format("Datoteka ne postoji! Putanja: %s\n", putanjaAranzmani.toString());
+      String opis = String.format("Datoteka ne postoji! Putanja: %s\n",
+          putanjaAranzmani.toString());
       throw new IOException(opis);
     }
 
@@ -513,9 +522,11 @@ public class Program {
 
     try {
       provjeriCsvInfoRedak(redci.getFirst(),
-          new String[]{"Oznaka", "Naziv", "Program", "Početni datum", "Završni datum", "Vrijeme kretanja",
+          new String[]{"Oznaka", "Naziv", "Program", "Početni datum", "Završni datum",
+              "Vrijeme kretanja",
               "Vrijeme povratka", "Cijena", "Min broj putnika", "Maks broj putnika", "Broj noćenja",
-              "Doplata za jednokrevetnu sobu", "Prijevoz", "Broj doručka", "Broj ručkova", "Broj večera"});
+              "Doplata za jednokrevetnu sobu", "Prijevoz", "Broj doručka", "Broj ručkova",
+              "Broj večera"});
     } catch (CsvFormatGreska e) {
       EvidencijaGresaka.dajInstancu().evidentiraj(e);
     }
@@ -577,7 +588,8 @@ public class Program {
   private List<Rezervacija> ucitajRezervacije(Path putanjaRezervacije) throws IOException {
 
     if (Files.notExists(putanjaRezervacije)) {
-      String opis = String.format("Datoteka ne postoji! Putanja: %s\n", putanjaRezervacije.toString());
+      String opis = String.format("Datoteka ne postoji! Putanja: %s\n",
+          putanjaRezervacije.toString());
       throw new IOException(opis);
     }
 
@@ -595,7 +607,8 @@ public class Program {
     }
 
     try {
-      provjeriCsvInfoRedak(redci.getFirst(), new String[]{"Ime", "Prezime", "Oznaka aranžmana", "Datum i vrijeme"});
+      provjeriCsvInfoRedak(redci.getFirst(),
+          new String[]{"Ime", "Prezime", "Oznaka aranžmana", "Datum i vrijeme"});
     } catch (CsvFormatGreska e) {
       EvidencijaGresaka.dajInstancu().evidentiraj(e);
     }
@@ -636,7 +649,8 @@ public class Program {
   private void provjeriCsvInfoRedak(CsvRedak infoRedak, String[] stupci) throws CsvFormatGreska {
 
     if (infoRedak.brojElemenata() != stupci.length) {
-      String opis = String.format("Informacijski redak ne sadrži točan broj stupaca! Očekivano: %d, stvarno: %d",
+      String opis = String.format(
+          "Informacijski redak ne sadrži točan broj stupaca! Očekivano: %d, stvarno: %d",
           stupci.length, infoRedak.brojElemenata());
       throw new CsvFormatGreska(opis, infoRedak);
     }
@@ -647,7 +661,8 @@ public class Program {
       String infoStupac = infoRedak.dajString(i, "").trim();
 
       if (!stupac.equalsIgnoreCase(infoStupac)) {
-        String opis = String.format("Informacijski redak ne sadrži točan stupac! Očekivano: %s, stvarno: %s", stupac,
+        String opis = String.format(
+            "Informacijski redak ne sadrži točan stupac! Očekivano: %s, stvarno: %s", stupac,
             infoStupac);
         throw new CsvFormatGreska(opis, infoRedak);
       }

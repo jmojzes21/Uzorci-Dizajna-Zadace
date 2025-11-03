@@ -14,6 +14,7 @@ public class KreatorPrimljeneRezervacije extends KreatorRezervacije {
 
   @Override
   public Rezervacija promijeniVrstu(Rezervacija r) {
+    if (r instanceof PrimljenaRezervacija) {return r;}
     return new PrimljenaRezervacija(r);
   }
 

@@ -43,16 +43,17 @@ public class TuristickaAgencija {
     return aranzmani.get(oznaka);
   }
 
-  public List<Rezervacija> dajRezervacijeAranzmana(int oznaka, boolean prikaziGlavne, boolean prikaziNaCekanju,
-      boolean prikaziOtkazane) {
+  public List<Rezervacija> dajRezervacijeAranzmana(int oznaka, boolean prikaziPrimljeneAktivne,
+      boolean prikaziNaCekanju, boolean prikaziOtkazane) {
 
     Aranzman aranzman = aranzmani.get(oznaka);
     if (aranzman == null) {return null;}
 
     List<Rezervacija> rezultat = new ArrayList<>();
 
-    if (prikaziGlavne) {
-      rezultat.addAll(aranzman.rezervacije());
+    if (prikaziPrimljeneAktivne) {
+      rezultat.addAll(aranzman.primljeneRezervacije());
+      rezultat.addAll(aranzman.aktivneRezervacije());
     }
 
     if (prikaziNaCekanju) {
