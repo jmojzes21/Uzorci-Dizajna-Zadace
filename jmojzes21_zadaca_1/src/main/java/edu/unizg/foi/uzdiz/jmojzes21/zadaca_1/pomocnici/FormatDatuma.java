@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class FormatDatuma {
 
@@ -32,7 +33,7 @@ public class FormatDatuma {
 
     datumFormatorIspis = DateTimeFormatter.ofPattern("dd.MM.yyyy.");
     vrijemeFormatorIspis = DateTimeFormatter.ofPattern("HH:mm");
-    datumVrijemeFormatorIspis = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm");
+    datumVrijemeFormatorIspis = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
   }
 
   public String formatirajDatum(LocalDate datum) {
@@ -50,19 +51,35 @@ public class FormatDatuma {
     return datumVrijeme.format(datumVrijemeFormatorIspis);
   }
 
-  public LocalDate parsirajDatum(String datum) {
-    return LocalDate.parse(datum, datumFormator);
+  public LocalDate parsirajDatum(String datum) throws Exception {
+    try {
+      return LocalDate.parse(datum, datumFormator);
+    } catch (DateTimeParseException e) {
+      throw new Exception(
+          String.format("Nije moguće parsirati datum %s! Točan format: dd.MM.yyyy.", datum));
+    }
   }
 
-  public LocalTime parsirajVrijeme(String vrijeme) {
-    return LocalTime.parse(vrijeme, vrijemeFormator);
+  public LocalTime parsirajVrijeme(String vrijeme) throws Exception {
+    try {
+      return LocalTime.parse(vrijeme, vrijemeFormator);
+    } catch (DateTimeParseException e) {
+      throw new Exception(
+          String.format("Nije moguće parsirati vrijeme %s! Točan format: HH:mm", vrijeme));
+    }
   }
 
-  public LocalDateTime parsirajDatumVrijeme(String datumVrijeme) {
-    return LocalDateTime.parse(datumVrijeme, datumVrijemeFormator);
+  public LocalDateTime parsirajDatumVrijeme(String datumVrijeme) throws Exception {
+    try {
+      return LocalDateTime.parse(datumVrijeme, datumVrijemeFormator);
+    } catch (DateTimeParseException e) {
+      throw new Exception(
+          String.format("Nije moguće parsirati %s! Točan format: dd.MM.yyyy. HH:mm", datumVrijeme));
+    }
   }
 
-  public LocalDateTime parsirajDatumVrijeme(String datumTekst, String vrijemeTekst) {
+  public LocalDateTime parsirajDatumVrijeme(String datumTekst, String vrijemeTekst)
+      throws Exception {
     var datum = parsirajDatum(datumTekst);
     var vrijeme = parsirajVrijeme(vrijemeTekst);
     return LocalDateTime.of(datum, vrijeme);

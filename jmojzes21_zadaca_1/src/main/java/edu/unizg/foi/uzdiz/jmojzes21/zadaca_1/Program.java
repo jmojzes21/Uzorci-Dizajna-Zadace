@@ -8,11 +8,11 @@ import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.CitacOpcija;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.FormatDatuma;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.NeispravnaKomandaGreska;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.RegexKomandeGraditelj;
-import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.StupacTablice;
-import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.TablicniIspisGraditelj;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.csv.CsvCitac;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.csv.CsvFormatGreska;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.csv.CsvRedak;
+import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.tablicni_ispis.StupacTablice;
+import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.tablicni_ispis.TablicniIspisGraditelj;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -277,7 +277,7 @@ public class Program {
 
     var uzorak = new RegexKomandeGraditelj("IRTA")
         .dodajBroj("oznaka")
-        .dodajTekst("filter")
+        .dodajTekstOpcionalno("filter")
         .dajUzorak();
 
     var matcher = uzorak.matcher(komanda);
@@ -288,6 +288,7 @@ public class Program {
 
     int oznaka = Integer.parseInt(matcher.group("oznaka"));
     String filter = matcher.group("filter");
+    if (filter == null) {filter = "PAČO";}
 
     boolean prikaziPrimljeneAktivne = filter.contains("PA");
     boolean prikaziNaCekanju = filter.contains("Č");

@@ -7,6 +7,7 @@ import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.PrimljenaRezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Rezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.RezervacijaNaCekanju;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.FormatDatuma;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -25,6 +26,8 @@ public class TuristickiAgent {
 
   public void zaprimiRezervaciju(Aranzman aranzman, Rezervacija rezervacija) throws Exception {
 
+    provjeriDatumPrimljeneRezervacije(aranzman, rezervacija);
+
     int minPutnika = aranzman.minBrojPutnika();
     int maxPutnika = aranzman.maxBrojPutnika();
 
@@ -42,6 +45,13 @@ public class TuristickiAgent {
     }
 
     dodajPrimljenuRezervaciju(aranzman, rezervacija);
+
+    var rezervacije = dajRezervacijeKorisnika(aranzman, rezervacija.korisnik());
+    if (rezervacije.stream().noneMatch(e -> e.datumVrijeme().isEqual(rezervacija.datumVrijeme()))) {
+      throw new Exception(
+          String.format("Rezervacija korisnika %s za aranžman %d je neispravna te je obrisana.",
+              rezervacija.korisnik(), aranzman.oznaka()));
+    }
 
   }
 
@@ -103,7 +113,13 @@ public class TuristickiAgent {
   private void dodajRezervacijuUAktvine(Aranzman aranzman, Rezervacija rezervacija)
       throws Exception {
 
-    provjeriIspravnostRezervacije(aranzman, rezervacija);
+    try {
+      provjeriIspravnostRezervacije(aranzman, rezervacija);
+    } catch (Exception e) {
+      throw new Exception(
+          String.format("Korisnik %s već ima aktivnu rezervaciju za aranžman %d.",
+              rezervacija.korisnik().punoIme(), aranzman.oznaka()));
+    }
 
     var novaRezervacija = promijeniVrstuRezervacije(rezervacija, new KreatorAktivneRezervacije());
     aranzman.aktivneRezervacije().add(novaRezervacija);
@@ -121,7 +137,18 @@ public class TuristickiAgent {
         "Brisanje rezervacije korisnika %s, aranžman %d, vrijeme %s. Razlog: %s",
         rezervacija.korisnik().punoIme(), rezervacija.oznakaAranzmana(),
         formatDatum.formatirajDatumVrijeme(rezervacija.datumVrijeme()), razlog);
-    System.out.println(opis);
+    EvidencijaGresaka.dajInstancu().evidentiraj(opis);
+  }
+
+  private void provjeriDatumPrimljeneRezervacije(Aranzman aranzman, Rezervacija rezervacija)
+      throws Exception {
+
+    LocalDateTime vrijeme = rezervacija.datumVrijeme();
+
+    if (vrijeme.isAfter(aranzman.pocetniDatum().atStartOfDay())) {
+      String opis = "Datum rezervacije je nakon početka turističkog aranžmana.";
+      throw new Exception(opis);
+    }
   }
 
   // endregion
@@ -175,7 +202,6 @@ public class TuristickiAgent {
       throw new Exception("Nije moguće otkazati rezervaciju!");
     }
 
-    List<Rezervacija> rezervacije = aranzman.aktivneRezervacije();
     Queue<Rezervacija> rezervacijeNaCekanju = aranzman.rezervacijeNaCekanju();
 
     var otkazanaRezervacija = promijeniVrstuRezervacije(rezervacija,
@@ -195,7 +221,7 @@ public class TuristickiAgent {
         }
 
         var novaRezervacija = promijeniVrstuRezervacije(naCekanju, new KreatorAktivneRezervacije());
-        rezervacije.add(novaRezervacija);
+        aranzman.aktivneRezervacije().add(novaRezervacija);
       }
 
 
@@ -205,12 +231,12 @@ public class TuristickiAgent {
 
       var kreatorRezervacije = new KreatorPrimljeneRezervacije();
 
-      List<Rezervacija> trenutneRezervacije = rezervacije.stream()
+      List<Rezervacija> trenutneRezervacije = aranzman.aktivneRezervacije().stream()
           .map(e -> promijeniVrstuRezervacije(e, kreatorRezervacije))
           .toList();
 
-      rezervacije.clear();
-      rezervacije.addAll(trenutneRezervacije);
+      aranzman.aktivneRezervacije().clear();
+      aranzman.primljeneRezervacije().addAll(trenutneRezervacije);
 
     }
 

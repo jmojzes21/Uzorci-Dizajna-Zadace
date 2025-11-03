@@ -22,8 +22,7 @@ public class EvidencijaGresaka {
   public void evidentiraj(String poruka) {
     brojGresaka++;
 
-    System.out.printf("Greška %d\n", brojGresaka);
-    System.out.println(poruka);
+    System.out.printf("[Greška %d] %s\n", brojGresaka, poruka);
   }
 
 }

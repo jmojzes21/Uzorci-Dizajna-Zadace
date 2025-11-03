@@ -4,7 +4,6 @@ import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.FormatDatuma;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 
 public class CsvRedak {
@@ -67,7 +66,7 @@ public class CsvRedak {
     String element = dajElement(i);
     try {
       return FormatDatuma.dajInstancu().parsirajDatum(element);
-    } catch (DateTimeParseException e) {
+    } catch (Exception e) {
       String opis = String.format("Nije moguće pretvoriti %s u datum!", element);
       throw new CsvFormatGreska(opis, this);
     }
@@ -81,7 +80,7 @@ public class CsvRedak {
     String element = dajElement(i);
     try {
       return FormatDatuma.dajInstancu().parsirajVrijeme(element);
-    } catch (DateTimeParseException e) {
+    } catch (Exception e) {
       String opis = String.format("Nije moguće pretvoriti %s u vrijeme!", element);
       throw new CsvFormatGreska(opis, this);
     }
@@ -95,7 +94,7 @@ public class CsvRedak {
     String element = dajElement(i);
     try {
       return FormatDatuma.dajInstancu().parsirajDatumVrijeme(element);
-    } catch (DateTimeParseException e) {
+    } catch (Exception e) {
       String opis = String.format("Nije moguće pretvoriti %s u datum vrijeme!", element);
       throw new CsvFormatGreska(opis, this);
     }

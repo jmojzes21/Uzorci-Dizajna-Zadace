@@ -24,6 +24,14 @@ public class RegexKomandeGraditelj {
     return this;
   }
 
+  public RegexKomandeGraditelj dodajTekstOpcionalno(String naziv) {
+    regex.append("(");
+    regex.append(razmakArgumenata);
+    regex.append(String.format("(?<%s>\\w+)", naziv));
+    regex.append(")?");
+    return this;
+  }
+
   public RegexKomandeGraditelj dodajDatum(String naziv) {
     regex.append(razmakArgumenata);
     regex.append(String.format("(?<%s>\\d+\\.\\d+\\.\\d+\\.?)", naziv));
