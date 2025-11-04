@@ -204,7 +204,7 @@ public class Program {
         .dodajStupac("Min putnika", 12, StupacTablice.PORAVNANJE_DESNO)
         .dodajStupac("Max putnika", 12, StupacTablice.PORAVNANJE_DESNO)
         .napravi();
-
+     
     tablicniIspis.ispisiZaglavlje();
     tablicniIspis.ispisi(aranzmani.stream()
         .map(e -> new String[]{
@@ -553,7 +553,7 @@ public class Program {
       throw new CsvFormatGreska(opis, csvRedak);
     }
 
-    var graditelj = new AranzmanGraditelj();
+    AranzmanGraditelj graditelj = new AranzmanStvarniGraditelj();
 
     int indeks = 0;
     int oznaka = csvRedak.dajInt(indeks++);

@@ -5,89 +5,38 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-public class AranzmanGraditelj {
+public interface AranzmanGraditelj {
 
-  private Aranzman aranzman;
+  AranzmanGraditelj napraviAranzman(int oznaka, String naziv);
 
-  public AranzmanGraditelj() {}
+  AranzmanGraditelj setProgram(String program);
 
-  public AranzmanGraditelj napraviAranzman(int oznaka, String naziv) {
-    aranzman = new Aranzman(oznaka, naziv);
-    return this;
-  }
+  AranzmanGraditelj setPocetniDatum(LocalDate pocetniDatum);
 
-  public AranzmanGraditelj setProgram(String program) {
-    aranzman.setProgram(program);
-    return this;
-  }
+  AranzmanGraditelj setZavrsniDatum(LocalDate zavrsniDatum);
 
-  public AranzmanGraditelj setPocetniDatum(LocalDate pocetniDatum) {
-    aranzman.setPocetniDatum(pocetniDatum);
-    return this;
-  }
+  AranzmanGraditelj setVrijemeKretanja(LocalTime vrijemeKretanja);
 
-  public AranzmanGraditelj setZavrsniDatum(LocalDate zavrsniDatum) {
-    aranzman.setZavrsniDatum(zavrsniDatum);
-    return this;
-  }
+  AranzmanGraditelj setVrijemePovratka(LocalTime vrijemePovratka);
 
-  public AranzmanGraditelj setVrijemeKretanja(LocalTime vrijemeKretanja) {
-    aranzman.setVrijemeKretanja(vrijemeKretanja);
-    return this;
-  }
+  AranzmanGraditelj setCijena(float cijena);
 
-  public AranzmanGraditelj setVrijemePovratka(LocalTime vrijemePovratka) {
-    aranzman.setVrijemePovratka(vrijemePovratka);
-    return this;
-  }
+  AranzmanGraditelj setMinBrojPutnika(int minBrojPutnika);
 
-  public AranzmanGraditelj setCijena(float cijena) {
-    aranzman.setCijena(cijena);
-    return this;
-  }
+  AranzmanGraditelj setMaxBrojPutnika(int maxBrojPutnika);
 
-  public AranzmanGraditelj setMinBrojPutnika(int minBrojPutnika) {
-    aranzman.setMinBrojPutnika(minBrojPutnika);
-    return this;
-  }
+  AranzmanGraditelj setBrojNocenja(int brojNocenja);
 
-  public AranzmanGraditelj setMaxBrojPutnika(int maxBrojPutnika) {
-    aranzman.setMaxBrojPutnika(maxBrojPutnika);
-    return this;
-  }
+  AranzmanGraditelj setBrojDorucka(int brojDorucka);
 
-  public AranzmanGraditelj setBrojNocenja(int brojNocenja) {
-    aranzman.setBrojNocenja(brojNocenja);
-    return this;
-  }
+  AranzmanGraditelj setBrojRuckova(int brojRuckova);
 
-  public AranzmanGraditelj setBrojDorucka(int brojDorucka) {
-    aranzman.setBrojDorucka(brojDorucka);
-    return this;
-  }
+  AranzmanGraditelj setBrojVecera(int brojVecera);
 
-  public AranzmanGraditelj setBrojRuckova(int brojRuckova) {
-    aranzman.setBrojRuckova(brojRuckova);
-    return this;
-  }
+  AranzmanGraditelj setDoplataZaJednokrevetnuSobu(float doplataZaJednokrevetnuSobu);
 
-  public AranzmanGraditelj setBrojVecera(int brojVecera) {
-    aranzman.setBrojVecera(brojVecera);
-    return this;
-  }
+  AranzmanGraditelj setPrijevoz(List<String> prijevoz);
 
-  public AranzmanGraditelj setDoplataZaJednokrevetnuSobu(float doplataZaJednokrevetnuSobu) {
-    aranzman.setDoplataZaJednokrevetnuSobu(doplataZaJednokrevetnuSobu);
-    return this;
-  }
-
-  public AranzmanGraditelj setPrijevoz(List<String> prijevoz) {
-    aranzman.setPrijevoz(prijevoz);
-    return this;
-  }
-
-  public Aranzman dajAranzman() {
-    return aranzman;
-  }
+  Aranzman dajAranzman();
 
 }

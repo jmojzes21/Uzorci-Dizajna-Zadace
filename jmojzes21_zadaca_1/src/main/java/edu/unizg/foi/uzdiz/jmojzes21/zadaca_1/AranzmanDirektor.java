@@ -7,8 +7,8 @@ public class AranzmanDirektor {
 
   private final AranzmanGraditelj graditelj;
 
-  public AranzmanDirektor() {
-    graditelj = new AranzmanGraditelj();
+  public AranzmanDirektor(AranzmanGraditelj graditelj) {
+    this.graditelj = graditelj;
   }
 
   public Aranzman napraviAranzman(int oznaka, String naziv, String program, LocalDate pocetniDatum,
