@@ -2,7 +2,7 @@ package edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci;
 
 import java.time.LocalDateTime;
 
-public class Rezervacija {
+public abstract class Rezervacija {
 
   private Korisnik korisnik;
 
@@ -21,13 +21,13 @@ public class Rezervacija {
     datumVrijeme = r.datumVrijeme;
   }
 
+  public abstract String vrsta();
+
   public Korisnik korisnik() {return korisnik;}
 
   public int oznakaAranzmana() {return oznakaAranzmana;}
 
   public LocalDateTime datumVrijeme() {return datumVrijeme;}
-
-  public String vrsta() {return null;}
 
   public void setKorisnik(Korisnik korisnik) {this.korisnik = korisnik;}
 
