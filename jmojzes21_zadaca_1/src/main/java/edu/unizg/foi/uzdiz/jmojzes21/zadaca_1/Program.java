@@ -11,7 +11,6 @@ import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.RegexKomandeGraditelj;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.csv.CsvCitac;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.csv.CsvFormatGreska;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.csv.CsvRedak;
-import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.tablicni_ispis.StupacTablice;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.tablicni_ispis.TablicniIspisGraditelj;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -193,30 +192,26 @@ public class Program {
 
     var formatDatuma = FormatDatuma.dajInstancu();
 
-    var tablicniIspis = new TablicniIspisGraditelj()
-        .dodajStupac("Oznaka", 6, StupacTablice.PORAVNANJE_DESNO)
-        .dodajStupac("Naziv", 40)
-        .dodajStupac("Početni datum", 14)
-        .dodajStupac("Završni datum", 14)
-        .dodajStupac("Vrijeme kretanja", 18)
-        .dodajStupac("Vrijeme povratka", 18)
-        .dodajStupac("Cijena", 12, StupacTablice.PORAVNANJE_DESNO)
-        .dodajStupac("Min putnika", 12, StupacTablice.PORAVNANJE_DESNO)
-        .dodajStupac("Max putnika", 12, StupacTablice.PORAVNANJE_DESNO)
+    var tablicniIspis = new TablicniIspisGraditelj<Aranzman>()
+        .dodajStupac("Oznaka", 6, e -> Integer.toString(e.oznaka()))
+        .poravnajDesno()
+        .dodajStupac("Naziv", 40, e -> e.naziv())
+        .dodajStupac("Početni datum", 14, e -> formatDatuma.formatirajDatum(e.pocetniDatum()))
+        .dodajStupac("Završni datum", 14, e -> formatDatuma.formatirajDatum(e.zavrsniDatum()))
+        .dodajStupac("Vrijeme kretanja", 18,
+            e -> formatDatuma.formatirajVrijeme(e.vrijemeKretanja()))
+        .dodajStupac("Vrijeme povratka", 18,
+            e -> formatDatuma.formatirajVrijeme(e.vrijemePovratka()))
+        .dodajStupac("Cijena", 12, e -> String.format("%.2f", e.cijena()))
+        .poravnajDesno()
+        .dodajStupac("Min putnika", 12, e -> Integer.toString(e.minBrojPutnika()))
+        .poravnajDesno()
+        .dodajStupac("Max putnika", 12, e -> Integer.toString(e.maxBrojPutnika()))
+        .poravnajDesno()
         .napravi();
-     
+
     tablicniIspis.ispisiZaglavlje();
-    tablicniIspis.ispisi(aranzmani.stream()
-        .map(e -> new String[]{
-            Integer.toString(e.oznaka()), e.naziv(),
-            formatDatuma.formatirajDatum(e.pocetniDatum()),
-            formatDatuma.formatirajDatum(e.zavrsniDatum()),
-            formatDatuma.formatirajVrijeme(e.vrijemeKretanja()),
-            formatDatuma.formatirajVrijeme(e.vrijemePovratka()),
-            String.format("%.2f", e.cijena()),
-            Integer.toString(e.minBrojPutnika()), Integer.toString(e.maxBrojPutnika())
-        })
-        .toList());
+    tablicniIspis.ispisi(aranzmani);
 
   }
 
@@ -340,30 +335,23 @@ public class Program {
 
     var formatDatuma = FormatDatuma.dajInstancu();
 
-    var tablicniIspis = new TablicniIspisGraditelj()
-        .dodajStupac("Ime", 18)
-        .dodajStupac("Prezime", 18)
-        .dodajStupac("Datum i vrijeme", 24)
-        .dodajStupac("Vrsta", 18)
-        .dodajStupac("Datum vrijeme otkaza", 24)
+    var tablicniIspis = new TablicniIspisGraditelj<Rezervacija>()
+        .dodajStupac("Ime", 18, e -> e.korisnik().ime())
+        .dodajStupac("Prezime", 18, e -> e.korisnik().prezime())
+        .dodajStupac("Datum i vrijeme", 24,
+            e -> formatDatuma.formatirajDatumVrijeme(e.datumVrijeme()))
+        .dodajStupac("Vrsta", 18, e -> e.vrsta())
+        .dodajStupac("Datum vrijeme otkaza", 24, e -> {
+          if (e instanceof OtkazanaRezervacija r) {
+            return formatDatuma.formatirajDatumVrijeme(r.datumVrijemeOtkaza());
+          }
+          return "";
+        })
         .prikazujStupac(prikaziOtkazane)
         .napravi();
 
     tablicniIspis.ispisiZaglavlje();
-    tablicniIspis.ispisi(rezervacije.stream()
-        .map(e -> {
-          String datumVrijmeOtkaza = "";
-          if (prikaziOtkazane && e instanceof OtkazanaRezervacija) {
-            datumVrijmeOtkaza = formatDatuma.formatirajDatumVrijeme(
-                ((OtkazanaRezervacija) e).datumVrijemeOtkaza());
-          }
-          return new String[]{
-              e.korisnik().ime(), e.korisnik().prezime(),
-              formatDatuma.formatirajDatumVrijeme(e.datumVrijeme()),
-              e.vrsta(), datumVrijmeOtkaza
-          };
-        })
-        .toList());
+    tablicniIspis.ispisi(rezervacije);
 
   }
 
@@ -372,23 +360,17 @@ public class Program {
     var formatDatuma = FormatDatuma.dajInstancu();
     var agencija = TuristickaAgencija.dajInstancu();
 
-    var tablicniIspis = new TablicniIspisGraditelj()
-        .dodajStupac("Datum i vrijeme", 24)
-        .dodajStupac("Oznaka aranžmana", 16)
-        .dodajStupac("Naziv aranžmana", 20)
-        .dodajStupac("Vrsta", 18)
+    var tablicniIspis = new TablicniIspisGraditelj<Rezervacija>()
+
+        .dodajStupac("Datum i vrijeme", 24,
+            e -> formatDatuma.formatirajDatumVrijeme(e.datumVrijeme()))
+        .dodajStupac("Oznaka aranžmana", 16, e -> Integer.toString(e.oznakaAranzmana()))
+        .dodajStupac("Naziv aranžmana", 20, e -> agencija.dajAranzman(e.oznakaAranzmana()).naziv())
+        .dodajStupac("Vrsta", 18, e -> e.vrsta())
         .napravi();
 
     tablicniIspis.ispisiZaglavlje();
-    tablicniIspis.ispisi(rezervacije.stream()
-        .map(e -> {
-          String nazivAranzmana = agencija.dajAranzman(e.oznakaAranzmana()).naziv();
-          return new String[]{
-              formatDatuma.formatirajDatumVrijeme(e.datumVrijeme()),
-              Integer.toString(e.oznakaAranzmana()), nazivAranzmana, e.vrsta()
-          };
-        })
-        .toList());
+    tablicniIspis.ispisi(rezervacije);
 
   }
 
