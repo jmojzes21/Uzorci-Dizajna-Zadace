@@ -136,7 +136,7 @@ public class TuristickiAgent {
     String opis = String.format(
         "Brisanje rezervacije korisnika %s, aranžman %d, vrijeme %s. Razlog: %s",
         rezervacija.korisnik().punoIme(), rezervacija.oznakaAranzmana(),
-        formatDatum.formatirajDatumVrijeme(rezervacija.datumVrijeme()), razlog);
+        formatDatum.formatiraj(rezervacija.datumVrijeme()), razlog);
     EvidencijaGresaka.dajInstancu().evidentiraj(opis);
   }
 

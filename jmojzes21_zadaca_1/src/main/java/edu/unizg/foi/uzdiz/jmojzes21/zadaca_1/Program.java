@@ -196,12 +196,10 @@ public class Program {
         .dodajStupac("Oznaka", 6, e -> Integer.toString(e.oznaka()))
         .poravnajDesno()
         .dodajStupac("Naziv", 40, e -> e.naziv())
-        .dodajStupac("Početni datum", 14, e -> formatDatuma.formatirajDatum(e.pocetniDatum()))
-        .dodajStupac("Završni datum", 14, e -> formatDatuma.formatirajDatum(e.zavrsniDatum()))
-        .dodajStupac("Vrijeme kretanja", 18,
-            e -> formatDatuma.formatirajVrijeme(e.vrijemeKretanja()))
-        .dodajStupac("Vrijeme povratka", 18,
-            e -> formatDatuma.formatirajVrijeme(e.vrijemePovratka()))
+        .dodajStupac("Početni datum", 14, e -> formatDatuma.formatiraj(e.pocetniDatum()))
+        .dodajStupac("Završni datum", 14, e -> formatDatuma.formatiraj(e.zavrsniDatum()))
+        .dodajStupac("Vrijeme kretanja", 18, e -> formatDatuma.formatiraj(e.vrijemeKretanja()))
+        .dodajStupac("Vrijeme povratka", 18, e -> formatDatuma.formatiraj(e.vrijemePovratka()))
         .dodajStupac("Cijena", 12, e -> String.format("%.2f", e.cijena()))
         .poravnajDesno()
         .dodajStupac("Min putnika", 12, e -> Integer.toString(e.minBrojPutnika()))
@@ -248,12 +246,10 @@ public class Program {
     System.out.printf("Oznaka: %d\n", a.oznaka());
     System.out.printf("Naziv: %s\n", a.naziv());
     System.out.printf("Program: %s\n", a.program().replace("\\n", "\n"));
-    System.out.printf("Početni datum: %s\n", formatDatuma.formatirajDatum(a.pocetniDatum()));
-    System.out.printf("Završni datum: %s\n", formatDatuma.formatirajDatum(a.zavrsniDatum()));
-    System.out.printf("Vrijeme kretanja: %s\n",
-        formatDatuma.formatirajVrijeme(a.vrijemeKretanja()));
-    System.out.printf("Vrijeme povratka: %s\n",
-        formatDatuma.formatirajVrijeme(a.vrijemePovratka()));
+    System.out.printf("Početni datum: %s\n", formatDatuma.formatiraj(a.pocetniDatum()));
+    System.out.printf("Završni datum: %s\n", formatDatuma.formatiraj(a.zavrsniDatum()));
+    System.out.printf("Vrijeme kretanja: %s\n", formatDatuma.formatiraj(a.vrijemeKretanja()));
+    System.out.printf("Vrijeme povratka: %s\n", formatDatuma.formatiraj(a.vrijemePovratka()));
     System.out.printf("Cijena: %.2f\n", a.cijena());
     System.out.printf("Min broj putnika: %d\n", a.minBrojPutnika());
     System.out.printf("Max broj putnika: %d\n", a.maxBrojPutnika());
@@ -338,12 +334,11 @@ public class Program {
     var tablicniIspis = new TablicniIspisGraditelj<Rezervacija>()
         .dodajStupac("Ime", 18, e -> e.korisnik().ime())
         .dodajStupac("Prezime", 18, e -> e.korisnik().prezime())
-        .dodajStupac("Datum i vrijeme", 24,
-            e -> formatDatuma.formatirajDatumVrijeme(e.datumVrijeme()))
+        .dodajStupac("Datum i vrijeme", 24, e -> formatDatuma.formatiraj(e.datumVrijeme()))
         .dodajStupac("Vrsta", 18, e -> e.vrsta())
         .dodajStupac("Datum vrijeme otkaza", 24, e -> {
           if (e instanceof OtkazanaRezervacija r) {
-            return formatDatuma.formatirajDatumVrijeme(r.datumVrijemeOtkaza());
+            return formatDatuma.formatiraj(r.datumVrijemeOtkaza());
           }
           return "";
         })
@@ -361,9 +356,7 @@ public class Program {
     var agencija = TuristickaAgencija.dajInstancu();
 
     var tablicniIspis = new TablicniIspisGraditelj<Rezervacija>()
-
-        .dodajStupac("Datum i vrijeme", 24,
-            e -> formatDatuma.formatirajDatumVrijeme(e.datumVrijeme()))
+        .dodajStupac("Datum i vrijeme", 24, e -> formatDatuma.formatiraj(e.datumVrijeme()))
         .dodajStupac("Oznaka aranžmana", 16, e -> Integer.toString(e.oznakaAranzmana()))
         .dodajStupac("Naziv aranžmana", 20, e -> agencija.dajAranzman(e.oznakaAranzmana()).naziv())
         .dodajStupac("Vrsta", 18, e -> e.vrsta())

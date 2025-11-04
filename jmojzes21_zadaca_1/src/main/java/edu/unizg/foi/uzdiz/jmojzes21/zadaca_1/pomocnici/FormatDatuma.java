@@ -36,17 +36,17 @@ public class FormatDatuma {
     datumVrijemeFormatorIspis = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
   }
 
-  public String formatirajDatum(LocalDate datum) {
+  public String formatiraj(LocalDate datum) {
     if (datum == null) {return "";}
     return datum.format(datumFormatorIspis);
   }
 
-  public String formatirajVrijeme(LocalTime vrijeme) {
+  public String formatiraj(LocalTime vrijeme) {
     if (vrijeme == null) {return "";}
     return vrijeme.format(vrijemeFormatorIspis);
   }
 
-  public String formatirajDatumVrijeme(LocalDateTime datumVrijeme) {
+  public String formatiraj(LocalDateTime datumVrijeme) {
     if (datumVrijeme == null) {return "";}
     return datumVrijeme.format(datumVrijemeFormatorIspis);
   }
