@@ -2,6 +2,11 @@ package edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.tablicni_ispis;
 
 import java.util.function.Function;
 
+/**
+ * Stupac tablice kojeg koristi tablični ispis.
+ *
+ * @param <T> tip klase za koju se odnosi tablični ispis
+ */
 public class StupacTablice<T> {
 
   private String naziv;

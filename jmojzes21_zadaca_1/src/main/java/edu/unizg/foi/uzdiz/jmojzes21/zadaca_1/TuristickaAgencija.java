@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Turistička agencija.
+ */
 public class TuristickaAgencija {
 
   private static TuristickaAgencija turistickaAgencija;
@@ -21,16 +24,31 @@ public class TuristickaAgencija {
     return turistickaAgencija;
   }
 
+  /**
+   * Mapa turističkih aranžmana. Ključ je oznaka aranžmana, a vrijednost je objekt aranžmana.
+   */
   private final Map<Integer, Aranzman> aranzmani = new HashMap<>();
 
   public TuristickaAgencija() {}
 
+  /**
+   * Vrati listu svih aranžmana.
+   *
+   * @return lista aranžmana
+   */
   public List<Aranzman> dajAranzmane() {
     return aranzmani.values().stream()
         .sorted(Comparator.comparing(Aranzman::oznaka))
         .toList();
   }
 
+  /**
+   * Vrati listu aranžmana koji se odvijanju unutar određenog razdoblja.
+   *
+   * @param datumOd početni datum razdovlja
+   * @param datumDo završni datum razdoblja
+   * @return lista aranžmana
+   */
   public List<Aranzman> dajAranzmane(LocalDate datumOd, LocalDate datumDo) {
     return aranzmani.values().stream()
         .filter(e -> e.pocetniDatum().compareTo(datumOd) >= 0
@@ -39,10 +57,25 @@ public class TuristickaAgencija {
         .toList();
   }
 
+  /**
+   * Vrati aranžman prema oznaci.
+   *
+   * @param oznaka oznaka aranžmana
+   * @return aranžman ili null
+   */
   public Aranzman dajAranzman(int oznaka) {
     return aranzmani.get(oznaka);
   }
 
+  /**
+   * Dohvati sve rezervacije određenog aranžmana.
+   *
+   * @param oznaka                  oznaka
+   * @param prikaziPrimljeneAktivne prikaži primljene i aktivne rezervacije
+   * @param prikaziNaCekanju        prikaži rezervacije na čekanju
+   * @param prikaziOtkazane         prikaži otkazane rezervacije
+   * @return lista rezervacija
+   */
   public List<Rezervacija> dajRezervacijeAranzmana(int oznaka, boolean prikaziPrimljeneAktivne,
       boolean prikaziNaCekanju, boolean prikaziOtkazane) {
 
@@ -69,6 +102,13 @@ public class TuristickaAgencija {
         .toList();
   }
 
+  /**
+   * Dohvati sve rezervacije sa svih aranžmana određenog korisnika.
+   *
+   * @param ime     ime korisnika
+   * @param prezime prezime korisnika
+   * @return rezervacije korisnika
+   */
   public List<Rezervacija> dajRezervacijeKorisnika(String ime, String prezime) {
 
     var korisnik = new Korisnik(ime, prezime);
@@ -81,6 +121,12 @@ public class TuristickaAgencija {
         .toList();
   }
 
+  /**
+   * Zaprimi rezervaciju korisnika
+   *
+   * @param rezervacija rezervacija
+   * @throws Exception zaprimanje rezervacije nije uspjelo
+   */
   public void zaprimiRezervaciju(Rezervacija rezervacija) throws Exception {
 
     Aranzman aranzman = aranzmani.get(rezervacija.oznakaAranzmana());
@@ -95,6 +141,14 @@ public class TuristickaAgencija {
 
   }
 
+  /**
+   * Otkaži rezervaciju korisnika
+   *
+   * @param ime     ime
+   * @param prezime prezime
+   * @param oznaka  oznaka aranžmana
+   * @throws Exception otkazivanje rezervacije nije uspjelo
+   */
   public void otkaziRezervaciju(String ime, String prezime, int oznaka) throws Exception {
 
     Aranzman aranzman = aranzmani.get(oznaka);
@@ -110,6 +164,11 @@ public class TuristickaAgencija {
 
   }
 
+  /**
+   * Učitaj turističke aranžmane.
+   *
+   * @param aranzmani aranžmani
+   */
   public void ucitajAranzmane(List<Aranzman> aranzmani) {
     this.aranzmani.clear();
 

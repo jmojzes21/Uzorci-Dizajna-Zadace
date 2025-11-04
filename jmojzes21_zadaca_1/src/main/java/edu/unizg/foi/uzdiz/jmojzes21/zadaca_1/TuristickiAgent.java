@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
+/**
+ * Turistički agent obavlja zaprimanje i otkazivanje rezervacija korisnika.
+ */
 public class TuristickiAgent {
 
   private final Map<Integer, Aranzman> aranzmani;
@@ -24,6 +27,13 @@ public class TuristickiAgent {
 
   // region Zaprimi rezervaciju
 
+  /**
+   * Zaprimi rezervaciju
+   *
+   * @param aranzman    aranžman
+   * @param rezervacija rezervacija
+   * @throws Exception zaprimanje nije uspjelo
+   */
   public void zaprimiRezervaciju(Aranzman aranzman, Rezervacija rezervacija) throws Exception {
 
     provjeriDatumPrimljeneRezervacije(aranzman, rezervacija);
@@ -155,6 +165,13 @@ public class TuristickiAgent {
 
   // region Otkaži rezervaciju
 
+  /**
+   * Otkaži rezervaciju korisnika za aranžman.
+   *
+   * @param aranzman aranžman
+   * @param korisnik korisnik
+   * @throws Exception otkazivanje nije uspjelo
+   */
   public void otkaziRezervaciju(Aranzman aranzman, Korisnik korisnik) throws Exception {
 
     List<Rezervacija> rezervacije = dajRezervacijeKorisnika(aranzman, korisnik);
@@ -259,6 +276,13 @@ public class TuristickiAgent {
 
   // region Ostalo
 
+  /**
+   * Provjeri je li rezervacija ispravna.
+   *
+   * @param aranzman    aranžman
+   * @param rezervacija rezervacija
+   * @throws Exception rezervacija nije ispravna
+   */
   private void provjeriIspravnostRezervacije(Aranzman aranzman, Rezervacija rezervacija)
       throws Exception {
 
@@ -283,6 +307,14 @@ public class TuristickiAgent {
     }
   }
 
+  /**
+   * Filtriraj rezervacije pri čemu korisnik može imati samo jednu rezervaciju. Ostavlja se samo
+   * najstarija rezervacija korisnika, ostale se brišu.
+   *
+   * @param rezervacije
+   * @param obrisaneRezervacije rezervacije koje su obrisane, tj. duplikati su
+   * @return rezervacije
+   */
   private List<Rezervacija> filtrirajDuplikateRezervacija(List<Rezervacija> rezervacije,
       List<Rezervacija> obrisaneRezervacije) {
 
@@ -322,6 +354,13 @@ public class TuristickiAgent {
     return kreatorRezervacije.promijeniVrstu(rezervacija);
   }
 
+  /**
+   * Provjeri preklapaju li se 2 aranćmana prema datumima početka i kraja
+   *
+   * @param a1 aranžman 1
+   * @param a2 aranžman 2
+   * @return true ako se aranžmani preklapaju
+   */
   private boolean aranzmaniSePreklapaju(Aranzman a1, Aranzman a2) {
     if (a1.pocetniDatum().compareTo(a2.pocetniDatum()) > 0) {
       Aranzman a3 = a1;
@@ -335,10 +374,26 @@ public class TuristickiAgent {
 
   // region Dohvaćanje rezervacija korisnika
 
+  /**
+   * Daj sve rezervacije korisnika za određeni aranžman. Uključuje: primljene, aktivne, na čekanju
+   *
+   * @param aranzman aranžman
+   * @param korisnik korisnik
+   * @return rezervacije korisnika
+   */
   public List<Rezervacija> dajRezervacijeKorisnika(Aranzman aranzman, Korisnik korisnik) {
     return dajRezervacijeKorisnika(aranzman, korisnik, false);
   }
 
+  /**
+   * Daj sve rezervacije korisnika za određeni aranžman. Uključuje: primljene, aktivne, na čekanju,
+   * otkazane
+   *
+   * @param aranzman        aranžman
+   * @param korisnik        korisnik
+   * @param prikaziOtkazane prikaži otkazane rezervacije
+   * @return rezervacije korisnika
+   */
   public List<Rezervacija> dajRezervacijeKorisnika(Aranzman aranzman, Korisnik korisnik,
       boolean prikaziOtkazane) {
     List<Rezervacija> rezultat = new ArrayList<>();
@@ -354,10 +409,23 @@ public class TuristickiAgent {
     return rezultat;
   }
 
+  /**
+   * Daj sve rezervacije korisnika za sve aranžmane. Uključuje: primljene, aktivne, na čekanju
+   *
+   * @param korisnik korisnik
+   * @return rezervacije korisnika
+   */
   public List<Rezervacija> dajSveRezervacijeKorisnika(Korisnik korisnik) {
     return dajSveRezervacijeKorisnika(korisnik, false);
   }
 
+  /**
+   * Daj sve rezervacije korisnika za sve aranžmane. Uključuje: primljene, aktivne, na čekanju,
+   * otkazane
+   *
+   * @param korisnik korisnik
+   * @return rezervacije korisnika
+   */
   public List<Rezervacija> dajSveRezervacijeKorisnika(Korisnik korisnik, boolean prikaziOtkazane) {
     List<Rezervacija> rezultat = new ArrayList<>();
 

@@ -2,6 +2,9 @@ package edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci;
 
 import java.util.Objects;
 
+/**
+ * Sadrži podatke o korisniku (osobi).
+ */
 public class Korisnik {
 
   private String ime;

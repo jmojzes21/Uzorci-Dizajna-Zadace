@@ -6,6 +6,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
+/**
+ * Sadrži informacije o csv retku.
+ */
 public class CsvRedak {
 
   private final String linija;

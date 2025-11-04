@@ -5,6 +5,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+/**
+ * Graditelj za turistički aranžman.
+ */
 public interface AranzmanGraditelj {
 
   AranzmanGraditelj napraviAranzman(int oznaka, String naziv);

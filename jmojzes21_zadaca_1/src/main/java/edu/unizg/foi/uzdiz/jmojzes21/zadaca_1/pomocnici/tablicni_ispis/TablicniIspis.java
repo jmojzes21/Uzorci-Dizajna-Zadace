@@ -2,6 +2,11 @@ package edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.pomocnici.tablicni_ispis;
 
 import java.util.List;
 
+/**
+ * Omogućuje ispis u obliku tablice za neki tip klase
+ *
+ * @param <T> tip klase za koju se odnosi tablični ispis
+ */
 public class TablicniIspis<T> {
 
   private final List<StupacTablice<T>> stupci;
@@ -10,6 +15,9 @@ public class TablicniIspis<T> {
     this.stupci = stupci;
   }
 
+  /**
+   * Ispisuje zaglavlje tablice, odnosno nazive stupaca.
+   */
   public void ispisiZaglavlje() {
     for (var stupac : stupci) {
       if (!stupac.prikaziStupac()) {continue;}
@@ -19,12 +27,22 @@ public class TablicniIspis<T> {
     System.out.println("|");
   }
 
+  /**
+   * Ispiši sve elemente svaki u jedan red.
+   *
+   * @param elementi elementi
+   */
   public void ispisi(List<T> elementi) {
     for (var e : elementi) {
       ispisi(e);
     }
   }
 
+  /**
+   * Ispiši jedan element u jedan red.
+   *
+   * @param element element
+   */
   public void ispisi(T element) {
     for (StupacTablice<T> stupac : stupci) {
       if (!stupac.prikaziStupac()) {continue;}

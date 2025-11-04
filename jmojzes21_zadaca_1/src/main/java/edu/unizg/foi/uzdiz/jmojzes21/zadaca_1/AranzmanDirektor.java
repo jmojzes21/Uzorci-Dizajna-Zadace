@@ -3,6 +3,9 @@ package edu.unizg.foi.uzdiz.jmojzes21.zadaca_1;
 import edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.podaci.Aranzman;
 import java.time.LocalDate;
 
+/**
+ * Direktor za izgradnju turističkih aranžmana.
+ */
 public class AranzmanDirektor {
 
   private final AranzmanGraditelj graditelj;
@@ -11,6 +14,19 @@ public class AranzmanDirektor {
     this.graditelj = graditelj;
   }
 
+  /**
+   * Napravi turistički aranžman s obaveznim podacima.
+   *
+   * @param oznaka       oznaka
+   * @param naziv        naziv
+   * @param program      program
+   * @param pocetniDatum početni datum
+   * @param zavrsniDatum završni datum
+   * @param cijena       cijena
+   * @param minPutnika   min broj putnika
+   * @param maxPutnika   max borj putnika
+   * @return turistički aranžman
+   */
   public Aranzman napraviAranzman(int oznaka, String naziv, String program, LocalDate pocetniDatum,
       LocalDate zavrsniDatum, float cijena, int minPutnika, int maxPutnika) {
     return graditelj.napraviAranzman(oznaka, naziv)

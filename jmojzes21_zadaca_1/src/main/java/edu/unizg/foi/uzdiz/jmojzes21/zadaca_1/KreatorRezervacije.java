@@ -6,8 +6,23 @@ import java.time.LocalDateTime;
 
 public abstract class KreatorRezervacije {
 
-  public abstract Rezervacija napraviRezervaciju(Korisnik korisnik, int oznaka, LocalDateTime datumVrijeme);
+  /**
+   * Napravi novi objekt rezervacije.
+   *
+   * @param korisnik     korisnik rezervacije
+   * @param oznaka       oznaka turističkog aranžmana
+   * @param datumVrijeme datum i vrijeme rezervacije
+   * @return rezervacija
+   */
+  public abstract Rezervacija napraviRezervaciju(Korisnik korisnik, int oznaka,
+      LocalDateTime datumVrijeme);
 
+  /**
+   * Promijeni tip već postojećeg objekta rezervacije.
+   *
+   * @param r rezervacija
+   * @return rezervacija određenog tipa
+   */
   public abstract Rezervacija promijeniVrstu(Rezervacija r);
 
 }

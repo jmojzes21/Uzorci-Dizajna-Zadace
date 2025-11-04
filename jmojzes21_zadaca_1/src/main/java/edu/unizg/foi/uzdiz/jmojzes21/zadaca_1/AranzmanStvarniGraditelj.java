@@ -5,6 +5,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+/**
+ * Konkretni graditelj za turistički aranžman.
+ */
 public class AranzmanStvarniGraditelj implements AranzmanGraditelj {
 
   private Aranzman aranzman;

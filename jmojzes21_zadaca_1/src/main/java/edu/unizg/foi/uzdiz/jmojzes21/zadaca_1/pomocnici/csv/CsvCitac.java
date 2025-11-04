@@ -5,24 +5,57 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Omogućuje parsiranje csv zapisa.
+ */
 public class CsvCitac {
 
+  /**
+   * Znak odvajanja csv retka.
+   */
   private final char znakOdvajanja;
 
+  /**
+   * Lista svih csv redaka.
+   */
   private final List<CsvRedak> csvRedci = new ArrayList<>();
 
+  /**
+   * Trenutna linija koja se obrađuje.
+   */
   String linija = null;
+
+  /**
+   * Broj trenutne linije koja se obrađuje.
+   */
   int brojLinije = 0;
+
+  /**
+   * Trenutna pozicija znaka unutar linije koja se obrađuje.
+   */
   int pozicija = 0;
 
+  /**
+   * Kreiraj objekt sa zadanim znakom odvajanja ",".
+   */
   public CsvCitac() {
     this(',');
   }
 
+  /**
+   * Kreiraj objekt sa znakom odvajanja
+   *
+   * @param znakOdvajanja znak odvajanja
+   */
   public CsvCitac(char znakOdvajanja) {
     this.znakOdvajanja = znakOdvajanja;
   }
 
+  /**
+   * Učitaj i parsiraj csv zapis
+   *
+   * @param csv csv zapis
+   */
   public void ucitajCsv(String csv) {
 
     csvRedci.clear();
@@ -49,8 +82,16 @@ public class CsvCitac {
     pozicija = 0;
   }
 
+  /**
+   * Vraća sve csv retke koji su učitani iz csv zapisa.
+   *
+   * @return lista csv redaka
+   */
   public List<CsvRedak> csvRedci() {return csvRedci;}
 
+  /**
+   * Obradi trenutnu csv liniju.
+   */
   private void obradiLiniju() {
 
     pozicija = 0;
@@ -65,6 +106,11 @@ public class CsvCitac {
     csvRedci.add(redak);
   }
 
+  /**
+   * Parsiraj elemente trenutne csv linije
+   *
+   * @return lista elemenata
+   */
   private List<String> parsirajElementeLinije() {
     List<String> elementi = new ArrayList<>();
 
@@ -78,6 +124,11 @@ public class CsvCitac {
     return elementi;
   }
 
+  /**
+   * Vraća sljedeći element unutar trenutne csv linije.
+   *
+   * @return sljedeći element ili null ako je prazni stupac
+   */
   private String dajSljedeciElement() {
 
     if (pozicija >= linija.length()) {
@@ -121,6 +172,9 @@ public class CsvCitac {
     return element;
   }
 
+  /**
+   * Postavlja poziciju unutar trenutne linije na prvi znak koji nije razmka.
+   */
   private void preskociRazmake() {
     while (linija.charAt(pozicija) == ' ') {
       pozicija++;

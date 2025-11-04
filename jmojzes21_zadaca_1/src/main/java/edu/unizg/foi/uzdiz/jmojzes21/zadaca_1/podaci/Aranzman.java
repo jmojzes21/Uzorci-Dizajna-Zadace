@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
+/**
+ * Turistički aranžman.
+ */
 public class Aranzman {
 
   private int oznaka;
@@ -32,7 +35,7 @@ public class Aranzman {
   private float doplataZaJednokrevetnuSobu;
 
   private List<String> prijevoz;
-
+ 
   private final List<Rezervacija> primljeneRezervacije = new ArrayList<>();
   private final List<Rezervacija> aktivneRezervacije = new ArrayList<>();
 
@@ -44,10 +47,18 @@ public class Aranzman {
     this.naziv = naziv;
   }
 
+  /**
+   *
+   * @return broj primljenih rezervacija
+   */
   public int brojPrimljenih() {
     return primljeneRezervacije.size();
   }
 
+  /**
+   *
+   * @return broj aktivnih rezervacija
+   */
   public int brojAktivnih() {
     return aktivneRezervacije.size();
   }
