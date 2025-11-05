@@ -100,6 +100,10 @@ public class Program {
         Map.entry("or", "ORTA")
     );
 
+    if (komanda.isEmpty()) {
+      return;
+    }
+
     String naziv = dajNazivKomande(komanda);
 
     for (var e : alternativeKomandi.entrySet()) {
