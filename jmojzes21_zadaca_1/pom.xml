@@ -76,7 +76,7 @@
             <manifest>
               <addClasspath>true</addClasspath>
               <classpathPrefix>libs/</classpathPrefix>
-              <mainClass>edu.unizg.foi.uzdiz.jmojzes21.zadaca_1.Program</mainClass>
+              <mainClass>edu.unizg.foi.uzdiz.jmojzes21.Program</mainClass>
             </manifest>
           </archive>
         </configuration>
