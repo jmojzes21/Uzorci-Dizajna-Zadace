@@ -259,7 +259,7 @@ public class Program {
     System.out.printf("Max broj putnika: %d\n", a.maxBrojPutnika());
     System.out.printf("Broj noćenja: %d\n", a.brojNocenja());
     System.out.printf("Doplata za jednokrevetnu sobu: %.2f\n", a.doplataZaJednokrevetnuSobu());
-    System.out.printf("Prijevoz: %s\n", String.join(", ", a.prijevoz()));
+    System.out.printf("Prijevoz: %s\n", a.prijevoz() != null ? String.join(", ", a.prijevoz()) : "nema");
     System.out.printf("Broj doručka: %d\n", a.brojDorucka());
     System.out.printf("Broj ručkova: %d\n", a.brojRuckova());
     System.out.printf("Broj večera: %d\n", a.brojVecera());
