@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Program {
@@ -90,11 +91,27 @@ public class Program {
 
   private void obradiKomanduKorisnika(String komanda) throws Exception {
 
+    Map<String, String> alternativeKomandi = Map.ofEntries(
+        Map.entry("a", "ITAK"),
+        Map.entry("da", "ITAP"),
+        Map.entry("ra", "IRTA"),
+        Map.entry("rk", "IRO"),
+        Map.entry("dr", "DRTA"),
+        Map.entry("or", "ORTA")
+    );
+
     if (komanda.isEmpty()) {
       return;
     }
 
     String naziv = dajNazivKomande(komanda);
+
+    for (var e : alternativeKomandi.entrySet()) {
+      if (naziv.equals(e.getKey())) {
+        naziv = e.getValue();
+        komanda = komanda.replaceFirst(e.getKey(), e.getValue());
+      }
+    }
 
     switch (naziv) {
       case "ITAK":
