@@ -1,4 +1,4 @@
-package edu.unizg.foi.uzdiz.jmojzes21.pomocnici.csv;
+package edu.unizg.foi.uzdiz.jmojzes21.lib;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
@@ -87,7 +87,9 @@ public class CsvCitac {
    *
    * @return lista csv redaka
    */
-  public List<CsvRedak> csvRedci() {return csvRedci;}
+  public CsvRedakIterator csvRedci() {
+    return new CsvRedakIterator(csvRedci);
+  }
 
   /**
    * Obradi trenutnu csv liniju.

@@ -1,4 +1,4 @@
-package edu.unizg.foi.uzdiz.jmojzes21.pomocnici.csv;
+package edu.unizg.foi.uzdiz.jmojzes21.lib;
 
 public class CsvFormatGreska extends Exception {
 

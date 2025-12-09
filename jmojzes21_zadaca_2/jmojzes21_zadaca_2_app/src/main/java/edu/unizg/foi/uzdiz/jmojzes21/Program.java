@@ -1,5 +1,6 @@
 package edu.unizg.foi.uzdiz.jmojzes21;
 
+import edu.unizg.foi.uzdiz.jmojzes21.lib.UcitavacPodatakaFacade;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.OtkazanaRezervacija;
@@ -8,13 +9,8 @@ import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.CitacOpcija;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.FormatDatuma;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.NeispravnaKomandaGreska;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.RegexKomandeGraditelj;
-import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.csv.CsvCitac;
-import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.csv.CsvFormatGreska;
-import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.csv.CsvRedak;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.tablicni_ispis.TablicniIspisGraditelj;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -479,44 +475,18 @@ public class Program {
 
   // region Učitavanje podataka
 
-  private List<Aranzman> ucitajAranzmane(Path putanjaAranzmani) throws IOException {
+  private List<Aranzman> ucitajAranzmane(Path putanja) throws IOException {
 
-    if (Files.notExists(putanjaAranzmani)) {
-      String opis = String.format("Datoteka ne postoji! Putanja: %s\n",
-          putanjaAranzmani.toString());
-      throw new IOException(opis);
-    }
+    var ucitavacPodataka = new UcitavacPodatakaFacade();
+    List<List<String>> csvRedci = ucitavacPodataka.ucitajAranzmane(putanja);
 
-    String csv = Files.readString(putanjaAranzmani, StandardCharsets.UTF_8);
-
-    var csvCitac = new CsvCitac();
-    csvCitac.ucitajCsv(csv);
-
-    List<CsvRedak> redci = csvCitac.csvRedci();
     List<Aranzman> aranzmani = new ArrayList<>();
 
-    if (redci.isEmpty()) {
-      String opis = "Ne postoji informativni redak za aranžmane!";
-      EvidencijaGresaka.dajInstancu().evidentiraj(opis);
-    }
-
-    try {
-      provjeriCsvInfoRedak(redci.getFirst(),
-          new String[]{"Oznaka", "Naziv", "Program", "Početni datum", "Završni datum",
-              "Vrijeme kretanja",
-              "Vrijeme povratka", "Cijena", "Min broj putnika", "Maks broj putnika", "Broj noćenja",
-              "Doplata za jednokrevetnu sobu", "Prijevoz", "Broj doručka", "Broj ručkova",
-              "Broj večera"});
-    } catch (CsvFormatGreska e) {
-      EvidencijaGresaka.dajInstancu().evidentiraj(e);
-    }
-
-    for (int i = 1; i < redci.size(); i++) {
-      CsvRedak redak = redci.get(i);
+    for (List<String> stupci : csvRedci) {
       try {
-        var aranzman = parsirajAranzman(redak);
+        Aranzman aranzman = parsirajAranzman(stupci);
         aranzmani.add(aranzman);
-      } catch (CsvFormatGreska e) {
+      } catch (Exception e) {
         EvidencijaGresaka.dajInstancu().evidentiraj(e);
       }
     }
@@ -524,35 +494,74 @@ public class Program {
     return aranzmani;
   }
 
-  private Aranzman parsirajAranzman(CsvRedak csvRedak) throws CsvFormatGreska {
+  private Aranzman parsirajAranzman(List<String> stupci) throws Exception {
 
-    if (csvRedak.brojElemenata() != 16) {
-      String opis = String.format("Csv redak za aranžmane treba imati 16 stupaca, trenutno: %d!",
-          csvRedak.brojElemenata());
-      throw new CsvFormatGreska(opis, csvRedak);
+    if (stupci.size() != 16) {
+      String opis = String.format("Broj stupaca aranžmana mora biti 16! Trenutno: %d", stupci.size());
+      throw new Exception(opis);
     }
 
+    int index = 0;
+    String oznaka = stupci.get(index++);
+    String naziv = stupci.get(index++);
+    String program = stupci.get(index++);
+    String pocetniDatum = stupci.get(index++);
+    String zavrsniDatum = stupci.get(index++);
+    String vrijemeKretanja = stupci.get(index++);
+    String vrijemePovratka = stupci.get(index++);
+    String cijena = stupci.get(index++);
+
+    String minPutnika = stupci.get(index++);
+    String maxPutnika = stupci.get(index++);
+    String brojNocenja = stupci.get(index++);
+    String doplataJednokrevetnaSoba = stupci.get(index++);
+    String prijevoz = stupci.get(index++);
+    String brojDorucka = stupci.get(index++);
+    String brojRuckova = stupci.get(index++);
+    String brojVecera = stupci.get(index);
+
+    var formatDatuma = FormatDatuma.dajInstancu();
     AranzmanGraditelj graditelj = new AranzmanStvarniGraditelj();
 
-    int indeks = 0;
-    int oznaka = csvRedak.dajInt(indeks++);
-    String naziv = csvRedak.dajString(indeks++);
+    graditelj.napraviAranzman(Integer.parseInt(oznaka), naziv)
+        .setProgram(program)
+        .setPocetniDatum(formatDatuma.parsirajDatum(pocetniDatum))
+        .setZavrsniDatum(formatDatuma.parsirajDatum(zavrsniDatum))
+        .setCijena(Float.parseFloat(cijena))
+        .setMinBrojPutnika(Integer.parseInt(minPutnika))
+        .setMaxBrojPutnika(Integer.parseInt(maxPutnika));
 
-    graditelj.napraviAranzman(oznaka, naziv)
-        .setProgram(csvRedak.dajString(indeks++))
-        .setPocetniDatum(csvRedak.dajDatum(indeks++))
-        .setZavrsniDatum(csvRedak.dajDatum(indeks++))
-        .setVrijemeKretanja(csvRedak.dajVrijeme(indeks++, null))
-        .setVrijemePovratka(csvRedak.dajVrijeme(indeks++, null))
-        .setCijena(csvRedak.dajFloat(indeks++))
-        .setMinBrojPutnika(csvRedak.dajInt(indeks++))
-        .setMaxBrojPutnika(csvRedak.dajInt(indeks++))
-        .setBrojNocenja(csvRedak.dajInt(indeks++, 0))
-        .setDoplataZaJednokrevetnuSobu(csvRedak.dajFloat(indeks++, 0))
-        .setPrijevoz(parsirajPrijevozAranzmana(csvRedak.dajString(indeks++, null)))
-        .setBrojDorucka(csvRedak.dajInt(indeks++, 0))
-        .setBrojRuckova(csvRedak.dajInt(indeks++, 0))
-        .setBrojVecera(csvRedak.dajInt(indeks, 0));
+    if (vrijemeKretanja != null) {
+      graditelj.setVrijemeKretanja(formatDatuma.parsirajVrijeme(vrijemeKretanja));
+    }
+
+    if (vrijemePovratka != null) {
+      graditelj.setVrijemePovratka(formatDatuma.parsirajVrijeme(vrijemePovratka));
+    }
+
+    if (brojNocenja != null) {
+      graditelj.setBrojNocenja(Integer.parseInt(brojNocenja));
+    }
+
+    if (doplataJednokrevetnaSoba != null) {
+      graditelj.setDoplataZaJednokrevetnuSobu(Float.parseFloat(doplataJednokrevetnaSoba));
+    }
+
+    if (prijevoz != null) {
+      graditelj.setPrijevoz(parsirajPrijevozAranzmana(prijevoz));
+    }
+
+    if (brojDorucka != null) {
+      graditelj.setBrojDorucka(Integer.parseInt(brojDorucka));
+    }
+
+    if (brojRuckova != null) {
+      graditelj.setBrojRuckova(Integer.parseInt(brojRuckova));
+    }
+
+    if (brojVecera != null) {
+      graditelj.setBrojVecera(Integer.parseInt(brojVecera));
+    }
 
     return graditelj.dajAranzman();
   }
@@ -565,40 +574,18 @@ public class Program {
         .toList();
   }
 
-  private List<Rezervacija> ucitajRezervacije(Path putanjaRezervacije) throws IOException {
+  private List<Rezervacija> ucitajRezervacije(Path putanja) throws IOException {
 
-    if (Files.notExists(putanjaRezervacije)) {
-      String opis = String.format("Datoteka ne postoji! Putanja: %s\n",
-          putanjaRezervacije.toString());
-      throw new IOException(opis);
-    }
+    var ucitavacPodataka = new UcitavacPodatakaFacade();
+    List<List<String>> csvRedci = ucitavacPodataka.ucitajRezervacije(putanja);
 
-    String csv = Files.readString(putanjaRezervacije, StandardCharsets.UTF_8);
-
-    var csvCitac = new CsvCitac();
-    csvCitac.ucitajCsv(csv);
-
-    List<CsvRedak> redci = csvCitac.csvRedci();
     List<Rezervacija> rezervacije = new ArrayList<>();
 
-    if (redci.isEmpty()) {
-      String opis = "Ne postoji informativni redak za rezervacije!";
-      EvidencijaGresaka.dajInstancu().evidentiraj(opis);
-    }
-
-    try {
-      provjeriCsvInfoRedak(redci.getFirst(),
-          new String[]{"Ime", "Prezime", "Oznaka aranžmana", "Datum i vrijeme"});
-    } catch (CsvFormatGreska e) {
-      EvidencijaGresaka.dajInstancu().evidentiraj(e);
-    }
-
-    for (int i = 1; i < redci.size(); i++) {
-      CsvRedak redak = redci.get(i);
+    for (List<String> stupci : csvRedci) {
       try {
-        var rezervacija = parsirajRezervaciju(redak);
+        Rezervacija rezervacija = parsirajRezervaciju(stupci);
         rezervacije.add(rezervacija);
-      } catch (CsvFormatGreska e) {
+      } catch (Exception e) {
         EvidencijaGresaka.dajInstancu().evidentiraj(e);
       }
     }
@@ -606,48 +593,25 @@ public class Program {
     return rezervacije;
   }
 
-  private Rezervacija parsirajRezervaciju(CsvRedak csvRedak) throws CsvFormatGreska {
+  private Rezervacija parsirajRezervaciju(List<String> stupci) throws Exception {
 
-    if (csvRedak.brojElemenata() != 4) {
-      String opis = String.format("Csv redak za rezervacije treba imati 4 stupca, trenutno: %d!",
-          csvRedak.brojElemenata());
-      throw new CsvFormatGreska(opis, csvRedak);
+    if (stupci.size() != 4) {
+      String opis = String.format("Broj stupaca rezervacije mora biti 4! Trenutno: %d", stupci.size());
+      throw new Exception(opis);
     }
 
-    int indeks = 0;
-    String ime = csvRedak.dajString(indeks++);
-    String prezime = csvRedak.dajString(indeks++);
-    int oznaka = csvRedak.dajInt(indeks++);
-    LocalDateTime datumVrijeme = csvRedak.dajDatumVrijeme(indeks);
+    var formatDatuma = FormatDatuma.dajInstancu();
+
+    int index = 0;
+    String ime = stupci.get(index++);
+    String prezime = stupci.get(index++);
+    int oznaka = Integer.parseInt(stupci.get(index++));
+    LocalDateTime datumVrijeme = formatDatuma.parsirajDatumVrijeme(stupci.get(index));
 
     var korisnik = new Korisnik(ime, prezime);
 
     KreatorRezervacije kreatorRezervacije = new KreatorPrimljeneRezervacije();
     return kreatorRezervacije.napraviRezervaciju(korisnik, oznaka, datumVrijeme);
-  }
-
-  private void provjeriCsvInfoRedak(CsvRedak infoRedak, String[] stupci) throws CsvFormatGreska {
-
-    if (infoRedak.brojElemenata() != stupci.length) {
-      String opis = String.format(
-          "Informacijski redak ne sadrži točan broj stupaca! Očekivano: %d, stvarno: %d",
-          stupci.length, infoRedak.brojElemenata());
-      throw new CsvFormatGreska(opis, infoRedak);
-    }
-
-    List<String> elementi = infoRedak.elementi();
-    for (int i = 0; i < stupci.length; i++) {
-      String stupac = stupci[i].trim();
-      String infoStupac = infoRedak.dajString(i, "").trim();
-
-      if (!stupac.equalsIgnoreCase(infoStupac)) {
-        String opis = String.format(
-            "Informacijski redak ne sadrži točan stupac! Očekivano: %s, stvarno: %s", stupac,
-            infoStupac);
-        throw new CsvFormatGreska(opis, infoRedak);
-      }
-    }
-
   }
 
   // endregion
