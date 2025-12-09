@@ -1,0 +1,75 @@
+package edu.unizg.foi.uzdiz.jmojzes21.komande;
+
+import edu.unizg.foi.uzdiz.jmojzes21.TuristickaAgencija;
+import edu.unizg.foi.uzdiz.jmojzes21.podaci.OtkazanaRezervacija;
+import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
+import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.FormatDatuma;
+import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.NeispravnaKomandaGreska;
+import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.RegexKomandeGraditelj;
+import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.tablicni_ispis.TablicniIspisGraditelj;
+import java.util.List;
+
+public class KomandaIRTA {
+
+  public void obradiKomanduPregledRezervacijaAranzmana(String komanda) throws Exception {
+
+    TuristickaAgencija agencija = TuristickaAgencija.dajInstancu();
+
+    var uzorak = new RegexKomandeGraditelj("IRTA")
+        .dodajBroj("oznaka")
+        .dodajTekstOpcionalno("filter")
+        .dajUzorak();
+
+    var matcher = uzorak.matcher(komanda);
+    if (!matcher.matches()) {
+      String opis = "IRTA oznaka [PA|Č|O]";
+      throw new NeispravnaKomandaGreska(opis);
+    }
+
+    int oznaka = Integer.parseInt(matcher.group("oznaka"));
+    String filter = matcher.group("filter");
+    if (filter == null) {filter = "PAČO";}
+
+    boolean prikaziPrimljeneAktivne = filter.contains("PA");
+    boolean prikaziNaCekanju = filter.contains("Č");
+    boolean prikaziOtkazane = filter.contains("O");
+
+    List<Rezervacija> rezervacije = agencija.dajRezervacijeAranzmana(oznaka,
+        prikaziPrimljeneAktivne, prikaziNaCekanju, prikaziOtkazane);
+    if (rezervacije == null) {
+      System.out.println("Aranžman ne postoji.");
+      return;
+    }
+
+    if (rezervacije.isEmpty()) {
+      System.out.println("Nema rezervacija za prikaz.");
+      return;
+    }
+
+    prikaziRezervacije(rezervacije, prikaziOtkazane);
+  }
+
+  private void prikaziRezervacije(List<Rezervacija> rezervacije, boolean prikaziOtkazane) {
+
+    var formatDatuma = FormatDatuma.dajInstancu();
+
+    var tablicniIspis = new TablicniIspisGraditelj<Rezervacija>()
+        .dodajStupac("Ime", 18, e -> e.korisnik().ime())
+        .dodajStupac("Prezime", 18, e -> e.korisnik().prezime())
+        .dodajStupac("Datum i vrijeme", 24, e -> formatDatuma.formatiraj(e.datumVrijeme()))
+        .dodajStupac("Vrsta", 18, e -> e.vrsta())
+        .dodajStupac("Datum vrijeme otkaza", 24, e -> {
+          if (e instanceof OtkazanaRezervacija r) {
+            return formatDatuma.formatiraj(r.datumVrijemeOtkaza());
+          }
+          return "";
+        })
+        .prikazujStupac(prikaziOtkazane)
+        .napravi();
+
+    tablicniIspis.ispisiZaglavlje();
+    tablicniIspis.ispisi(rezervacije);
+
+  }
+
+}
