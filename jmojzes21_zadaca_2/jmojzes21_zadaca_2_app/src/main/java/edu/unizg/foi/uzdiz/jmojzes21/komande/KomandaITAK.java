@@ -17,20 +17,20 @@ public class KomandaITAK {
     this.agencija = agencija;
   }
 
-  public void obradiKomanduPregledAranzmana(String komanda) throws Exception {
+  public void obradiKomanduPregledAranzmana(String args) throws Exception {
 
     List<Aranzman> aranzmani;
 
-    if (komanda.equals("ITAK")) {
+    if (args.isEmpty()) {
       aranzmani = agencija.dajAranzmane();
     } else {
 
-      var uzorak = new RegexKomandeGraditelj("ITAK")
+      var uzorak = new RegexKomandeGraditelj()
           .dodajDatum("od")
           .dodajDatum("do")
           .dajUzorak();
 
-      var matcher = uzorak.matcher(komanda);
+      var matcher = uzorak.matcher(args);
       if (!matcher.matches()) {
         String opis = "ITAK [od do]";
         throw new NeispravnaKomandaGreska(opis);

@@ -99,37 +99,39 @@ public class Program {
       return;
     }
 
-    String naziv = dajNazivKomande(komanda).toUpperCase();
+    String[] dijelovi = razdvojiKomandu(komanda);
+    String naziv = dijelovi[0].toUpperCase();
+    String args = dijelovi[1];
 
     switch (naziv) {
       case "ITAK": {
         var k = new KomandaITAK(agencija);
-        k.obradiKomanduPregledAranzmana(komanda);
+        k.obradiKomanduPregledAranzmana(args);
         break;
       }
       case "ITAP": {
         var k = new KomandaITAP(agencija);
-        k.obradiKomanduDetaljiAranzmana(komanda);
+        k.obradiKomanduDetaljiAranzmana(args);
         break;
       }
       case "IRTA": {
         var k = new KomandaIRTA(agencija);
-        k.obradiKomanduPregledRezervacijaAranzmana(komanda);
+        k.obradiKomanduPregledRezervacijaAranzmana(args);
         break;
       }
       case "IRO": {
         var k = new KomandaIRO(agencija);
-        k.obradiKomanduPregledRezervacijaKorisnika(komanda);
+        k.obradiKomanduPregledRezervacijaKorisnika(args);
         break;
       }
       case "DRTA": {
         var k = new KomandaDRTA(agencija);
-        k.obradiKomanduDodavanjeRezervacije(komanda);
+        k.obradiKomanduDodavanjeRezervacije(args);
         break;
       }
       case "ORTA": {
         var k = new KomandaORTA(agencija);
-        k.obradiKomanduOtkaziRezervaciju(komanda);
+        k.obradiKomanduOtkaziRezervaciju(args);
         break;
       }
       case "Q": {
@@ -146,23 +148,33 @@ public class Program {
 
   private void pregledKomandi() {
     System.out.println("Komande:");
-    System.out.println("  ITAK - Pregled svih aranžmana");
-    System.out.println("  ITAP - Pregled pojedinog aranžmana");
-    System.out.println("  IRTA - Pregled rezervacija za aranžman");
-    System.out.println("  IRO  - Pregled rezervacija za korisnika");
-    System.out.println("  DRTA - Dodaj rezervaciju");
-    System.out.println("  ORTA - Otkaži rezervacije");
-    System.out.println("  Q    - Izlaz");
+    System.out.println("ITAK - Pregled svih aranžmana, ITAK [od do]");
+    System.out.println("ITAP - Pregled pojedinog aranžmana, ITAP oznaka");
+    System.out.println("IRTA - Pregled rezervacija za aranžman, IRTA oznaka [PA|Č|O|OD]");
+    System.out.println("IRO  - Pregled rezervacija za korisnika, IRO ime prezime");
+    System.out.println("DRTA - Dodaj rezervaciju, DRTA ime prezime oznaka datum vrijeme");
+    System.out.println("ORTA - Otkaži rezervacije, ORTA ime prezime oznaka");
+    System.out.println("OTA  - Otkaži turistički aranžman, OTA oznaka");
+    System.out.println("IP   - Postavi način sortiranja podataka, IP [N|S]");
+    System.out.println("BP   - Brisanje podataka, BP [A|R]");
+    System.out.println("UP   - Učitavanje podataka, UP [A|R]");
+    System.out.println("ITAS - Ispis statističkih podataka, ITAS [od do]");
+    System.out.println("Q    - Izlaz");
   }
 
   // endregion
 
   // region Pomoćne metode
 
-  private String dajNazivKomande(String komanda) {
+  private String[] razdvojiKomandu(String komanda) {
     int i = komanda.indexOf(' ');
-    if (i == -1) {return komanda;}
-    return komanda.substring(0, i);
+    if (i == -1) {
+      return new String[]{komanda, ""};
+    }
+
+    String naziv = komanda.substring(0, i);
+    String args = komanda.substring(i + 1).trim();
+    return new String[]{naziv, args};
   }
 
   private void ucitajOpcije(String[] args) throws Exception {

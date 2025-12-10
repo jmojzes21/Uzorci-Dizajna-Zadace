@@ -11,13 +11,8 @@ public class RegexKomandeGraditelj {
   private final StringBuilder regex;
   private final String razmakArgumenata = "\\s+";
 
-  /**
-   *
-   * @param nazivKomande naziv komande
-   */
-  public RegexKomandeGraditelj(String nazivKomande) {
+  public RegexKomandeGraditelj() {
     regex = new StringBuilder();
-    regex.append(String.format("(%s)", nazivKomande));
   }
 
   /**
@@ -27,7 +22,7 @@ public class RegexKomandeGraditelj {
    * @return graditelj
    */
   public RegexKomandeGraditelj dodajBroj(String naziv) {
-    regex.append(razmakArgumenata);
+    if (!regex.isEmpty()) {regex.append(razmakArgumenata);}
     regex.append(String.format("(?<%s>\\d+)", naziv));
     return this;
   }
@@ -39,7 +34,7 @@ public class RegexKomandeGraditelj {
    * @return graditelj
    */
   public RegexKomandeGraditelj dodajTekst(String naziv) {
-    regex.append(razmakArgumenata);
+    if (!regex.isEmpty()) {regex.append(razmakArgumenata);}
     regex.append(String.format("(?<%s>\\w+)", naziv));
     return this;
   }
@@ -65,7 +60,7 @@ public class RegexKomandeGraditelj {
    * @return graditelj
    */
   public RegexKomandeGraditelj dodajDatum(String naziv) {
-    regex.append(razmakArgumenata);
+    if (!regex.isEmpty()) {regex.append(razmakArgumenata);}
     regex.append(String.format("(?<%s>\\d+\\.\\d+\\.\\d+\\.?)", naziv));
     return this;
   }
@@ -77,7 +72,7 @@ public class RegexKomandeGraditelj {
    * @return graditelj
    */
   public RegexKomandeGraditelj dodajVrijeme(String naziv) {
-    regex.append(razmakArgumenata);
+    if (!regex.isEmpty()) {regex.append(razmakArgumenata);}
     regex.append(String.format("(?<%s>\\d+\\:\\d+(\\:\\d+)?)", naziv));
     return this;
   }

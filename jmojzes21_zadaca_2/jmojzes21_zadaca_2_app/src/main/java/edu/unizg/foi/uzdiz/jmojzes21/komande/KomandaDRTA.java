@@ -16,11 +16,11 @@ public class KomandaDRTA {
     this.agencija = agencija;
   }
 
-  public void obradiKomanduDodavanjeRezervacije(String komanda) throws Exception {
+  public void obradiKomanduDodavanjeRezervacije(String args) throws Exception {
 
     FormatDatuma formatDatuma = FormatDatuma.dajInstancu();
 
-    var uzorak = new RegexKomandeGraditelj("DRTA")
+    var uzorak = new RegexKomandeGraditelj()
         .dodajTekst("ime")
         .dodajTekst("prezime")
         .dodajBroj("oznaka")
@@ -28,7 +28,7 @@ public class KomandaDRTA {
         .dodajVrijeme("vrijeme")
         .dajUzorak();
 
-    var matcher = uzorak.matcher(komanda);
+    var matcher = uzorak.matcher(args);
     if (!matcher.matches()) {
       String opis = "DRTA ime prezime oznaka datum vrijeme";
       throw new NeispravnaKomandaGreska(opis);

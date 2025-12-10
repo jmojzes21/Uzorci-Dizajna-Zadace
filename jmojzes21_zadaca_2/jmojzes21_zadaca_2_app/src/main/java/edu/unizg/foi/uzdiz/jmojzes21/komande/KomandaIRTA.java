@@ -16,14 +16,14 @@ public class KomandaIRTA {
     this.agencija = agencija;
   }
 
-  public void obradiKomanduPregledRezervacijaAranzmana(String komanda) throws Exception {
+  public void obradiKomanduPregledRezervacijaAranzmana(String args) throws Exception {
 
-    var uzorak = new RegexKomandeGraditelj("IRTA")
+    var uzorak = new RegexKomandeGraditelj()
         .dodajBroj("oznaka")
         .dodajTekstOpcionalno("filter")
         .dajUzorak();
 
-    var matcher = uzorak.matcher(komanda);
+    var matcher = uzorak.matcher(args);
     if (!matcher.matches()) {
       String opis = "IRTA oznaka [PA|Č|O]";
       throw new NeispravnaKomandaGreska(opis);

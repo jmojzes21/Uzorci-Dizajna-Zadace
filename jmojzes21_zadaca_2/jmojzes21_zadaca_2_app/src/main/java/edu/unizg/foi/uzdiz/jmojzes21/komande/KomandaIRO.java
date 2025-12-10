@@ -16,14 +16,14 @@ public class KomandaIRO {
     this.agencija = agencija;
   }
 
-  public void obradiKomanduPregledRezervacijaKorisnika(String komanda) throws Exception {
+  public void obradiKomanduPregledRezervacijaKorisnika(String args) throws Exception {
 
-    var uzorak = new RegexKomandeGraditelj("IRO")
+    var uzorak = new RegexKomandeGraditelj()
         .dodajTekst("ime")
         .dodajTekst("prezime")
         .dajUzorak();
 
-    var matcher = uzorak.matcher(komanda);
+    var matcher = uzorak.matcher(args);
     if (!matcher.matches()) {
       String opis = "IRO ime prezime";
       throw new NeispravnaKomandaGreska(opis);

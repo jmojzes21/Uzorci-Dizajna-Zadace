@@ -14,13 +14,13 @@ public class KomandaITAP {
     this.agencija = agencija;
   }
 
-  public void obradiKomanduDetaljiAranzmana(String komanda) throws Exception {
+  public void obradiKomanduDetaljiAranzmana(String args) throws Exception {
 
-    var uzorak = new RegexKomandeGraditelj("ITAP")
+    var uzorak = new RegexKomandeGraditelj()
         .dodajBroj("oznaka")
         .dajUzorak();
 
-    var matcher = uzorak.matcher(komanda);
+    var matcher = uzorak.matcher(args);
     if (!matcher.matches()) {
       String opis = "ITAP oznaka";
       throw new NeispravnaKomandaGreska(opis);
