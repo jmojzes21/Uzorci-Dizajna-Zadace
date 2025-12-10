@@ -19,8 +19,10 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Program {
@@ -43,27 +45,26 @@ public class Program {
 
   public void pokreni(String[] args) throws Exception {
 
-    if (args.length == 0) {
-      System.out.println("Potrebno je unijeti argumente za pokretanje!");
-      System.out.println("Primjer: --ta [datoteka aranžmani] --rta [datoteka rezervacije]");
-      return;
+    agencija = new TuristickaAgencija();
+
+    Map<String, String> opcije = ucitajOpcije(args);
+
+    String putanjaAranzmani = opcije.get("--ta");
+    String putanjaRezervacije = opcije.get("--rta");
+
+    if (putanjaAranzmani != null) {
+      List<Aranzman> aranzmani = ucitajAranzmane(Path.of(putanjaAranzmani));
+      agencija.ucitajAranzmane(aranzmani);
     }
 
-    ucitajOpcije(args);
-
-    var konfig = Konfiguracija.dajKonfiguraciju();
-
-    List<Aranzman> aranzmani = ucitajAranzmane(Path.of(konfig.putanjaAranzmani()));
-    List<Rezervacija> rezervacije = ucitajRezervacije(Path.of(konfig.putanjaRezervacije()));
-
-    agencija = new TuristickaAgencija();
-    agencija.ucitajAranzmane(aranzmani);
-
-    for (var r : rezervacije) {
-      try {
-        agencija.zaprimiRezervaciju(r);
-      } catch (Exception e) {
-        EvidencijaGresaka.dajInstancu().evidentiraj(e);
+    if (putanjaRezervacije != null) {
+      List<Rezervacija> rezervacije = ucitajRezervacije(Path.of(putanjaRezervacije));
+      for (var r : rezervacije) {
+        try {
+          agencija.zaprimiRezervaciju(r);
+        } catch (Exception e) {
+          EvidencijaGresaka.dajInstancu().evidentiraj(e);
+        }
       }
     }
 
@@ -177,28 +178,28 @@ public class Program {
     return new String[]{naziv, args};
   }
 
-  private void ucitajOpcije(String[] args) throws Exception {
-
-    var konfig = Konfiguracija.dajKonfiguraciju();
+  private Map<String, String> ucitajOpcije(String[] args) throws Exception {
 
     var citacOpcija = new CitacOpcija();
     citacOpcija.ucitajOpcije(args);
 
     var opcije = citacOpcija.opcije();
+    Map<String, String> rezultat = new HashMap<>();
 
     for (var opcija : opcije.keySet()) {
       switch (opcija) {
         case "--ta":
-          konfig.setPutanjaAranzmani(citacOpcija.dajVrijednost(opcija));
+          rezultat.put("--ta", citacOpcija.dajVrijednost(opcija));
           break;
         case "--rta":
-          konfig.setPutanjaRezervacije(citacOpcija.dajVrijednost(opcija));
+          rezultat.put("--rta", citacOpcija.dajVrijednost(opcija));
           break;
         default:
-          throw new Exception(String.format("Nepoznata opcija %s!", opcija));
+          throw new Exception(String.format("Nepoznata opcija %s", opcija));
       }
     }
 
+    return rezultat;
   }
 
   // endregion
