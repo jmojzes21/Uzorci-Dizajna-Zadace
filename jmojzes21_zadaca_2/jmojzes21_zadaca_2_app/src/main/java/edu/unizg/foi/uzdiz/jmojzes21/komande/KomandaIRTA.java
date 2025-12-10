@@ -1,8 +1,7 @@
 package edu.unizg.foi.uzdiz.jmojzes21.komande;
 
-import edu.unizg.foi.uzdiz.jmojzes21.TuristickaAgencija;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.OtkazanaRezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
+import edu.unizg.foi.uzdiz.jmojzes21.podaci.TuristickaAgencija;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.FormatDatuma;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.NeispravnaKomandaGreska;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.RegexKomandeGraditelj;
@@ -11,9 +10,13 @@ import java.util.List;
 
 public class KomandaIRTA {
 
-  public void obradiKomanduPregledRezervacijaAranzmana(String komanda) throws Exception {
+  private final TuristickaAgencija agencija;
 
-    TuristickaAgencija agencija = TuristickaAgencija.dajInstancu();
+  public KomandaIRTA(TuristickaAgencija agencija) {
+    this.agencija = agencija;
+  }
+
+  public void obradiKomanduPregledRezervacijaAranzmana(String komanda) throws Exception {
 
     var uzorak = new RegexKomandeGraditelj("IRTA")
         .dodajBroj("oznaka")
@@ -56,14 +59,9 @@ public class KomandaIRTA {
     var tablicniIspis = new TablicniIspisGraditelj<Rezervacija>()
         .dodajStupac("Ime", 18, e -> e.korisnik().ime())
         .dodajStupac("Prezime", 18, e -> e.korisnik().prezime())
-        .dodajStupac("Datum i vrijeme", 24, e -> formatDatuma.formatiraj(e.datumVrijeme()))
-        .dodajStupac("Vrsta", 18, e -> e.vrsta())
-        .dodajStupac("Datum vrijeme otkaza", 24, e -> {
-          if (e instanceof OtkazanaRezervacija r) {
-            return formatDatuma.formatiraj(r.datumVrijemeOtkaza());
-          }
-          return "";
-        })
+        .dodajStupac("Datum i vrijeme", 24, e -> formatDatuma.formatiraj(e.vrijemePrijema()))
+        .dodajStupac("Status", 18, e -> e.nazivStanja())
+        .dodajStupac("Vrijeme otkaza", 24, e -> "")
         .prikazujStupac(prikaziOtkazane)
         .napravi();
 

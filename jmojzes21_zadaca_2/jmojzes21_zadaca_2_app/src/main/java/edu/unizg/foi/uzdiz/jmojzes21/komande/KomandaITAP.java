@@ -1,17 +1,20 @@
 package edu.unizg.foi.uzdiz.jmojzes21.komande;
 
-import edu.unizg.foi.uzdiz.jmojzes21.TuristickaAgencija;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
+import edu.unizg.foi.uzdiz.jmojzes21.podaci.TuristickaAgencija;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.FormatDatuma;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.NeispravnaKomandaGreska;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.RegexKomandeGraditelj;
 
 public class KomandaITAP {
 
+  private final TuristickaAgencija agencija;
+
+  public KomandaITAP(TuristickaAgencija agencija) {
+    this.agencija = agencija;
+  }
 
   public void obradiKomanduDetaljiAranzmana(String komanda) throws Exception {
-
-    TuristickaAgencija agencija = TuristickaAgencija.dajInstancu();
 
     var uzorak = new RegexKomandeGraditelj("ITAP")
         .dodajBroj("oznaka")

@@ -2,15 +2,12 @@ package edu.unizg.foi.uzdiz.jmojzes21.podaci;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 
 /**
  * Turistički aranžman.
  */
-public class Aranzman {
+public class Aranzman extends RezervacijaComposite {
 
   private int oznaka;
   private String naziv;
@@ -33,45 +30,41 @@ public class Aranzman {
   private int brojVecera;
 
   private float doplataZaJednokrevetnuSobu;
-
   private List<String> prijevoz;
-
-  private final List<Rezervacija> primljeneRezervacije = new ArrayList<>();
-  private final List<Rezervacija> aktivneRezervacije = new ArrayList<>();
-
-  private final Queue<Rezervacija> rezervacijeNaCekanju = new ArrayDeque<>();
-  private final Queue<Rezervacija> otkazaneRezervacije = new ArrayDeque<>();
 
   public Aranzman(int oznaka, String naziv) {
     this.oznaka = oznaka;
     this.naziv = naziv;
   }
 
-  /**
-   *
-   * @return broj primljenih rezervacija
-   */
-  public int brojPrimljenih() {
-    return primljeneRezervacije.size();
+  @Override
+  protected void dodaj(RezervacijaComponent r) {
+    if (!(r instanceof Rezervacija)) {
+      throw new RuntimeException("Nije moguće dodati " + r.getClass().getName() + " u turistički aranžman!");
+    }
+    djeca.add(r);
   }
 
-  /**
-   *
-   * @return broj aktivnih rezervacija
-   */
-  public int brojAktivnih() {
-    return aktivneRezervacije.size();
+  public void zaprimiRezervaciju(Rezervacija rezervacija) {
+    rezervacija.zaprimi();
+    dodaj(rezervacija);
   }
 
-  // region Metode za dohvaćanje i postavljanje polja
+  public List<Rezervacija> primljeneRezervacije() {
+    return djeca.stream()
+        .map(e -> (Rezervacija) e)
+        .filter(e -> e.jePrimljena())
+        .toList();
+  }
 
-  public List<Rezervacija> primljeneRezervacije() {return primljeneRezervacije;}
+  public List<Rezervacija> aktivneRezervacije() {
+    return djeca.stream()
+        .map(e -> (Rezervacija) e)
+        .filter(e -> e.jeAktivna())
+        .toList();
+  }
 
-  public List<Rezervacija> aktivneRezervacije() {return aktivneRezervacije;}
-
-  public Queue<Rezervacija> rezervacijeNaCekanju() {return rezervacijeNaCekanju;}
-
-  public Queue<Rezervacija> otkazaneRezervacije() {return otkazaneRezervacije;}
+  // region Metode za dohvaćanje i postavljanje atributa
 
   public int oznaka() {return oznaka;}
 

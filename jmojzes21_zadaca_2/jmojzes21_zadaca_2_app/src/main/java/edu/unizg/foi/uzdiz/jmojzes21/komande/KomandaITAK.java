@@ -1,7 +1,7 @@
 package edu.unizg.foi.uzdiz.jmojzes21.komande;
 
-import edu.unizg.foi.uzdiz.jmojzes21.TuristickaAgencija;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
+import edu.unizg.foi.uzdiz.jmojzes21.podaci.TuristickaAgencija;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.FormatDatuma;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.NeispravnaKomandaGreska;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.RegexKomandeGraditelj;
@@ -10,10 +10,15 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class KomandaITAK {
- 
+
+  private final TuristickaAgencija agencija;
+
+  public KomandaITAK(TuristickaAgencija agencija) {
+    this.agencija = agencija;
+  }
+
   public void obradiKomanduPregledAranzmana(String komanda) throws Exception {
 
-    TuristickaAgencija agencija = TuristickaAgencija.dajInstancu();
     List<Aranzman> aranzmani;
 
     if (komanda.equals("ITAK")) {

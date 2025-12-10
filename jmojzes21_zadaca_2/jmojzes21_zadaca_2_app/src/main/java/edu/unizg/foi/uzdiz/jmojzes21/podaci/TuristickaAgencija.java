@@ -1,70 +1,59 @@
-package edu.unizg.foi.uzdiz.jmojzes21;
+package edu.unizg.foi.uzdiz.jmojzes21.podaci;
 
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Korisnik;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Turistička agencija.
  */
-public class TuristickaAgencija {
+public class TuristickaAgencija extends RezervacijaComposite {
 
-  private static TuristickaAgencija turistickaAgencija;
-
-  public static TuristickaAgencija dajInstancu() {
-    if (turistickaAgencija == null) {
-      turistickaAgencija = new TuristickaAgencija();
+  @Override
+  protected void dodaj(RezervacijaComponent r) {
+    if (!(r instanceof Aranzman)) {
+      throw new RuntimeException("Nije moguće dodati " + r.getClass().getName() + " u turističku agenciju!");
     }
-    return turistickaAgencija;
+    djeca.add(r);
   }
 
   /**
-   * Mapa turističkih aranžmana. Ključ je oznaka aranžmana, a vrijednost je objekt aranžmana.
-   */
-  private final Map<Integer, Aranzman> aranzmani = new HashMap<>();
-
-  public TuristickaAgencija() {}
-
-  /**
-   * Vrati listu svih aranžmana.
+   * Daj listu svih aranžmana.
    *
    * @return lista aranžmana
    */
   public List<Aranzman> dajAranzmane() {
-    return aranzmani.values().stream()
-        .sorted(Comparator.comparing(Aranzman::oznaka))
-        .toList();
+    return djeca.stream().map(e -> (Aranzman) e).toList();
   }
 
   /**
-   * Vrati listu aranžmana koji se odvijanju unutar određenog razdoblja.
+   * Daj listu aranžmana koji se odvijanju unutar određenog razdoblja.
    *
    * @param datumOd početni datum razdovlja
    * @param datumDo završni datum razdoblja
    * @return lista aranžmana
    */
   public List<Aranzman> dajAranzmane(LocalDate datumOd, LocalDate datumDo) {
-    return aranzmani.values().stream()
+    List<Aranzman> aranzmani = dajAranzmane();
+    return aranzmani.stream()
         .filter(e -> e.pocetniDatum().compareTo(datumOd) >= 0
             && e.pocetniDatum().compareTo(datumDo) <= 0)
-        .sorted(Comparator.comparing(Aranzman::oznaka))
         .toList();
   }
 
   /**
-   * Vrati aranžman prema oznaci.
+   * Daj aranžman prema oznaci.
    *
    * @param oznaka oznaka aranžmana
    * @return aranžman ili null
    */
   public Aranzman dajAranzman(int oznaka) {
-    return aranzmani.get(oznaka);
+    List<Aranzman> aranzmani = dajAranzmane();
+    return aranzmani.stream()
+        .filter(e -> e.oznaka() == oznaka)
+        .findFirst()
+        .orElse(null);
   }
 
   /**
@@ -74,12 +63,12 @@ public class TuristickaAgencija {
    * @param prikaziPrimljeneAktivne prikaži primljene i aktivne rezervacije
    * @param prikaziNaCekanju        prikaži rezervacije na čekanju
    * @param prikaziOtkazane         prikaži otkazane rezervacije
-   * @return lista rezervacija
+   * @return lista rezervacija ili null
    */
   public List<Rezervacija> dajRezervacijeAranzmana(int oznaka, boolean prikaziPrimljeneAktivne,
       boolean prikaziNaCekanju, boolean prikaziOtkazane) {
 
-    Aranzman aranzman = aranzmani.get(oznaka);
+    Aranzman aranzman = dajAranzman(oznaka);
     if (aranzman == null) {return null;}
 
     List<Rezervacija> rezultat = new ArrayList<>();
@@ -89,16 +78,8 @@ public class TuristickaAgencija {
       rezultat.addAll(aranzman.aktivneRezervacije());
     }
 
-    if (prikaziNaCekanju) {
-      rezultat.addAll(aranzman.rezervacijeNaCekanju());
-    }
-
-    if (prikaziOtkazane) {
-      rezultat.addAll(aranzman.otkazaneRezervacije());
-    }
-
     return rezultat.stream()
-        .sorted(Comparator.comparing(Rezervacija::vrsta).thenComparing(Rezervacija::datumVrijeme))
+        .sorted(Comparator.comparing(Rezervacija::vrijemePrijema))
         .toList();
   }
 
@@ -113,12 +94,13 @@ public class TuristickaAgencija {
 
     var korisnik = new Korisnik(ime, prezime);
 
-    var agent = new TuristickiAgent(aranzmani);
+    /*var agent = new TuristickiAgent(aranzmani);
     var rezervacije = agent.dajSveRezervacijeKorisnika(korisnik, true);
 
     return rezervacije.stream()
         .sorted(Comparator.comparing(Rezervacija::vrsta).thenComparing(Rezervacija::datumVrijeme))
-        .toList();
+        .toList();*/
+    return null;
   }
 
   /**
@@ -129,15 +111,13 @@ public class TuristickaAgencija {
    */
   public void zaprimiRezervaciju(Rezervacija rezervacija) throws Exception {
 
-    Aranzman aranzman = aranzmani.get(rezervacija.oznakaAranzmana());
+    Aranzman aranzman = dajAranzman(rezervacija.oznakaAranzmana());
     if (aranzman == null) {
-      String opis = String.format("Ne postoji aranžam oznake %d.\n",
-          rezervacija.oznakaAranzmana());
+      String opis = String.format("Ne postoji aranžam oznake %d.\n", rezervacija.oznakaAranzmana());
       throw new Exception(opis);
     }
 
-    var agent = new TuristickiAgent(aranzmani);
-    agent.zaprimiRezervaciju(aranzman, rezervacija);
+    aranzman.zaprimiRezervaciju(rezervacija);
 
   }
 
@@ -150,7 +130,7 @@ public class TuristickaAgencija {
    * @throws Exception otkazivanje rezervacije nije uspjelo
    */
   public void otkaziRezervaciju(String ime, String prezime, int oznaka) throws Exception {
-
+    /*
     Aranzman aranzman = aranzmani.get(oznaka);
     if (aranzman == null) {
       String opis = String.format("Ne postoji aranžam oznake %d.\n", oznaka);
@@ -161,7 +141,7 @@ public class TuristickaAgencija {
 
     var agent = new TuristickiAgent(aranzmani);
     agent.otkaziRezervaciju(aranzman, korisnik);
-
+    */
   }
 
   /**
@@ -170,10 +150,8 @@ public class TuristickaAgencija {
    * @param aranzmani aranžmani
    */
   public void ucitajAranzmane(List<Aranzman> aranzmani) {
-    this.aranzmani.clear();
-
     for (Aranzman aranzman : aranzmani) {
-      this.aranzmani.put(aranzman.oznaka(), aranzman);
+      dodaj(aranzman);
     }
   }
 

@@ -1,23 +1,11 @@
 package edu.unizg.foi.uzdiz.jmojzes21;
 
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.AktivnaRezervacija;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Korisnik;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.PrimljenaRezervacija;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.RezervacijaNaCekanju;
-import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.FormatDatuma;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-
 /**
  * Turistički agent obavlja zaprimanje i otkazivanje rezervacija korisnika.
  */
 public class TuristickiAgent {
+
+  /*
 
   private final Map<Integer, Aranzman> aranzmani;
 
@@ -33,7 +21,7 @@ public class TuristickiAgent {
    * @param aranzman    aranžman
    * @param rezervacija rezervacija
    * @throws Exception zaprimanje nije uspjelo
-   */
+
   public void zaprimiRezervaciju(Aranzman aranzman, Rezervacija rezervacija) throws Exception {
 
     provjeriDatumPrimljeneRezervacije(aranzman, rezervacija);
@@ -171,7 +159,7 @@ public class TuristickiAgent {
    * @param aranzman aranžman
    * @param korisnik korisnik
    * @throws Exception otkazivanje nije uspjelo
-   */
+
   public void otkaziRezervaciju(Aranzman aranzman, Korisnik korisnik) throws Exception {
 
     List<Rezervacija> rezervacije = dajRezervacijeKorisnika(aranzman, korisnik);
@@ -282,9 +270,8 @@ public class TuristickiAgent {
    * @param aranzman    aranžman
    * @param rezervacija rezervacija
    * @throws Exception rezervacija nije ispravna
-   */
-  private void provjeriIspravnostRezervacije(Aranzman aranzman, Rezervacija rezervacija)
-      throws Exception {
+
+  private void provjeriIspravnostRezervacije(Aranzman aranzman, Rezervacija rezervacija) throws Exception {
 
     var korisnik = rezervacija.korisnik();
     var sveRezervacije = dajSveRezervacijeKorisnika(korisnik);
@@ -314,7 +301,7 @@ public class TuristickiAgent {
    * @param rezervacije
    * @param obrisaneRezervacije rezervacije koje su obrisane, tj. duplikati su
    * @return rezervacije
-   */
+
   private List<Rezervacija> filtrirajDuplikateRezervacija(List<Rezervacija> rezervacije,
       List<Rezervacija> obrisaneRezervacije) {
 
@@ -360,7 +347,7 @@ public class TuristickiAgent {
    * @param a1 aranžman 1
    * @param a2 aranžman 2
    * @return true ako se aranžmani preklapaju
-   */
+
   private boolean aranzmaniSePreklapaju(Aranzman a1, Aranzman a2) {
     if (a1.pocetniDatum().compareTo(a2.pocetniDatum()) > 0) {
       Aranzman a3 = a1;
@@ -380,7 +367,7 @@ public class TuristickiAgent {
    * @param aranzman aranžman
    * @param korisnik korisnik
    * @return rezervacije korisnika
-   */
+
   public List<Rezervacija> dajRezervacijeKorisnika(Aranzman aranzman, Korisnik korisnik) {
     return dajRezervacijeKorisnika(aranzman, korisnik, false);
   }
@@ -392,7 +379,7 @@ public class TuristickiAgent {
    * @param korisnik        korisnik
    * @param prikaziOtkazane prikaži otkazane rezervacije
    * @return rezervacije korisnika
-   */
+
   public List<Rezervacija> dajRezervacijeKorisnika(Aranzman aranzman, Korisnik korisnik,
       boolean prikaziOtkazane) {
     List<Rezervacija> rezultat = new ArrayList<>();
@@ -413,7 +400,7 @@ public class TuristickiAgent {
    *
    * @param korisnik korisnik
    * @return rezervacije korisnika
-   */
+
   public List<Rezervacija> dajSveRezervacijeKorisnika(Korisnik korisnik) {
     return dajSveRezervacijeKorisnika(korisnik, false);
   }
@@ -423,7 +410,7 @@ public class TuristickiAgent {
    *
    * @param korisnik korisnik
    * @return rezervacije korisnika
-   */
+
   public List<Rezervacija> dajSveRezervacijeKorisnika(Korisnik korisnik, boolean prikaziOtkazane) {
     List<Rezervacija> rezultat = new ArrayList<>();
 
@@ -448,5 +435,7 @@ public class TuristickiAgent {
   }
 
   // endregion
+
+  */
 
 }

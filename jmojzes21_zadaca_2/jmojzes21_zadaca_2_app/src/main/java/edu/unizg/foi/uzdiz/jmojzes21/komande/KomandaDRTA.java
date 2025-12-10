@@ -1,10 +1,8 @@
 package edu.unizg.foi.uzdiz.jmojzes21.komande;
 
-import edu.unizg.foi.uzdiz.jmojzes21.KreatorPrimljeneRezervacije;
-import edu.unizg.foi.uzdiz.jmojzes21.KreatorRezervacije;
-import edu.unizg.foi.uzdiz.jmojzes21.TuristickaAgencija;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
+import edu.unizg.foi.uzdiz.jmojzes21.podaci.TuristickaAgencija;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.FormatDatuma;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.NeispravnaKomandaGreska;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.RegexKomandeGraditelj;
@@ -12,9 +10,14 @@ import java.time.LocalDateTime;
 
 public class KomandaDRTA {
 
+  private final TuristickaAgencija agencija;
+
+  public KomandaDRTA(TuristickaAgencija agencija) {
+    this.agencija = agencija;
+  }
+
   public void obradiKomanduDodavanjeRezervacije(String komanda) throws Exception {
 
-    TuristickaAgencija agencija = TuristickaAgencija.dajInstancu();
     FormatDatuma formatDatuma = FormatDatuma.dajInstancu();
 
     var uzorak = new RegexKomandeGraditelj("DRTA")
@@ -36,12 +39,10 @@ public class KomandaDRTA {
     int oznaka = Integer.parseInt(matcher.group("oznaka"));
     String datum = matcher.group("datum");
     String vrijeme = matcher.group("vrijeme");
-    LocalDateTime datumVrijeme = formatDatuma.parsirajDatumVrijeme(datum, vrijeme);
+    LocalDateTime vrijemePrijema = formatDatuma.parsirajDatumVrijeme(datum, vrijeme);
 
     var korisnik = new Korisnik(ime, prezime);
-
-    KreatorRezervacije kreatorRezervacije = new KreatorPrimljeneRezervacije();
-    Rezervacija rezervacija = kreatorRezervacije.napraviRezervaciju(korisnik, oznaka, datumVrijeme);
+    var rezervacija = new Rezervacija(korisnik, oznaka, vrijemePrijema);
 
     try {
       agencija.zaprimiRezervaciju(rezervacija);

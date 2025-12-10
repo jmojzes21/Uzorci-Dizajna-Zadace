@@ -10,6 +10,7 @@ import edu.unizg.foi.uzdiz.jmojzes21.lib.UcitavacPodatakaFacade;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
+import edu.unizg.foi.uzdiz.jmojzes21.podaci.TuristickaAgencija;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.CitacOpcija;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.FormatDatuma;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.NeispravnaKomandaGreska;
@@ -38,6 +39,7 @@ public class Program {
   }
 
   private boolean zaprimajKomandeKorisnika = true;
+  private TuristickaAgencija agencija;
 
   public void pokreni(String[] args) throws Exception {
 
@@ -51,10 +53,10 @@ public class Program {
 
     var konfig = Konfiguracija.dajKonfiguraciju();
 
-    var aranzmani = ucitajAranzmane(Path.of(konfig.putanjaAranzmani()));
-    var rezervacije = ucitajRezervacije(Path.of(konfig.putanjaRezervacije()));
+    List<Aranzman> aranzmani = ucitajAranzmane(Path.of(konfig.putanjaAranzmani()));
+    List<Rezervacija> rezervacije = ucitajRezervacije(Path.of(konfig.putanjaRezervacije()));
 
-    var agencija = TuristickaAgencija.dajInstancu();
+    agencija = new TuristickaAgencija();
     agencija.ucitajAranzmane(aranzmani);
 
     for (var r : rezervacije) {
@@ -101,32 +103,32 @@ public class Program {
 
     switch (naziv) {
       case "ITAK": {
-        var k = new KomandaITAK();
+        var k = new KomandaITAK(agencija);
         k.obradiKomanduPregledAranzmana(komanda);
         break;
       }
       case "ITAP": {
-        var k = new KomandaITAP();
+        var k = new KomandaITAP(agencija);
         k.obradiKomanduDetaljiAranzmana(komanda);
         break;
       }
       case "IRTA": {
-        var k = new KomandaIRTA();
+        var k = new KomandaIRTA(agencija);
         k.obradiKomanduPregledRezervacijaAranzmana(komanda);
         break;
       }
       case "IRO": {
-        var k = new KomandaIRO();
+        var k = new KomandaIRO(agencija);
         k.obradiKomanduPregledRezervacijaKorisnika(komanda);
         break;
       }
       case "DRTA": {
-        var k = new KomandaDRTA();
+        var k = new KomandaDRTA(agencija);
         k.obradiKomanduDodavanjeRezervacije(komanda);
         break;
       }
       case "ORTA": {
-        var k = new KomandaORTA();
+        var k = new KomandaORTA(agencija);
         k.obradiKomanduOtkaziRezervaciju(komanda);
         break;
       }
@@ -135,7 +137,6 @@ public class Program {
         break;
       }
       default: {
-        System.out.println();
         pregledKomandi();
         break;
       }
@@ -323,12 +324,10 @@ public class Program {
     String ime = stupci.get(index++);
     String prezime = stupci.get(index++);
     int oznaka = Integer.parseInt(stupci.get(index++));
-    LocalDateTime datumVrijeme = formatDatuma.parsirajDatumVrijeme(stupci.get(index));
+    LocalDateTime vrijemePrijema = formatDatuma.parsirajDatumVrijeme(stupci.get(index));
 
     var korisnik = new Korisnik(ime, prezime);
-
-    KreatorRezervacije kreatorRezervacije = new KreatorPrimljeneRezervacije();
-    return kreatorRezervacije.napraviRezervaciju(korisnik, oznaka, datumVrijeme);
+    return new Rezervacija(korisnik, oznaka, vrijemePrijema);
   }
 
   // endregion
