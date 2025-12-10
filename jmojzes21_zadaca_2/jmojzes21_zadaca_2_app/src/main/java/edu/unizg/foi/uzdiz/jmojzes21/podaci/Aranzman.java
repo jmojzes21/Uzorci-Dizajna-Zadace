@@ -1,5 +1,9 @@
 package edu.unizg.foi.uzdiz.jmojzes21.podaci;
 
+import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.AranzmanAktivan;
+import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.AranzmanPopunjen;
+import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.AranzmanStanje;
+import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.AranzmanUPripremi;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -32,9 +36,12 @@ public class Aranzman extends RezervacijaComposite {
   private float doplataZaJednokrevetnuSobu;
   private List<String> prijevoz;
 
+  private AranzmanStanje stanje;
+
   public Aranzman(int oznaka, String naziv) {
     this.oznaka = oznaka;
     this.naziv = naziv;
+    stanje = new AranzmanUPripremi();
   }
 
   @Override
@@ -48,6 +55,26 @@ public class Aranzman extends RezervacijaComposite {
   public void zaprimiRezervaciju(Rezervacija rezervacija) {
     rezervacija.zaprimi();
     dodaj(rezervacija);
+  }
+
+  public AranzmanStanje stanje() {
+    return stanje;
+  }
+
+  public void postaviStanje(AranzmanStanje stanje) {
+    this.stanje = stanje;
+  }
+
+  public boolean jeUPripremi() {
+    return stanje instanceof AranzmanUPripremi;
+  }
+
+  public boolean jeAktivan() {
+    return stanje instanceof AranzmanAktivan;
+  }
+
+  public boolean jePopunjen() {
+    return stanje instanceof AranzmanPopunjen;
   }
 
   public List<Rezervacija> primljeneRezervacije() {
