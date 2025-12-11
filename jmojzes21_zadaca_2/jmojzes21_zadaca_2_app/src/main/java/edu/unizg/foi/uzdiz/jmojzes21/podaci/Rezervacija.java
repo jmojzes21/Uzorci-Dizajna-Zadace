@@ -29,6 +29,10 @@ public class Rezervacija extends RezervacijaComponent {
     stanje.zaprimi(this);
   }
 
+  public void aktiviraj() {
+    stanje.aktiviraj(this);
+  }
+
   public RezervacijaStanje stanje() {
     return stanje;
   }

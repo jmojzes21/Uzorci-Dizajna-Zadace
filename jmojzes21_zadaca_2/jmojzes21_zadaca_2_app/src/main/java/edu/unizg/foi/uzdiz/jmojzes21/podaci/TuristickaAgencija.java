@@ -18,6 +18,11 @@ public class TuristickaAgencija extends RezervacijaComposite {
     djeca.add(r);
   }
 
+  @Override
+  protected void ukloni(RezervacijaComponent r) {
+    djeca.remove(r);
+  }
+
   /**
    * Daj listu svih aranžmana.
    *
@@ -150,7 +155,15 @@ public class TuristickaAgencija extends RezervacijaComposite {
    * @param aranzmani aranžmani
    */
   public void ucitajAranzmane(List<Aranzman> aranzmani) {
+
     for (Aranzman aranzman : aranzmani) {
+
+      List<Aranzman> trenutniAranzmani = dajAranzmane();
+      for (var a : trenutniAranzmani) {
+        a.dodajPromatraca(aranzman);
+        aranzman.dodajPromatraca(a);
+      }
+
       dodaj(aranzman);
     }
   }

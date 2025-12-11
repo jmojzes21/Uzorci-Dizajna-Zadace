@@ -6,12 +6,13 @@ import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.AranzmanStanje;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.AranzmanUPripremi;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Turistički aranžman.
  */
-public class Aranzman extends RezervacijaComposite {
+public class Aranzman extends RezervacijaComposite implements RezervacijaSubject, RezervacijaObserver {
 
   private int oznaka;
   private String naziv;
@@ -38,6 +39,8 @@ public class Aranzman extends RezervacijaComposite {
 
   private AranzmanStanje stanje;
 
+  private final List<RezervacijaObserver> promatraci = new ArrayList<>();
+
   public Aranzman(int oznaka, String naziv) {
     this.oznaka = oznaka;
     this.naziv = naziv;
@@ -45,16 +48,48 @@ public class Aranzman extends RezervacijaComposite {
   }
 
   @Override
-  protected void dodaj(RezervacijaComponent r) {
+  public void dodaj(RezervacijaComponent r) {
     if (!(r instanceof Rezervacija)) {
       throw new RuntimeException("Nije moguće dodati " + r.getClass().getName() + " u turistički aranžman!");
     }
     djeca.add(r);
   }
 
-  public void zaprimiRezervaciju(Rezervacija rezervacija) {
-    rezervacija.zaprimi();
-    dodaj(rezervacija);
+  @Override
+  public void ukloni(RezervacijaComponent r) {
+    djeca.remove(r);
+  }
+
+  public void zaprimiRezervaciju(Rezervacija rezervacija) throws Exception {
+    stanje.zaprimiRezervaciju(this, rezervacija);
+  }
+
+  public void aktiviraj() throws Exception {
+    stanje.aktiviraj(this);
+  }
+
+  @Override
+  public void kadaAktiviranaRezervacija(Rezervacija rezervacija) {
+
+  }
+
+  @Override
+  public void dodajPromatraca(RezervacijaObserver promatrac) {
+    if (!promatraci.contains(promatrac)) {
+      promatraci.add(promatrac);
+    }
+  }
+
+  @Override
+  public void ukloniPromatraca(RezervacijaObserver promatrac) {
+    promatraci.remove(promatrac);
+  }
+
+  @Override
+  public void obavijestiAktiviranjeRezervacije(Rezervacija rezervacija) {
+    for (var promatrac : promatraci) {
+      promatrac.kadaAktiviranaRezervacija(rezervacija);
+    }
   }
 
   public AranzmanStanje stanje() {
@@ -89,6 +124,27 @@ public class Aranzman extends RezervacijaComposite {
         .map(e -> (Rezervacija) e)
         .filter(e -> e.jeAktivna())
         .toList();
+  }
+
+  public List<Rezervacija> primljeneAktivneRezervacije() {
+    return djeca.stream()
+        .map(e -> (Rezervacija) e)
+        .filter(e -> e.jePrimljena() || e.jeAktivna())
+        .toList();
+  }
+
+  public int brojPrimljenih() {
+    return Math.toIntExact(djeca.stream()
+        .map(e -> (Rezervacija) e)
+        .filter(e -> e.jePrimljena())
+        .count());
+  }
+
+  public int brojAktivnih() {
+    return Math.toIntExact(djeca.stream()
+        .map(e -> (Rezervacija) e)
+        .filter(e -> e.jeAktivna())
+        .count());
   }
 
   // region Metode za dohvaćanje i postavljanje atributa

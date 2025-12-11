@@ -9,4 +9,6 @@ public abstract class RezervacijaComposite extends RezervacijaComponent {
 
   protected abstract void dodaj(RezervacijaComponent r);
 
+  protected abstract void ukloni(RezervacijaComponent r);
+
 }
