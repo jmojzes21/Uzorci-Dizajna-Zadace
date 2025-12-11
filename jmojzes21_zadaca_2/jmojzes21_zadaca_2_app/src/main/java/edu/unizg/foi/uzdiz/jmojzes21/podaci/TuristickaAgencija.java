@@ -79,10 +79,13 @@ public class TuristickaAgencija extends RezervacijaComposite {
     List<Rezervacija> rezultat = new ArrayList<>();
 
     if (prikaziPrimljeneAktivne) {
-      rezultat.addAll(aranzman.primljeneRezervacije());
-      rezultat.addAll(aranzman.aktivneRezervacije());
+      rezultat.addAll(aranzman.primljeneAktivneRezervacije());
     }
 
+    if (prikaziNaCekanju) {
+      rezultat.addAll(aranzman.rezervacijeNaCekanju());
+    }
+ 
     return rezultat.stream()
         .sorted(Comparator.comparing(Rezervacija::vrijemePrijema))
         .toList();

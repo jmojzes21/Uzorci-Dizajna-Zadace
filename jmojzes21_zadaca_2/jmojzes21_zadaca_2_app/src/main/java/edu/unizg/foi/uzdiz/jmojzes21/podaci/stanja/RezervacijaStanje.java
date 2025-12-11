@@ -8,6 +8,10 @@ public interface RezervacijaStanje {
 
   default void aktiviraj(Rezervacija rezervacija) {throw new RuntimeException();}
 
+  default void staviNaCekanje(Rezervacija rezervacija) {
+    throw new RuntimeException("Nije moguce staviti rezervaciju na cekanje");
+  }
+
   String dajNaziv();
 
 }

@@ -1,6 +1,7 @@
 package edu.unizg.foi.uzdiz.jmojzes21.podaci;
 
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.RezervacijaAktivna;
+import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.RezervacijaNaCekanju;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.RezervacijaNova;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.RezervacijaPrimljena;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.RezervacijaStanje;
@@ -33,6 +34,10 @@ public class Rezervacija extends RezervacijaComponent {
     stanje.aktiviraj(this);
   }
 
+  public void staviNaCekanje() {
+    stanje.staviNaCekanje(this);
+  }
+
   public RezervacijaStanje stanje() {
     return stanje;
   }
@@ -51,6 +56,10 @@ public class Rezervacija extends RezervacijaComponent {
 
   public boolean jeAktivna() {
     return stanje instanceof RezervacijaAktivna;
+  }
+
+  public boolean jeNaCekanju() {
+    return stanje instanceof RezervacijaNaCekanju;
   }
 
   // region Metode za dohvaćanje i postavljanje atributa

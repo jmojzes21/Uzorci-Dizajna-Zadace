@@ -10,6 +10,11 @@ public class RezervacijaPrimljena implements RezervacijaStanje {
   }
 
   @Override
+  public void staviNaCekanje(Rezervacija rezervacija) {
+    rezervacija.postaviStanje(new RezervacijaNaCekanju());
+  }
+
+  @Override
   public String dajNaziv() {
     return "Primljena";
   }

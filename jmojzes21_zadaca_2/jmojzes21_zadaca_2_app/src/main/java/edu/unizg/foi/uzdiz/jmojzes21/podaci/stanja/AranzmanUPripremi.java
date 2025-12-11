@@ -26,7 +26,7 @@ public class AranzmanUPripremi implements AranzmanStanje {
         System.out.println(e.getMessage());
       }
 
-      var rezervacije = aranzman.primljeneRezervacije();
+      var rezervacije = aranzman.primljeneAktivneRezervacije();
       if (!rezervacije.contains(rezervacija)) {
         throw new Exception("Rezervacije je obrisana.");
       }

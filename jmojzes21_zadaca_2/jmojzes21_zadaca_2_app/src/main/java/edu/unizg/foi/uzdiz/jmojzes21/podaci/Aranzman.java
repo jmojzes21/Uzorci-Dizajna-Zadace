@@ -133,6 +133,13 @@ public class Aranzman extends RezervacijaComposite implements RezervacijaSubject
         .toList();
   }
 
+  public List<Rezervacija> rezervacijeNaCekanju() {
+    return djeca.stream()
+        .map(e -> (Rezervacija) e)
+        .filter(e -> e.jeNaCekanju())
+        .toList();
+  }
+
   public int brojPrimljenih() {
     return Math.toIntExact(djeca.stream()
         .map(e -> (Rezervacija) e)
