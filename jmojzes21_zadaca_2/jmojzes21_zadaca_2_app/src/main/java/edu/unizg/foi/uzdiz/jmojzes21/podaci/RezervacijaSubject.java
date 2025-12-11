@@ -6,6 +6,6 @@ public interface RezervacijaSubject {
 
   void ukloniPromatraca(RezervacijaObserver promatrac);
 
-  void obavijestiAktiviranjeRezervacije(Rezervacija rezervacija);
+  void obavijestiAktiviranjeRezervacije(Rezervacija aktivirana);
 
 }

@@ -7,7 +7,7 @@ import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.RezervacijaPrimljena;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.RezervacijaStanje;
 import java.time.LocalDateTime;
 
-public class Rezervacija extends RezervacijaComponent {
+public class Rezervacija extends RezervacijaComponent implements RezervacijaObserver {
 
   private Korisnik korisnik;
 
@@ -38,6 +38,41 @@ public class Rezervacija extends RezervacijaComponent {
     stanje.staviNaCekanje(this);
   }
 
+  public void odgodi() {
+    stanje.odgodi(this);
+  }
+
+  @Override
+  public void kadaAktiviranaRezervacija(Rezervacija aktivirana) {
+    if (oznakaAranzmana == aktivirana.oznakaAranzmana) {return;}
+
+    if (jeAktivna() && korisnik.equals(aktivirana.korisnik)) {
+
+      Aranzman aranzman1 = dajAranzman();
+      Aranzman aranzman2 = aktivirana.dajAranzman();
+
+      if (aranzman1.preklapaSe(aranzman2)) {
+        System.out.println("Preklapanje " + korisnik.punoIme() + " " + oznakaAranzmana + " s rezervacijom "
+            + aktivirana.oznakaAranzmana());
+
+        Rezervacija zaOdgodu;
+
+        if (vrijemePrijema.isBefore(aktivirana.vrijemePrijema)) {
+          System.out.println("Rezervacija " + aktivirana.oznakaAranzmana + " postaje odgođena");
+          zaOdgodu = aktivirana;
+        } else {
+          System.out.println("Rezervacija " + oznakaAranzmana + " postaje odgođena");
+          zaOdgodu = this;
+        }
+
+        zaOdgodu.odgodi();
+        zaOdgodu.dajAranzman().provjeriAktivneRezervacije();
+
+      }
+
+    }
+  }
+
   public RezervacijaStanje stanje() {
     return stanje;
   }
@@ -60,6 +95,10 @@ public class Rezervacija extends RezervacijaComponent {
 
   public boolean jeNaCekanju() {
     return stanje instanceof RezervacijaNaCekanju;
+  }
+
+  public Aranzman dajAranzman() {
+    return (Aranzman) dajRoditelja();
   }
 
   // region Metode za dohvaćanje i postavljanje atributa

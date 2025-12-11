@@ -20,11 +20,8 @@ public class AranzmanUPripremi implements AranzmanStanje {
     int brojPrimljenih = aranzman.primljeneRezervacije().size();
 
     if (brojPrimljenih >= aranzman.minBrojPutnika()) {
-      try {
-        aranzman.aktiviraj();
-      } catch (Exception e) {
-        System.out.println(e.getMessage());
-      }
+
+      aranzman.aktiviraj();
 
       var rezervacije = aranzman.primljeneAktivneRezervacije();
       if (!rezervacije.contains(rezervacija)) {
@@ -54,14 +51,28 @@ public class AranzmanUPripremi implements AranzmanStanje {
     int brojPrimljenih = aranzman.brojPrimljenih();
 
     if (brojPrimljenih < aranzman.minBrojPutnika()) {
-      String opis = String.format("Aranžman %d ne može postati aktivan jer nema dovoljno primljenih rezervacija!",
+      System.out.printf("Aranžman %d ne može postati aktivan jer nema dovoljno primljenih rezervacija!\n",
           aranzman.oznaka());
-      throw new Exception(opis);
+      return;
     }
 
     for (Rezervacija rezervacija : rezervacije) {
       rezervacija.aktiviraj();
       aranzman.obavijestiAktiviranjeRezervacije(rezervacija);
+    }
+
+    int brojAktivnih = aranzman.brojAktivnih();
+
+    if (brojAktivnih < aranzman.minBrojPutnika()) {
+
+      List<Rezervacija> aktivne = aranzman.aktivneRezervacije();
+      for (Rezervacija r : aktivne) {
+        r.zaprimi();
+      }
+
+      System.out.printf("Aranžman %d ne može postati aktivan jer nema dovoljno primljenih rezervacija!\n",
+          aranzman.oznaka());
+      return;
     }
 
     aranzman.postaviStanje(new AranzmanAktivan());

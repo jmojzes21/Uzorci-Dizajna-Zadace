@@ -52,6 +52,7 @@ public class Aranzman extends RezervacijaComposite implements RezervacijaSubject
     if (!(r instanceof Rezervacija)) {
       throw new RuntimeException("Nije moguće dodati " + r.getClass().getName() + " u turistički aranžman!");
     }
+    r.postaviRoditelja(this);
     djeca.add(r);
   }
 
@@ -69,8 +70,24 @@ public class Aranzman extends RezervacijaComposite implements RezervacijaSubject
   }
 
   @Override
-  public void kadaAktiviranaRezervacija(Rezervacija rezervacija) {
+  public void kadaAktiviranaRezervacija(Rezervacija aktivirana) {
+    List<Rezervacija> rezervacije = aktivneRezervacije();
+    for (Rezervacija r : rezervacije) {
+      r.kadaAktiviranaRezervacija(aktivirana);
+    }
+  }
 
+  public void provjeriAktivneRezervacije() {
+    if (jeAktivan()) {
+      int brojAktivnih = brojAktivnih();
+      if (brojAktivnih < minBrojPutnika) {
+        List<Rezervacija> aktivne = aktivneRezervacije();
+        for (var r : aktivne) {
+          r.zaprimi();
+        }
+        postaviStanje(new AranzmanUPripremi());
+      }
+    }
   }
 
   @Override
@@ -86,9 +103,9 @@ public class Aranzman extends RezervacijaComposite implements RezervacijaSubject
   }
 
   @Override
-  public void obavijestiAktiviranjeRezervacije(Rezervacija rezervacija) {
+  public void obavijestiAktiviranjeRezervacije(Rezervacija aktivirana) {
     for (var promatrac : promatraci) {
-      promatrac.kadaAktiviranaRezervacija(rezervacija);
+      promatrac.kadaAktiviranaRezervacija(aktivirana);
     }
   }
 
@@ -152,6 +169,20 @@ public class Aranzman extends RezervacijaComposite implements RezervacijaSubject
         .map(e -> (Rezervacija) e)
         .filter(e -> e.jeAktivna())
         .count());
+  }
+
+  /**
+   * Provjeri preklapa li se ovaj aranžman s drugim aranžmanom.
+   *
+   * @param drugi
+   * @return true ako se aranžmani preklapaju
+   */
+  public boolean preklapaSe(Aranzman drugi) {
+    if (pocetniDatum().isBefore(drugi.pocetniDatum())) {
+      return zavrsniDatum().compareTo(drugi.pocetniDatum()) >= 0;
+    } else {
+      return drugi.zavrsniDatum().compareTo(pocetniDatum()) >= 0;
+    }
   }
 
   // region Metode za dohvaćanje i postavljanje atributa

@@ -12,6 +12,10 @@ public interface RezervacijaStanje {
     throw new RuntimeException("Nije moguce staviti rezervaciju na cekanje");
   }
 
+  default void odgodi(Rezervacija rezervacija) {
+    throw new RuntimeException("Nije moguće odgoditi rezervaciju");
+  }
+
   String dajNaziv();
 
 }

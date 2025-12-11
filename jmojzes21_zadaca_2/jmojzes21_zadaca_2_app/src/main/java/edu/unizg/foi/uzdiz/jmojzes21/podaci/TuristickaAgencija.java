@@ -15,6 +15,7 @@ public class TuristickaAgencija extends RezervacijaComposite {
     if (!(r instanceof Aranzman)) {
       throw new RuntimeException("Nije moguće dodati " + r.getClass().getName() + " u turističku agenciju!");
     }
+    r.postaviRoditelja(this);
     djeca.add(r);
   }
 
@@ -85,7 +86,7 @@ public class TuristickaAgencija extends RezervacijaComposite {
     if (prikaziNaCekanju) {
       rezultat.addAll(aranzman.rezervacijeNaCekanju());
     }
- 
+
     return rezultat.stream()
         .sorted(Comparator.comparing(Rezervacija::vrijemePrijema))
         .toList();
