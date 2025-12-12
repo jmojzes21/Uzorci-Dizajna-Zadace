@@ -1,4 +1,4 @@
-package edu.unizg.foi.uzdiz.jmojzes21.lib;
+package edu.unizg.foi.uzdiz.jmojzes21.lib.pomocnici;
 
 
 import java.time.LocalDate;

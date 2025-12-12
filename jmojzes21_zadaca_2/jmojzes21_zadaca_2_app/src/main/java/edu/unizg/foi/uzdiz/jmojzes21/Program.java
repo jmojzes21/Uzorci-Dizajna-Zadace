@@ -6,7 +6,7 @@ import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaIRTA;
 import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaITAK;
 import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaITAP;
 import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaORTA;
-import edu.unizg.foi.uzdiz.jmojzes21.lib.UcitavacPodatakaFacade;
+import edu.unizg.foi.uzdiz.jmojzes21.lib.facade.UcitavacPodatakaFacade;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;

@@ -25,6 +25,7 @@
     <maven.javadoc>3.11.2</maven.javadoc>
     <maven.jar>3.4.2</maven.jar>
     <maven.install>3.1.4</maven.install>
+    <maven.dependency>3.8.1</maven.dependency>
 
   </properties>
 
