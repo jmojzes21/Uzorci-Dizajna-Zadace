@@ -17,7 +17,6 @@ public class AranzmanAktivan implements AranzmanStanje {
 
     aranzman.dodaj(rezervacija);
     rezervacija.zaprimi();
-
     rezervacija.aktiviraj();
     aranzman.obavijestiAktiviranjeRezervacije(rezervacija);
 
@@ -26,6 +25,19 @@ public class AranzmanAktivan implements AranzmanStanje {
       aranzman.postaviStanje(new AranzmanPopunjen());
     }
 
+  }
+
+  @Override
+  public void provjeriAktivneRezervacije(Aranzman aranzman) {
+    List<Rezervacija> aktivneRezervacije = aranzman.aktivneRezervacije();
+    int brojAktivnih = aktivneRezervacije.size();
+
+    if (brojAktivnih < aranzman.minBrojPutnika()) {
+      for (var r : aktivneRezervacije) {
+        r.zaprimi();
+      }
+      aranzman.postaviStanje(new AranzmanUPripremi());
+    }
   }
 
   @Override

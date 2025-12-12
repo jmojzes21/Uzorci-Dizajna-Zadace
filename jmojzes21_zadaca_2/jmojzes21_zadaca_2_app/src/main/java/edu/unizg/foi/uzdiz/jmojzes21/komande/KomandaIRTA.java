@@ -31,14 +31,22 @@ public class KomandaIRTA {
 
     int oznaka = Integer.parseInt(matcher.group("oznaka"));
     String filter = matcher.group("filter");
-    if (filter == null) {filter = "PAČO";}
+    if (filter == null) {filter = "PAČODO";}
 
     boolean prikaziPrimljeneAktivne = filter.contains("PA");
     boolean prikaziNaCekanju = filter.contains("Č");
+
+    boolean prikaziOdgodjene = false;
+    if (filter.contains("OD")) {
+      prikaziOdgodjene = true;
+      filter = filter.replace("OD", "");
+    }
+
     boolean prikaziOtkazane = filter.contains("O");
 
-    List<Rezervacija> rezervacije = agencija.dajRezervacijeAranzmana(oznaka,
-        prikaziPrimljeneAktivne, prikaziNaCekanju, prikaziOtkazane);
+    List<Rezervacija> rezervacije = agencija.dajRezervacijeAranzmana(oznaka, prikaziPrimljeneAktivne, prikaziNaCekanju,
+        prikaziOtkazane, prikaziOdgodjene);
+
     if (rezervacije == null) {
       System.out.println("Aranžman ne postoji.");
       return;

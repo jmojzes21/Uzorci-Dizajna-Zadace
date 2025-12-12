@@ -15,6 +15,8 @@ public interface AranzmanStanje {
 
   default void popuni(Aranzman aranzman) {throw new RuntimeException();}
 
+  default void provjeriAktivneRezervacije(Aranzman aranzman) {throw new RuntimeException();}
+
   String dajNaziv();
-  
+
 }

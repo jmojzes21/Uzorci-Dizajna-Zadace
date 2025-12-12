@@ -1,7 +1,6 @@
 package edu.unizg.foi.uzdiz.jmojzes21.podaci;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -69,23 +68,17 @@ public class TuristickaAgencija extends RezervacijaComposite {
    * @param prikaziPrimljeneAktivne prikaži primljene i aktivne rezervacije
    * @param prikaziNaCekanju        prikaži rezervacije na čekanju
    * @param prikaziOtkazane         prikaži otkazane rezervacije
+   * @param prikaziOdgodjene        prikaži odgođene rezervacije
    * @return lista rezervacija ili null
    */
   public List<Rezervacija> dajRezervacijeAranzmana(int oznaka, boolean prikaziPrimljeneAktivne,
-      boolean prikaziNaCekanju, boolean prikaziOtkazane) {
+      boolean prikaziNaCekanju, boolean prikaziOtkazane, boolean prikaziOdgodjene) {
 
     Aranzman aranzman = dajAranzman(oznaka);
     if (aranzman == null) {return null;}
 
-    List<Rezervacija> rezultat = new ArrayList<>();
-
-    if (prikaziPrimljeneAktivne) {
-      rezultat.addAll(aranzman.primljeneAktivneRezervacije());
-    }
-
-    if (prikaziNaCekanju) {
-      rezultat.addAll(aranzman.rezervacijeNaCekanju());
-    }
+    List<Rezervacija> rezultat = aranzman.filtrirajRezervacije(prikaziPrimljeneAktivne, prikaziPrimljeneAktivne,
+        prikaziNaCekanju, prikaziOtkazane, prikaziOdgodjene);
 
     return rezultat.stream()
         .sorted(Comparator.comparing(Rezervacija::vrijemePrijema))

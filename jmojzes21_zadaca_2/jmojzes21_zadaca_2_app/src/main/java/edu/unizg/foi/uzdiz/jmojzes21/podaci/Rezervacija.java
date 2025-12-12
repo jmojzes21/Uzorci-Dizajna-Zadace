@@ -3,6 +3,8 @@ package edu.unizg.foi.uzdiz.jmojzes21.podaci;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.RezervacijaAktivna;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.RezervacijaNaCekanju;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.RezervacijaNova;
+import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.RezervacijaOdgodjena;
+import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.RezervacijaOtkazana;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.RezervacijaPrimljena;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.RezervacijaStanje;
 import java.time.LocalDateTime;
@@ -45,32 +47,7 @@ public class Rezervacija extends RezervacijaComponent implements RezervacijaObse
   @Override
   public void kadaAktiviranaRezervacija(Rezervacija aktivirana) {
     if (oznakaAranzmana == aktivirana.oznakaAranzmana) {return;}
-
-    if (jeAktivna() && korisnik.equals(aktivirana.korisnik)) {
-
-      Aranzman aranzman1 = dajAranzman();
-      Aranzman aranzman2 = aktivirana.dajAranzman();
-
-      if (aranzman1.preklapaSe(aranzman2)) {
-        System.out.println("Preklapanje " + korisnik.punoIme() + " " + oznakaAranzmana + " s rezervacijom "
-            + aktivirana.oznakaAranzmana());
-
-        Rezervacija zaOdgodu;
-
-        if (vrijemePrijema.isBefore(aktivirana.vrijemePrijema)) {
-          System.out.println("Rezervacija " + aktivirana.oznakaAranzmana + " postaje odgođena");
-          zaOdgodu = aktivirana;
-        } else {
-          System.out.println("Rezervacija " + oznakaAranzmana + " postaje odgođena");
-          zaOdgodu = this;
-        }
-
-        zaOdgodu.odgodi();
-        zaOdgodu.dajAranzman().provjeriAktivneRezervacije();
-
-      }
-
-    }
+    stanje.kadaAktiviranaRezervacija(this, aktivirana);
   }
 
   public RezervacijaStanje stanje() {
@@ -95,6 +72,14 @@ public class Rezervacija extends RezervacijaComponent implements RezervacijaObse
 
   public boolean jeNaCekanju() {
     return stanje instanceof RezervacijaNaCekanju;
+  }
+
+  public boolean jeOtkazana() {
+    return stanje instanceof RezervacijaOtkazana;
+  }
+
+  public boolean jeOdgodjena() {
+    return stanje instanceof RezervacijaOdgodjena;
   }
 
   public Aranzman dajAranzman() {

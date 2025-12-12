@@ -7,6 +7,7 @@ import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.AranzmanUPripremi;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -78,16 +79,7 @@ public class Aranzman extends RezervacijaComposite implements RezervacijaSubject
   }
 
   public void provjeriAktivneRezervacije() {
-    if (jeAktivan()) {
-      int brojAktivnih = brojAktivnih();
-      if (brojAktivnih < minBrojPutnika) {
-        List<Rezervacija> aktivne = aktivneRezervacije();
-        for (var r : aktivne) {
-          r.zaprimi();
-        }
-        postaviStanje(new AranzmanUPripremi());
-      }
-    }
+    stanje.provjeriAktivneRezervacije(this);
   }
 
   @Override
@@ -120,7 +112,7 @@ public class Aranzman extends RezervacijaComposite implements RezervacijaSubject
   public String nazivStanja() {
     return stanje.dajNaziv();
   }
-  
+
   public boolean jeUPripremi() {
     return stanje instanceof AranzmanUPripremi;
   }
@@ -131,6 +123,12 @@ public class Aranzman extends RezervacijaComposite implements RezervacijaSubject
 
   public boolean jePopunjen() {
     return stanje instanceof AranzmanPopunjen;
+  }
+
+  public List<Rezervacija> rezervacije() {
+    return djeca.stream()
+        .map(e -> (Rezervacija) e)
+        .toList();
   }
 
   public List<Rezervacija> primljeneRezervacije() {
@@ -161,6 +159,32 @@ public class Aranzman extends RezervacijaComposite implements RezervacijaSubject
         .toList();
   }
 
+  public List<Rezervacija> otkazaneRezervacije() {
+    return djeca.stream()
+        .map(e -> (Rezervacija) e)
+        .filter(e -> e.jeOtkazana())
+        .toList();
+  }
+
+  public List<Rezervacija> odgodjeneRezervacije() {
+    return djeca.stream()
+        .map(e -> (Rezervacija) e)
+        .filter(e -> e.jeOdgodjena())
+        .toList();
+  }
+
+  public List<Rezervacija> filtrirajRezervacije(boolean prikaziPrimljene, boolean prikaziAktivne,
+      boolean prikaziNaCekanju, boolean prikaziOtkazane, boolean prikaziOdgodjene) {
+    return djeca.stream()
+        .map(e -> (Rezervacija) e)
+        .filter(e -> prikaziPrimljene && e.jePrimljena()
+            || prikaziAktivne && e.jeAktivna()
+            || prikaziNaCekanju && e.jeNaCekanju()
+            || prikaziOtkazane && e.jeOtkazana()
+            || prikaziOdgodjene && e.jeOdgodjena())
+        .toList();
+  }
+
   public int brojPrimljenih() {
     return Math.toIntExact(djeca.stream()
         .map(e -> (Rezervacija) e)
@@ -187,6 +211,10 @@ public class Aranzman extends RezervacijaComposite implements RezervacijaSubject
     } else {
       return drugi.zavrsniDatum().compareTo(pocetniDatum()) >= 0;
     }
+  }
+
+  public Rezervacija dajNajnovijuRezervaciju(List<Rezervacija> rezervacije) {
+    return rezervacije.stream().max(Comparator.comparing(Rezervacija::vrijemePrijema)).orElse(null);
   }
 
   // region Metode za dohvaćanje i postavljanje atributa

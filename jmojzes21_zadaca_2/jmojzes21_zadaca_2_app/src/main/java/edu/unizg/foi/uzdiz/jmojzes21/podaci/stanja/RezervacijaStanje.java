@@ -16,6 +16,8 @@ public interface RezervacijaStanje {
     throw new RuntimeException("Nije moguće odgoditi rezervaciju");
   }
 
+  default void kadaAktiviranaRezervacija(Rezervacija trenutna, Rezervacija aktivirana) {}
+
   String dajNaziv();
 
 }

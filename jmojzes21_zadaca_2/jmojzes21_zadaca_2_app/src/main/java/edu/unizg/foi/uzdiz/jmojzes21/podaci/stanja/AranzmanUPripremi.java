@@ -23,7 +23,7 @@ public class AranzmanUPripremi implements AranzmanStanje {
 
       aranzman.aktiviraj();
 
-      var rezervacije = aranzman.primljeneAktivneRezervacije();
+      var rezervacije = aranzman.rezervacije();
       if (!rezervacije.contains(rezervacija)) {
         throw new Exception("Rezervacije je obrisana.");
       }
@@ -61,15 +61,13 @@ public class AranzmanUPripremi implements AranzmanStanje {
       aranzman.obavijestiAktiviranjeRezervacije(rezervacija);
     }
 
-    int brojAktivnih = aranzman.brojAktivnih();
+    List<Rezervacija> aktivneRezervacije = aranzman.aktivneRezervacije();
+    int brojAktivnih = aktivneRezervacije.size();
 
     if (brojAktivnih < aranzman.minBrojPutnika()) {
-
-      List<Rezervacija> aktivne = aranzman.aktivneRezervacije();
-      for (Rezervacija r : aktivne) {
+      for (Rezervacija r : aktivneRezervacije) {
         r.zaprimi();
       }
-
       System.out.printf("Aranžman %d ne može postati aktivan jer nema dovoljno primljenih rezervacija!\n",
           aranzman.oznaka());
       return;
