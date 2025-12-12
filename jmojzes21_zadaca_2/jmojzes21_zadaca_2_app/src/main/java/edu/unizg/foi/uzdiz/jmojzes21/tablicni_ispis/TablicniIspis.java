@@ -1,4 +1,4 @@
-package edu.unizg.foi.uzdiz.jmojzes21.pomocnici.tablicni_ispis;
+package edu.unizg.foi.uzdiz.jmojzes21.tablicni_ispis;
 
 import java.util.List;
 
