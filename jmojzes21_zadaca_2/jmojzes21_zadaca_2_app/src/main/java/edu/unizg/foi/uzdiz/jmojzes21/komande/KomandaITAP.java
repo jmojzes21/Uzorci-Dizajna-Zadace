@@ -58,6 +58,7 @@ public class KomandaITAP {
     System.out.printf("Broj doručka: %d\n", a.brojDorucka());
     System.out.printf("Broj ručkova: %d\n", a.brojRuckova());
     System.out.printf("Broj večera: %d\n", a.brojVecera());
+    System.out.printf("Status: %s\n", a.nazivStanja());
 
   }
 

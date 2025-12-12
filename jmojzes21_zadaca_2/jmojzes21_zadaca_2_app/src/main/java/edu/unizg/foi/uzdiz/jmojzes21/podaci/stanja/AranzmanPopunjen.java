@@ -12,4 +12,9 @@ public class AranzmanPopunjen implements AranzmanStanje {
     rezervacija.staviNaCekanje();
   }
 
+  @Override
+  public String dajNaziv() {
+    return "Popunjen";
+  }
+
 }

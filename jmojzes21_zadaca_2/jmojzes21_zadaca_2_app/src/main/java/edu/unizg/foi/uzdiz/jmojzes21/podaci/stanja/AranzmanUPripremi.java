@@ -79,6 +79,10 @@ public class AranzmanUPripremi implements AranzmanStanje {
 
   }
 
+  @Override
+  public String dajNaziv() {
+    return "U pripremi";
+  }
 
   /**
    * Filtriraj rezervacije korisnika tako da korisnik ima samo jednu rezervaciju. Ostale rezervacije postaju

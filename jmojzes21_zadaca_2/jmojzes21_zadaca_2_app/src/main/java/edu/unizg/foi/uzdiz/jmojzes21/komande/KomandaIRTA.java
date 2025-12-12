@@ -25,7 +25,7 @@ public class KomandaIRTA {
 
     var matcher = uzorak.matcher(args);
     if (!matcher.matches()) {
-      String opis = "IRTA oznaka [PA|Č|O]";
+      String opis = "IRTA oznaka [PA|Č|O|OD]";
       throw new NeispravnaKomandaGreska(opis);
     }
 

@@ -68,6 +68,7 @@ public class KomandaITAK {
         .poravnajDesno()
         .dodajStupac("Max putnika", 12, e -> Integer.toString(e.maxBrojPutnika()))
         .poravnajDesno()
+        .dodajStupac("Status", 20, e -> e.nazivStanja())
         .napravi();
 
     tablicniIspis.ispisiZaglavlje();

@@ -59,13 +59,7 @@ public class Program {
 
     if (putanjaRezervacije != null) {
       List<Rezervacija> rezervacije = ucitajRezervacije(Path.of(putanjaRezervacije));
-      for (var r : rezervacije) {
-        try {
-          agencija.zaprimiRezervaciju(r);
-        } catch (Exception e) {
-          EvidencijaGresaka.dajInstancu().evidentiraj(e);
-        }
-      }
+      agencija.zaprimiRezervacije(rezervacije);
     }
 
     obradiKomandeKorisnika();

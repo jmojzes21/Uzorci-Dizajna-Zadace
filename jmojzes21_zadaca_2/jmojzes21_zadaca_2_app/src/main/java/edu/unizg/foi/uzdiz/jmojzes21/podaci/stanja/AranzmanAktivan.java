@@ -18,17 +18,19 @@ public class AranzmanAktivan implements AranzmanStanje {
     aranzman.dodaj(rezervacija);
     rezervacija.zaprimi();
 
-    int brojAktivnih = aranzman.brojAktivnih();
-
-    if (brojAktivnih >= aranzman.maxBrojPutnika()) {
-      rezervacija.staviNaCekanje();
-      aranzman.postaviStanje(new AranzmanPopunjen());
-      return;
-    }
-
     rezervacija.aktiviraj();
     aranzman.obavijestiAktiviranjeRezervacije(rezervacija);
 
+    int brojAktivnih = aranzman.brojAktivnih();
+    if (brojAktivnih >= aranzman.maxBrojPutnika()) {
+      aranzman.postaviStanje(new AranzmanPopunjen());
+    }
+
+  }
+
+  @Override
+  public String dajNaziv() {
+    return "Aktivan";
   }
 
   private boolean korisnikImaAktivnuRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {

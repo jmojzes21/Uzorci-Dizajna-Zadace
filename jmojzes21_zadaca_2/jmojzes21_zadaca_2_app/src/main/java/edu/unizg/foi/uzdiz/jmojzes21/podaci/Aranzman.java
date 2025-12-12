@@ -117,6 +117,10 @@ public class Aranzman extends RezervacijaComposite implements RezervacijaSubject
     this.stanje = stanje;
   }
 
+  public String nazivStanja() {
+    return stanje.dajNaziv();
+  }
+  
   public boolean jeUPripremi() {
     return stanje instanceof AranzmanUPripremi;
   }

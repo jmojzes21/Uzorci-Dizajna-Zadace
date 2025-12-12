@@ -113,7 +113,7 @@ public class TuristickaAgencija extends RezervacijaComposite {
   }
 
   /**
-   * Zaprimi rezervaciju korisnika
+   * Zaprimi rezervaciju korisnika.
    *
    * @param rezervacija rezervacija
    * @throws Exception zaprimanje rezervacije nije uspjelo
@@ -127,6 +127,25 @@ public class TuristickaAgencija extends RezervacijaComposite {
     }
 
     aranzman.zaprimiRezervaciju(rezervacija);
+
+  }
+
+  /**
+   * Zaprimi rezervacije korisnika.
+   *
+   * @param rezervacije lista rezervacija
+   */
+  public void zaprimiRezervacije(List<Rezervacija> rezervacije) {
+
+    rezervacije.sort(Comparator.comparing(Rezervacija::vrijemePrijema));
+
+    for (Rezervacija rezervacija : rezervacije) {
+      try {
+        zaprimiRezervaciju(rezervacija);
+      } catch (Exception e) {
+        System.out.println(e.getMessage());
+      }
+    }
 
   }
 
