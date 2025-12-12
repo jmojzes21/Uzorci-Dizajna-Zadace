@@ -1,5 +1,6 @@
 package edu.unizg.foi.uzdiz.jmojzes21.komande;
 
+import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.TuristickaAgencija;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.FormatDatuma;
@@ -43,17 +44,24 @@ public class KomandaIRO {
 
   private void prikaziRezervacijeKorisnika(List<Rezervacija> rezervacije) {
 
-    var formatDatuma = FormatDatuma.dajInstancu();
+    var fd = FormatDatuma.dajInstancu();
 
-    var tablicniIspis = new TablicniIspisGraditelj<Rezervacija>()
-        .dodajStupac("Datum i vrijeme", 24, e -> formatDatuma.formatiraj(e.vrijemePrijema()))
-        .dodajStupac("Oznaka aranžmana", 16, e -> Integer.toString(e.oznakaAranzmana()))
-        .dodajStupac("Naziv aranžmana", 20, e -> agencija.dajAranzman(e.oznakaAranzmana()).naziv())
-        .dodajStupac("Status", 18, e -> e.nazivStanja())
+    var tablicniIspis = new TablicniIspisGraditelj()
+        .dodajStupac("Vrijeme prijema", 24)
+        .dodajStupac("Oznaka aranžmana", 16)
+        .dodajStupac("Naziv aranžmana", 20)
+        .dodajStupac("Status", 18)
         .napravi();
 
     tablicniIspis.ispisiZaglavlje();
-    tablicniIspis.ispisi(rezervacije);
+
+    for (Rezervacija e : rezervacije) {
+      Aranzman aranzman = e.dajAranzman();
+      List<String> podaci = List.of(
+          fd.formatiraj(e.vrijemePrijema()), Integer.toString(e.oznakaAranzmana()), aranzman.naziv(), e.nazivStanja()
+      );
+      tablicniIspis.ispisi(podaci);
+    }
 
   }
 

@@ -62,19 +62,26 @@ public class KomandaIRTA {
 
   private void prikaziRezervacije(List<Rezervacija> rezervacije, boolean prikaziOtkazane) {
 
-    var formatDatuma = FormatDatuma.dajInstancu();
+    var fd = FormatDatuma.dajInstancu();
 
-    var tablicniIspis = new TablicniIspisGraditelj<Rezervacija>()
-        .dodajStupac("Ime", 18, e -> e.korisnik().ime())
-        .dodajStupac("Prezime", 18, e -> e.korisnik().prezime())
-        .dodajStupac("Datum i vrijeme", 24, e -> formatDatuma.formatiraj(e.vrijemePrijema()))
-        .dodajStupac("Status", 18, e -> e.nazivStanja())
-        .dodajStupac("Vrijeme otkaza", 24, e -> "")
+    var tablicniIspis = new TablicniIspisGraditelj()
+        .dodajStupac("Ime", 18)
+        .dodajStupac("Prezime", 18)
+        .dodajStupac("Vrijeme prijema", 24)
+        .dodajStupac("Status", 18)
+        .dodajStupac("Vrijeme otkaza", 24)
         .prikazujStupac(prikaziOtkazane)
         .napravi();
 
     tablicniIspis.ispisiZaglavlje();
-    tablicniIspis.ispisi(rezervacije);
+
+    for (Rezervacija e : rezervacije) {
+      List<String> podaci = List.of(
+          e.korisnik().ime(), e.korisnik().prezime(), fd.formatiraj(e.vrijemePrijema()), e.nazivStanja(),
+          (e.vrijemeOtkaza() != null ? fd.formatiraj(e.vrijemeOtkaza()) : "")
+      );
+      tablicniIspis.ispisi(podaci);
+    }
 
   }
 

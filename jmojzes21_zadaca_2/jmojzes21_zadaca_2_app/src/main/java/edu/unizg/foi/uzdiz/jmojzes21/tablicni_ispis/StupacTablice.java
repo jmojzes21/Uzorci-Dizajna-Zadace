@@ -1,31 +1,24 @@
 package edu.unizg.foi.uzdiz.jmojzes21.tablicni_ispis;
 
-import java.util.function.Function;
-
 /**
  * Stupac tablice kojeg koristi tablični ispis.
- *
- * @param <T> tip klase za koju se odnosi tablični ispis
  */
-public class StupacTablice<T> {
+public class StupacTablice {
+
+  public enum Poravnanje {
+    lijevo, desno;
+  }
 
   private String naziv;
   private int sirina;
-  private Function<T, String> dajVrijednost;
 
   private Poravnanje poravnanje;
   private boolean prikaziStupac = true;
 
-  public StupacTablice(String naziv, int sirina, Function<T, String> dajVrijednost,
-      Poravnanje poravnanje) {
+  public StupacTablice(String naziv, int sirina, Poravnanje poravnanje) {
     setNaziv(naziv);
     setSirina(sirina);
-    setDajVrijednost(dajVrijednost);
     setPoravnanje(poravnanje);
-  }
-
-  public String dajVrijednost(T o) {
-    return dajVrijednost.apply(o);
   }
 
   public String naziv() {return naziv;}
@@ -45,13 +38,7 @@ public class StupacTablice<T> {
     this.sirina = sirina;
   }
 
-  public void setDajVrijednost(Function<T, String> dajVrijednost) {
-    this.dajVrijednost = dajVrijednost;
-  }
-
-  public void setPoravnanje(Poravnanje poravnanje) {
-    this.poravnanje = poravnanje;
-  }
+  public void setPoravnanje(Poravnanje poravnanje) {this.poravnanje = poravnanje;}
 
   public void setPrikaziStupac(boolean prikaziStupac) {this.prikaziStupac = prikaziStupac;}
 

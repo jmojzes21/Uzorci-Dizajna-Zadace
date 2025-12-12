@@ -1,17 +1,15 @@
 package edu.unizg.foi.uzdiz.jmojzes21.tablicni_ispis;
 
+import edu.unizg.foi.uzdiz.jmojzes21.tablicni_ispis.StupacTablice.Poravnanje;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 /**
  * Omogućuje izgradnju tabličnog ispisa.
- *
- * @param <T> tip klase za koju se odnosi tablični ispis
  */
-public class TablicniIspisGraditelj<T> {
+public class TablicniIspisGraditelj {
 
-  private final List<StupacTablice<T>> stupci;
+  private final List<StupacTablice> stupci;
 
   public TablicniIspisGraditelj() {
     stupci = new ArrayList<>();
@@ -20,14 +18,12 @@ public class TablicniIspisGraditelj<T> {
   /**
    * Dodaj novi stupac u tablicu.
    *
-   * @param naziv         naziv stupca u zaglavlju tablice
-   * @param sirina        širina stupca
-   * @param dajVrijednost povratna funkcija koja prikazuje vrijednost stupca iz objekta
+   * @param naziv  naziv stupca u zaglavlju tablice
+   * @param sirina širina stupca
    * @return graditelj
    */
-  public TablicniIspisGraditelj<T> dodajStupac(String naziv, int sirina,
-      Function<T, String> dajVrijednost) {
-    stupci.add(new StupacTablice<>(naziv, sirina, dajVrijednost, Poravnanje.lijevo));
+  public TablicniIspisGraditelj dodajStupac(String naziv, int sirina) {
+    stupci.add(new StupacTablice(naziv, sirina, Poravnanje.lijevo));
     return this;
   }
 
@@ -36,9 +32,8 @@ public class TablicniIspisGraditelj<T> {
    *
    * @return graditelj
    */
-  public TablicniIspisGraditelj<T> poravnajLijevo() {
-    setPoravnanje(Poravnanje.lijevo);
-    return this;
+  public TablicniIspisGraditelj poravnajLijevo() {
+    return setPoravnanje(Poravnanje.lijevo);
   }
 
   /**
@@ -46,9 +41,8 @@ public class TablicniIspisGraditelj<T> {
    *
    * @return graditelj
    */
-  public TablicniIspisGraditelj<T> poravnajDesno() {
-    setPoravnanje(Poravnanje.desno);
-    return this;
+  public TablicniIspisGraditelj poravnajDesno() {
+    return setPoravnanje(Poravnanje.desno);
   }
 
   /**
@@ -57,7 +51,7 @@ public class TablicniIspisGraditelj<T> {
    * @param poravnanje poravnanje
    * @return graditelj
    */
-  public TablicniIspisGraditelj<T> setPoravnanje(Poravnanje poravnanje) {
+  public TablicniIspisGraditelj setPoravnanje(Poravnanje poravnanje) {
     if (stupci.isEmpty()) {
       throw new IllegalStateException("Nema stupaca!");
     }
@@ -71,7 +65,7 @@ public class TablicniIspisGraditelj<T> {
    * @param prikazi prikazi stupac ili ne
    * @return graditelj
    */
-  public TablicniIspisGraditelj<T> prikazujStupac(boolean prikazi) {
+  public TablicniIspisGraditelj prikazujStupac(boolean prikazi) {
     if (stupci.isEmpty()) {
       throw new IllegalStateException("Nema stupaca!");
     }
@@ -84,8 +78,8 @@ public class TablicniIspisGraditelj<T> {
    *
    * @return tablični ispis
    */
-  public TablicniIspis<T> napravi() {
-    return new TablicniIspis<T>(stupci);
+  public TablicniIspis napravi() {
+    return new TablicniIspis(stupci);
   }
 
 }
