@@ -18,14 +18,15 @@ public class TablicniIspis {
    * Ispisuje zaglavlje tablice (nazive stupaca).
    */
   public void ispisiZaglavlje() {
+    ispisiCrtu();
     for (var stupac : stupci) {
       if (!stupac.prikaziStupac()) {continue;}
       String sadrzaj = formatirajSadrzaj(stupac, stupac.naziv());
       System.out.print(sadrzaj);
     }
     System.out.println("|");
+    ispisiCrtu();
   }
-
 
   /**
    * Ispisuje jedan redak tablice.
@@ -49,6 +50,26 @@ public class TablicniIspis {
     System.out.println("|");
   }
 
+  /**
+   * Ispisuje crtu u širini tablice.
+   */
+  public void ispisiCrtu() {
+    System.out.print("|");
+
+    int brojStupaca = 0;
+    int brojCrta = 0;
+
+    for (var stupac : stupci) {
+      if (!stupac.prikaziStupac()) {continue;}
+      brojStupaca++;
+      brojCrta += stupac.sirina() + 2;
+    }
+    brojCrta += brojStupaca - 1;
+
+    System.out.print("=".repeat(brojCrta));
+    System.out.println("|");
+  }
+
   private String formatirajSadrzaj(StupacTablice stupac, String sadrzaj) {
     int sirina = stupac.sirina();
 
@@ -61,7 +82,7 @@ public class TablicniIspis {
       case Poravnanje.desno -> 1;
     };
 
-    String format = "| %" + poravnanje * sirina + "s ";
+    String format = "| %" + (poravnanje * sirina) + "s ";
     return String.format(format, sadrzaj);
   }
 
