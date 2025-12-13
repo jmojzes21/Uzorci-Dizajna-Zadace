@@ -57,23 +57,41 @@ public class AranzmanUPripremi implements AranzmanStanje {
     }
 
     for (Rezervacija rezervacija : rezervacije) {
-      rezervacija.aktiviraj();
-      aranzman.obavijestiAktiviranjeRezervacije(rezervacija);
+      boolean mozePostatiAktivna = aranzman.obavijestiRezervacijaPostajeAktivna(rezervacija);
+      if (!mozePostatiAktivna) {
+        rezervacija.odgodi();
+      }
     }
 
-    List<Rezervacija> aktivneRezervacije = aranzman.aktivneRezervacije();
-    int brojAktivnih = aktivneRezervacije.size();
+    brojPrimljenih = aranzman.brojPrimljenih();
 
-    if (brojAktivnih < aranzman.minBrojPutnika()) {
-      for (Rezervacija r : aktivneRezervacije) {
-        r.zaprimi();
-      }
+    if (brojPrimljenih < aranzman.minBrojPutnika()) {
       System.out.printf("Aranžman %d ne može postati aktivan jer nema dovoljno primljenih rezervacija!\n",
           aranzman.oznaka());
       return;
     }
 
+    for (Rezervacija rezervacija : rezervacije) {
+      rezervacija.aktiviraj();
+      aranzman.obavijestiRezervacijaPostalaAktivna(rezervacija);
+    }
+
     aranzman.postaviStanje(new AranzmanAktivan());
+
+  }
+
+  @Override
+  public void otkaziRezervaciju(Aranzman aranzman, Korisnik korisnik) throws Exception {
+
+    Rezervacija zaOtkazati = dajRezervacijuKorisnika(aranzman, korisnik);
+
+    if (zaOtkazati == null) {
+      String opis = String.format("Korisnik %s nema rezervaciju za aranžman %d!", korisnik.punoIme(),
+          aranzman.oznaka());
+      throw new Exception(opis);
+    }
+
+    zaOtkazati.otkazi();
 
   }
 
@@ -113,6 +131,13 @@ public class AranzmanUPripremi implements AranzmanStanje {
 
     }
 
+  }
+
+  private Rezervacija dajRezervacijuKorisnika(Aranzman aranzman, Korisnik korisnik) {
+    List<Rezervacija> rezervacije = aranzman.primljeneRezervacije();
+    return rezervacije.stream()
+        .filter(e -> e.korisnik().equals(korisnik))
+        .findFirst().orElse(null);
   }
 
 }

@@ -2,6 +2,7 @@ package edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja;
 
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
+import java.time.LocalDateTime;
 
 public class RezervacijaAktivna implements RezervacijaStanje {
 
@@ -21,7 +22,35 @@ public class RezervacijaAktivna implements RezervacijaStanje {
   }
 
   @Override
-  public void kadaAktiviranaRezervacija(Rezervacija rezervacija, Rezervacija aktivirana) {
+  public void otkazi(Rezervacija rezervacija) {
+    rezervacija.setVrijemeOtkaza(LocalDateTime.now());
+    rezervacija.postaviStanje(new RezervacijaOtkazana());
+  }
+
+  @Override
+  public boolean kadaRezervacijaPostajeAktivna(Rezervacija trenutna, Rezervacija postajeAktivna) {
+
+    if (trenutna.korisnik().equals(postajeAktivna.korisnik())) {
+
+      Aranzman aranzman1 = trenutna.dajAranzman();
+      Aranzman aranzman2 = postajeAktivna.dajAranzman();
+
+      if (aranzman1.preklapaSe(aranzman2)) {
+        if (postajeAktivna.vrijemePrijema().isAfter(trenutna.vrijemePrijema())) {
+          System.out.println(
+              "Rezervacija " + postajeAktivna.korisnik().punoIme() + " " + postajeAktivna.oznakaAranzmana()
+                  + " ne može postati aktivna.");
+          return false;
+        }
+      }
+
+    }
+
+    return true;
+  }
+
+  @Override
+  public void kadaRezervacijaPostalaAktivna(Rezervacija rezervacija, Rezervacija aktivirana) {
 
     if (rezervacija.korisnik().equals(aktivirana.korisnik())) {
 
@@ -33,19 +62,9 @@ public class RezervacijaAktivna implements RezervacijaStanje {
             "Preklapanje " + rezervacija.korisnik().punoIme() + " " + rezervacija.oznakaAranzmana() + " s rezervacijom "
                 + aktivirana.oznakaAranzmana());
 
-        Rezervacija zaOdgodu;
-
-        if (rezervacija.vrijemePrijema().isBefore(aktivirana.vrijemePrijema())) {
-          System.out.println("Rezervacija " + aktivirana.oznakaAranzmana() + " postaje odgođena");
-          zaOdgodu = aktivirana;
-        } else {
-          System.out.println("Rezervacija " + rezervacija.oznakaAranzmana() + " postaje odgođena");
-          zaOdgodu = rezervacija;
-        }
-
-        zaOdgodu.odgodi();
-        zaOdgodu.dajAranzman().provjeriAktivneRezervacije();
-
+        rezervacija.odgodi();
+        rezervacija.dajAranzman().provjeriAktivneRezervacije();
+        
       }
 
     }

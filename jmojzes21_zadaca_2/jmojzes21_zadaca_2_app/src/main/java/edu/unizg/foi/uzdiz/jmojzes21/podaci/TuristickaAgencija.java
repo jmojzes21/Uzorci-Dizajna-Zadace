@@ -162,18 +162,16 @@ public class TuristickaAgencija extends RezervacijaComposite {
    * @throws Exception otkazivanje rezervacije nije uspjelo
    */
   public void otkaziRezervaciju(String ime, String prezime, int oznaka) throws Exception {
-    /*
-    Aranzman aranzman = aranzmani.get(oznaka);
+
+    Aranzman aranzman = dajAranzman(oznaka);
     if (aranzman == null) {
       String opis = String.format("Ne postoji aranžam oznake %d.\n", oznaka);
       throw new Exception(opis);
     }
 
     var korisnik = new Korisnik(ime, prezime);
+    aranzman.otkaziRezervaciju(korisnik);
 
-    var agent = new TuristickiAgent(aranzmani);
-    agent.otkaziRezervaciju(aranzman, korisnik);
-    */
   }
 
   public List<StatistikaAranzmana> dajStatistikuAranzmana(List<Aranzman> aranzmani) {

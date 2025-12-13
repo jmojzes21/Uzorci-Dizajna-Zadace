@@ -2,6 +2,8 @@ package edu.unizg.foi.uzdiz.jmojzes21.podaci;
 
 public interface RezervacijaObserver {
 
-  void kadaAktiviranaRezervacija(Rezervacija aktivirana);
+  boolean kadaRezervacijaPostajeAktivna(Rezervacija rezervacija);
+
+  void kadaRezervacijaPostalaAktivna(Rezervacija aktivirana);
 
 }

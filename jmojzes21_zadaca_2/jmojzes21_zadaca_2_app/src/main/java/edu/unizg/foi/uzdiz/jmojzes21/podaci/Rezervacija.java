@@ -46,10 +46,20 @@ public class Rezervacija extends RezervacijaComponent implements RezervacijaObse
     stanje.odgodi(this);
   }
 
+  public void otkazi() {
+    stanje.otkazi(this);
+  }
+
   @Override
-  public void kadaAktiviranaRezervacija(Rezervacija aktivirana) {
+  public boolean kadaRezervacijaPostajeAktivna(Rezervacija rezervacija) {
+    if (oznakaAranzmana == rezervacija.oznakaAranzmana) {return true;}
+    return stanje.kadaRezervacijaPostajeAktivna(this, rezervacija);
+  }
+
+  @Override
+  public void kadaRezervacijaPostalaAktivna(Rezervacija aktivirana) {
     if (oznakaAranzmana == aktivirana.oznakaAranzmana) {return;}
-    stanje.kadaAktiviranaRezervacija(this, aktivirana);
+    stanje.kadaRezervacijaPostalaAktivna(this, aktivirana);
   }
 
   public RezervacijaStanje stanje() {
@@ -100,7 +110,7 @@ public class Rezervacija extends RezervacijaComponent implements RezervacijaObse
     if (!uzlazno) {comparator = comparator.reversed();}
     return rezervacije.stream().sorted(comparator).toList();
   }
-  
+
   // region Metode za dohvaćanje i postavljanje atributa
 
   public Korisnik korisnik() {return korisnik;}

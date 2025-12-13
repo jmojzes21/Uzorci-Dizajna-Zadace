@@ -1,6 +1,7 @@
 package edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja;
 
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
+import edu.unizg.foi.uzdiz.jmojzes21.podaci.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
 import java.util.List;
 
@@ -26,6 +27,23 @@ public class AranzmanPopunjen implements AranzmanStanje {
   }
 
   @Override
+  public void otkaziRezervaciju(Aranzman aranzman, Korisnik korisnik) throws Exception {
+
+    Rezervacija zaOtkazati = dajRezervacijuKorisnika(aranzman, korisnik);
+
+    if (zaOtkazati == null) {
+      String opis = String.format("Korisnik %s nema rezervaciju za aranžman %d!", korisnik.punoIme(),
+          aranzman.oznaka());
+      throw new Exception(opis);
+    }
+
+    zaOtkazati.otkazi();
+
+    provjeriAktivneRezervacije(aranzman);
+
+  }
+
+  @Override
   public void provjeriAktivneRezervacije(Aranzman aranzman) {
     List<Rezervacija> aktivneRezervacije = aranzman.aktivneRezervacije();
     int brojAktivnih = aktivneRezervacije.size();
@@ -45,5 +63,11 @@ public class AranzmanPopunjen implements AranzmanStanje {
     return "Popunjen";
   }
 
+  private Rezervacija dajRezervacijuKorisnika(Aranzman aranzman, Korisnik korisnik) {
+    List<Rezervacija> rezervacije = aranzman.aktivneRezervacije();
+    return rezervacije.stream()
+        .filter(e -> e.korisnik().equals(korisnik))
+        .findFirst().orElse(null);
+  }
 
 }

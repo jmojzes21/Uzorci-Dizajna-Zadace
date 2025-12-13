@@ -1,6 +1,7 @@
 package edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja;
 
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
+import edu.unizg.foi.uzdiz.jmojzes21.podaci.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
 import java.util.List;
 
@@ -17,13 +18,37 @@ public class AranzmanAktivan implements AranzmanStanje {
 
     aranzman.dodaj(rezervacija);
     rezervacija.zaprimi();
+
+    boolean mozePostatiAktivna = aranzman.obavijestiRezervacijaPostajeAktivna(rezervacija);
+    if (!mozePostatiAktivna) {
+      rezervacija.odgodi();
+      return;
+    }
+
     rezervacija.aktiviraj();
-    aranzman.obavijestiAktiviranjeRezervacije(rezervacija);
+    aranzman.obavijestiRezervacijaPostalaAktivna(rezervacija);
 
     int brojAktivnih = aranzman.brojAktivnih();
     if (brojAktivnih >= aranzman.maxBrojPutnika()) {
       aranzman.postaviStanje(new AranzmanPopunjen());
     }
+
+  }
+
+  @Override
+  public void otkaziRezervaciju(Aranzman aranzman, Korisnik korisnik) throws Exception {
+
+    Rezervacija zaOtkazati = dajRezervacijuKorisnika(aranzman, korisnik);
+
+    if (zaOtkazati == null) {
+      String opis = String.format("Korisnik %s nema rezervaciju za aranžman %d!", korisnik.punoIme(),
+          aranzman.oznaka());
+      throw new Exception(opis);
+    }
+
+    zaOtkazati.otkazi();
+
+    provjeriAktivneRezervacije(aranzman);
 
   }
 
@@ -49,6 +74,13 @@ public class AranzmanAktivan implements AranzmanStanje {
     List<Rezervacija> rezervacije = aranzman.aktivneRezervacije();
     return rezervacije.stream()
         .anyMatch(e -> e.korisnik().equals(rezervacija.korisnik()));
+  }
+
+  private Rezervacija dajRezervacijuKorisnika(Aranzman aranzman, Korisnik korisnik) {
+    List<Rezervacija> rezervacije = aranzman.aktivneRezervacije();
+    return rezervacije.stream()
+        .filter(e -> e.korisnik().equals(korisnik))
+        .findFirst().orElse(null);
   }
 
 }

@@ -72,15 +72,30 @@ public class Aranzman extends RezervacijaComposite implements RezervacijaSubject
     stanje.zaprimiRezervaciju(this, rezervacija);
   }
 
+  public void otkaziRezervaciju(Korisnik korisnik) throws Exception {
+    stanje.otkaziRezervaciju(this, korisnik);
+  }
+
   public void aktiviraj() throws Exception {
     stanje.aktiviraj(this);
   }
 
   @Override
-  public void kadaAktiviranaRezervacija(Rezervacija aktivirana) {
+  public boolean kadaRezervacijaPostajeAktivna(Rezervacija rezervacija) {
     List<Rezervacija> rezervacije = aktivneRezervacije();
     for (Rezervacija r : rezervacije) {
-      r.kadaAktiviranaRezervacija(aktivirana);
+      if (!r.kadaRezervacijaPostajeAktivna(rezervacija)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  @Override
+  public void kadaRezervacijaPostalaAktivna(Rezervacija aktivirana) {
+    List<Rezervacija> rezervacije = aktivneRezervacije();
+    for (Rezervacija r : rezervacije) {
+      r.kadaRezervacijaPostalaAktivna(aktivirana);
     }
   }
 
@@ -101,9 +116,19 @@ public class Aranzman extends RezervacijaComposite implements RezervacijaSubject
   }
 
   @Override
-  public void obavijestiAktiviranjeRezervacije(Rezervacija aktivirana) {
+  public boolean obavijestiRezervacijaPostajeAktivna(Rezervacija rezervacija) {
     for (var promatrac : promatraci) {
-      promatrac.kadaAktiviranaRezervacija(aktivirana);
+      if (!promatrac.kadaRezervacijaPostajeAktivna(rezervacija)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  @Override
+  public void obavijestiRezervacijaPostalaAktivna(Rezervacija aktivirana) {
+    for (var promatrac : promatraci) {
+      promatrac.kadaRezervacijaPostalaAktivna(aktivirana);
     }
   }
 
