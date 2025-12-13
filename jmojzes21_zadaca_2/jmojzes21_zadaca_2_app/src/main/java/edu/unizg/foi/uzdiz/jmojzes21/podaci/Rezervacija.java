@@ -8,6 +8,8 @@ import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.RezervacijaOtkazana;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.RezervacijaPrimljena;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.RezervacijaStanje;
 import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
 
 public class Rezervacija extends RezervacijaComponent implements RezervacijaObserver {
 
@@ -86,6 +88,19 @@ public class Rezervacija extends RezervacijaComponent implements RezervacijaObse
     return (Aranzman) dajRoditelja();
   }
 
+  /**
+   * Sortira rezervacije prema vremenu prijema.
+   *
+   * @param rezervacije rezervacije
+   * @param uzlazno     ako je true sortira uzlazno, inače sortira silazno
+   * @return sortirane rezervacije
+   */
+  public static List<Rezervacija> sortiraj(List<Rezervacija> rezervacije, boolean uzlazno) {
+    var comparator = Comparator.comparing(Rezervacija::vrijemePrijema);
+    if (!uzlazno) {comparator = comparator.reversed();}
+    return rezervacije.stream().sorted(comparator).toList();
+  }
+  
   // region Metode za dohvaćanje i postavljanje atributa
 
   public Korisnik korisnik() {return korisnik;}

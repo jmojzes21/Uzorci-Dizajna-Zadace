@@ -1,6 +1,7 @@
 package edu.unizg.foi.uzdiz.jmojzes21.podaci;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -87,12 +88,8 @@ public class TuristickaAgencija extends RezervacijaComposite {
     Aranzman aranzman = dajAranzman(oznaka);
     if (aranzman == null) {return null;}
 
-    List<Rezervacija> rezultat = aranzman.filtrirajRezervacije(prikaziPrimljeneAktivne, prikaziPrimljeneAktivne,
+    return aranzman.filtrirajRezervacije(prikaziPrimljeneAktivne, prikaziPrimljeneAktivne,
         prikaziNaCekanju, prikaziOtkazane, prikaziOdgodjene);
-
-    return rezultat.stream()
-        .sorted(Comparator.comparing(Rezervacija::vrijemePrijema))
-        .toList();
   }
 
   /**
@@ -105,14 +102,17 @@ public class TuristickaAgencija extends RezervacijaComposite {
   public List<Rezervacija> dajRezervacijeKorisnika(String ime, String prezime) {
 
     var korisnik = new Korisnik(ime, prezime);
+    List<Rezervacija> rezervacijeKorisnika = new ArrayList<>();
 
-    /*var agent = new TuristickiAgent(aranzmani);
-    var rezervacije = agent.dajSveRezervacijeKorisnika(korisnik, true);
+    List<Aranzman> aranzmani = dajAranzmane();
+    for (var aranzman : aranzmani) {
+      List<Rezervacija> rezervacije = aranzman.rezervacije();
+      rezervacijeKorisnika.addAll(rezervacije.stream()
+          .filter(e -> e.korisnik().equals(korisnik))
+          .toList());
+    }
 
-    return rezervacije.stream()
-        .sorted(Comparator.comparing(Rezervacija::vrsta).thenComparing(Rezervacija::datumVrijeme))
-        .toList();*/
-    return null;
+    return rezervacijeKorisnika;
   }
 
   /**

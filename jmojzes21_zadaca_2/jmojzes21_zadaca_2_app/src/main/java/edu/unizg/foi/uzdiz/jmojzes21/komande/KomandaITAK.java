@@ -1,5 +1,6 @@
 package edu.unizg.foi.uzdiz.jmojzes21.komande;
 
+import edu.unizg.foi.uzdiz.jmojzes21.PostavkeSustava;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.TuristickaAgencija;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.Formati;
@@ -53,6 +54,9 @@ public class KomandaITAK {
   }
 
   private void prikaziAranzmane(List<Aranzman> aranzmani) {
+
+    boolean sortirajUzlazno = PostavkeSustava.dajInstancu().sortirajUzlazno();
+    aranzmani = Aranzman.sortiraj(aranzmani, sortirajUzlazno);
 
     var f = Formati.dajInstancu();
 

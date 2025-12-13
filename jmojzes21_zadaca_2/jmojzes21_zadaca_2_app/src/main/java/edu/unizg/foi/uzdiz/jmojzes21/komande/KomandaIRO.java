@@ -1,5 +1,6 @@
 package edu.unizg.foi.uzdiz.jmojzes21.komande;
 
+import edu.unizg.foi.uzdiz.jmojzes21.PostavkeSustava;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.TuristickaAgencija;
@@ -33,16 +34,24 @@ public class KomandaIRO {
     String ime = matcher.group("ime");
     String prezime = matcher.group("prezime");
 
+    prikaziRezervacijeKorisnika(ime, prezime);
+  }
+
+  private void prikaziRezervacijeKorisnika(String ime, String prezime) {
+
     List<Rezervacija> rezervacije = agencija.dajRezervacijeKorisnika(ime, prezime);
     if (rezervacije.isEmpty()) {
       System.out.println("Korisnik nema rezervacija.");
       return;
     }
 
-    prikaziRezervacijeKorisnika(rezervacije);
+    prikaziRezervacije(rezervacije);
   }
 
-  private void prikaziRezervacijeKorisnika(List<Rezervacija> rezervacije) {
+  private void prikaziRezervacije(List<Rezervacija> rezervacije) {
+
+    boolean sortirajUzlazno = PostavkeSustava.dajInstancu().sortirajUzlazno();
+    rezervacije = Rezervacija.sortiraj(rezervacije, sortirajUzlazno);
 
     var f = Formati.dajInstancu();
 

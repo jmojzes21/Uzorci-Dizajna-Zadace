@@ -142,7 +142,7 @@ public class Program {
       }
       case "IP": {
         System.out.println(komanda);
-        var k = new KomandaIP(agencija);
+        var k = new KomandaIP();
         k.obradiKomandu(args);
         break;
       }

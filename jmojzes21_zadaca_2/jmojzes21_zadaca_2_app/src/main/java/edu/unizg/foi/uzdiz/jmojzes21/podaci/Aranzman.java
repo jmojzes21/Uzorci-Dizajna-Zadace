@@ -223,6 +223,19 @@ public class Aranzman extends RezervacijaComposite implements RezervacijaSubject
     return rezervacije.stream().max(Comparator.comparing(Rezervacija::vrijemePrijema)).orElse(null);
   }
 
+  /**
+   * Sortira turističke aranžmane prema datumu početka.
+   *
+   * @param aranzmani turistički aranžmani
+   * @param uzlazno   ako je true sortira uzlazno, inače sortira silazno
+   * @return sortirani turistički aranžmani
+   */
+  public static List<Aranzman> sortiraj(List<Aranzman> aranzmani, boolean uzlazno) {
+    var comparator = Comparator.comparing(Aranzman::pocetniDatum);
+    if (!uzlazno) {comparator = comparator.reversed();}
+    return aranzmani.stream().sorted(comparator).toList();
+  }
+
   // region Metode za dohvaćanje i postavljanje atributa
 
   public int oznaka() {return oznaka;}

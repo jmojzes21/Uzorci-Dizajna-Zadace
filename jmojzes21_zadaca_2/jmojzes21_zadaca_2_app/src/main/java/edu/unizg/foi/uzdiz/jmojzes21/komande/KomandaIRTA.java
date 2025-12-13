@@ -1,5 +1,6 @@
 package edu.unizg.foi.uzdiz.jmojzes21.komande;
 
+import edu.unizg.foi.uzdiz.jmojzes21.PostavkeSustava;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.TuristickaAgencija;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.Formati;
@@ -33,15 +34,18 @@ public class KomandaIRTA {
     String filter = matcher.group("filter");
     if (filter == null) {filter = "PAČODO";}
 
+    prikaziRezervacijeAranzmana(oznaka, filter);
+  }
+
+  private void prikaziRezervacijeAranzmana(int oznaka, String filter) {
+
     boolean prikaziPrimljeneAktivne = filter.contains("PA");
     boolean prikaziNaCekanju = filter.contains("Č");
-
     boolean prikaziOdgodjene = false;
     if (filter.contains("OD")) {
       prikaziOdgodjene = true;
       filter = filter.replace("OD", "");
     }
-
     boolean prikaziOtkazane = filter.contains("O");
 
     List<Rezervacija> rezervacije = agencija.dajRezervacijeAranzmana(oznaka, prikaziPrimljeneAktivne, prikaziNaCekanju,
@@ -61,6 +65,9 @@ public class KomandaIRTA {
   }
 
   private void prikaziRezervacije(List<Rezervacija> rezervacije, boolean prikaziOtkazane) {
+
+    boolean sortirajUzlazno = PostavkeSustava.dajInstancu().sortirajUzlazno();
+    rezervacije = Rezervacija.sortiraj(rezervacije, sortirajUzlazno);
 
     var f = Formati.dajInstancu();
 
