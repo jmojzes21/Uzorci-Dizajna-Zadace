@@ -11,19 +11,12 @@ import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaITAS;
 import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaORTA;
 import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaOTA;
 import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaUP;
-import edu.unizg.foi.uzdiz.jmojzes21.lib.facade.UcitavacPodatakaFacade;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.TuristickaAgencija;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.CitacOpcija;
-import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.Formati;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.NeispravnaKomandaGreska;
-import java.io.IOException;
 import java.nio.file.Path;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,12 +50,14 @@ public class Program {
     String putanjaRezervacije = opcije.get("--rta");
 
     if (putanjaAranzmani != null) {
-      List<Aranzman> aranzmani = ucitajAranzmane(Path.of(putanjaAranzmani));
-      agencija.ucitajAranzmane(aranzmani);
+      var aranzmanRepo = new AranzmanRepozitorij();
+      List<Aranzman> aranzmani = aranzmanRepo.ucitajAranzmane(Path.of(putanjaAranzmani));
+      agencija.dodajAranzmane(aranzmani);
     }
 
     if (putanjaRezervacije != null) {
-      List<Rezervacija> rezervacije = ucitajRezervacije(Path.of(putanjaRezervacije));
+      var rezervacijaRepo = new RezervacijaRepozitorij();
+      List<Rezervacija> rezervacije = rezervacijaRepo.ucitajRezervacije(Path.of(putanjaRezervacije));
       agencija.zaprimiRezervacije(rezervacije);
     }
 
@@ -192,7 +187,7 @@ public class Program {
     System.out.println("OTA  - Otkaži turistički aranžman, OTA oznaka");
     System.out.println("IP   - Postavi način sortiranja podataka, IP [N|S]");
     System.out.println("BP   - Brisanje podataka, BP [A|R]");
-    System.out.println("UP   - Učitavanje podataka, UP [A|R]");
+    System.out.println("UP   - Učitavanje podataka, UP [A|R] nazivDatoteke");
     System.out.println("ITAS - Ispis statističkih podataka, ITAS [od do]");
     System.out.println("Q    - Izlaz");
   }
@@ -234,147 +229,6 @@ public class Program {
     }
 
     return rezultat;
-  }
-
-  // endregion
-
-  // region Učitavanje podataka
-
-  private List<Aranzman> ucitajAranzmane(Path putanja) throws IOException {
-
-    var ucitavacPodataka = new UcitavacPodatakaFacade();
-    List<List<String>> csvRedci = ucitavacPodataka.ucitajAranzmane(putanja);
-
-    List<Aranzman> aranzmani = new ArrayList<>();
-
-    for (List<String> stupci : csvRedci) {
-      try {
-        Aranzman aranzman = parsirajAranzman(stupci);
-        aranzmani.add(aranzman);
-      } catch (Exception e) {
-        EvidencijaGresaka.dajInstancu().evidentiraj(e);
-      }
-    }
-
-    return aranzmani;
-  }
-
-  private Aranzman parsirajAranzman(List<String> stupci) throws Exception {
-
-    if (stupci.size() != 16) {
-      String opis = String.format("Broj stupaca aranžmana mora biti 16! Trenutno: %d", stupci.size());
-      throw new Exception(opis);
-    }
-
-    int index = 0;
-    String oznaka = stupci.get(index++);
-    String naziv = stupci.get(index++);
-    String program = stupci.get(index++);
-    String pocetniDatum = stupci.get(index++);
-    String zavrsniDatum = stupci.get(index++);
-    String vrijemeKretanja = stupci.get(index++);
-    String vrijemePovratka = stupci.get(index++);
-    String cijena = stupci.get(index++);
-
-    String minPutnika = stupci.get(index++);
-    String maxPutnika = stupci.get(index++);
-    String brojNocenja = stupci.get(index++);
-    String doplataJednokrevetnaSoba = stupci.get(index++);
-    String prijevoz = stupci.get(index++);
-    String brojDorucka = stupci.get(index++);
-    String brojRuckova = stupci.get(index++);
-    String brojVecera = stupci.get(index);
-
-    var f = Formati.dajInstancu();
-    AranzmanGraditelj graditelj = new AranzmanStvarniGraditelj();
-
-    graditelj.napraviAranzman(Integer.parseInt(oznaka), naziv)
-        .setProgram(program)
-        .setPocetniDatum(f.parsirajDatum(pocetniDatum))
-        .setZavrsniDatum(f.parsirajDatum(zavrsniDatum))
-        .setCijena(Float.parseFloat(cijena))
-        .setMinBrojPutnika(Integer.parseInt(minPutnika))
-        .setMaxBrojPutnika(Integer.parseInt(maxPutnika));
-
-    if (vrijemeKretanja != null) {
-      graditelj.setVrijemeKretanja(f.parsirajVrijeme(vrijemeKretanja));
-    }
-
-    if (vrijemePovratka != null) {
-      graditelj.setVrijemePovratka(f.parsirajVrijeme(vrijemePovratka));
-    }
-
-    if (brojNocenja != null) {
-      graditelj.setBrojNocenja(Integer.parseInt(brojNocenja));
-    }
-
-    if (doplataJednokrevetnaSoba != null) {
-      graditelj.setDoplataZaJednokrevetnuSobu(Float.parseFloat(doplataJednokrevetnaSoba));
-    }
-
-    if (prijevoz != null) {
-      graditelj.setPrijevoz(parsirajPrijevozAranzmana(prijevoz));
-    }
-
-    if (brojDorucka != null) {
-      graditelj.setBrojDorucka(Integer.parseInt(brojDorucka));
-    }
-
-    if (brojRuckova != null) {
-      graditelj.setBrojRuckova(Integer.parseInt(brojRuckova));
-    }
-
-    if (brojVecera != null) {
-      graditelj.setBrojVecera(Integer.parseInt(brojVecera));
-    }
-
-    return graditelj.dajAranzman();
-  }
-
-  private List<String> parsirajPrijevozAranzmana(String prijevozTekst) {
-    if (prijevozTekst == null) {return null;}
-    return Arrays.stream(prijevozTekst.split(";"))
-        .map(e -> e.trim())
-        .filter(e -> !e.isEmpty())
-        .toList();
-  }
-
-  private List<Rezervacija> ucitajRezervacije(Path putanja) throws IOException {
-
-    var ucitavacPodataka = new UcitavacPodatakaFacade();
-    List<List<String>> csvRedci = ucitavacPodataka.ucitajRezervacije(putanja);
-
-    List<Rezervacija> rezervacije = new ArrayList<>();
-
-    for (List<String> stupci : csvRedci) {
-      try {
-        Rezervacija rezervacija = parsirajRezervaciju(stupci);
-        rezervacije.add(rezervacija);
-      } catch (Exception e) {
-        EvidencijaGresaka.dajInstancu().evidentiraj(e);
-      }
-    }
-
-    return rezervacije;
-  }
-
-  private Rezervacija parsirajRezervaciju(List<String> stupci) throws Exception {
-
-    if (stupci.size() != 4) {
-      String opis = String.format("Broj stupaca rezervacije mora biti 4! Trenutno: %d", stupci.size());
-      throw new Exception(opis);
-    }
-
-    var f = Formati.dajInstancu();
-
-    int index = 0;
-    String ime = stupci.get(index++);
-    String prezime = stupci.get(index++);
-    int oznaka = Integer.parseInt(stupci.get(index++));
-    LocalDateTime vrijemePrijema = f.parsirajDatumVrijeme(stupci.get(index));
-
-    var korisnik = new Korisnik(ime, prezime);
-    return new Rezervacija(korisnik, oznaka, vrijemePrijema);
   }
 
   // endregion
