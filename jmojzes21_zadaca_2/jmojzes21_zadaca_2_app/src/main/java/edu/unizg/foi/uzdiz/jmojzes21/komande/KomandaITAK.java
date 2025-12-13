@@ -2,7 +2,7 @@ package edu.unizg.foi.uzdiz.jmojzes21.komande;
 
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.TuristickaAgencija;
-import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.FormatDatuma;
+import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.Formati;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.NeispravnaKomandaGreska;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.RegexKomandeGraditelj;
 import edu.unizg.foi.uzdiz.jmojzes21.tablicni_ispis.TablicniIspisGraditelj;
@@ -18,6 +18,8 @@ public class KomandaITAK {
   }
 
   public void obradiKomanduPregledAranzmana(String args) throws Exception {
+
+    var f = Formati.dajInstancu();
 
     List<Aranzman> aranzmani;
 
@@ -36,8 +38,8 @@ public class KomandaITAK {
         throw new NeispravnaKomandaGreska(opis);
       }
 
-      LocalDate datumOd = FormatDatuma.dajInstancu().parsirajDatum(matcher.group("od"));
-      LocalDate datumDo = FormatDatuma.dajInstancu().parsirajDatum(matcher.group("do"));
+      LocalDate datumOd = f.parsirajDatum(matcher.group("od"));
+      LocalDate datumDo = f.parsirajDatum(matcher.group("do"));
 
       aranzmani = agencija.dajAranzmane(datumOd, datumDo);
     }
@@ -52,7 +54,7 @@ public class KomandaITAK {
 
   private void prikaziAranzmane(List<Aranzman> aranzmani) {
 
-    var fd = FormatDatuma.dajInstancu();
+    var f = Formati.dajInstancu();
 
     var tablicniIspis = new TablicniIspisGraditelj()
         .dodajStupac("Oznaka", 6)
@@ -71,19 +73,21 @@ public class KomandaITAK {
         .dodajStupac("Status", 20)
         .napravi();
 
+    System.out.println("Pregled turističkih aranžmana");
     tablicniIspis.ispisiZaglavlje();
 
     for (Aranzman e : aranzmani) {
       List<String> podaci = List.of(
           Integer.toString(e.oznaka()), e.naziv(),
-          fd.formatiraj(e.pocetniDatum()), fd.formatiraj(e.zavrsniDatum()),
-          fd.formatiraj(e.vrijemeKretanja()), fd.formatiraj(e.vrijemePovratka()),
-          String.format("%.2f", e.cijena()),
+          f.formatiraj(e.pocetniDatum()), f.formatiraj(e.zavrsniDatum()),
+          f.formatiraj(e.vrijemeKretanja()), f.formatiraj(e.vrijemePovratka()),
+          f.formatiraj(e.cijena()),
           Integer.toString(e.minBrojPutnika()), Integer.toString(e.maxBrojPutnika()),
           e.nazivStanja()
       );
       tablicniIspis.ispisi(podaci);
     }
+    tablicniIspis.ispisiCrtu();
 
 
   }

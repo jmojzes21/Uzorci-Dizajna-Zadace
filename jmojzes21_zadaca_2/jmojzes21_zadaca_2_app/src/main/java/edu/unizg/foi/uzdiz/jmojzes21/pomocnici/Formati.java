@@ -1,6 +1,8 @@
 package edu.unizg.foi.uzdiz.jmojzes21.pomocnici;
 
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -10,15 +12,15 @@ import java.time.format.DateTimeParseException;
 /**
  * Omogućuje formatiranje datuma zadanog formata.
  */
-public class FormatDatuma {
+public class Formati {
 
-  private static FormatDatuma formatDatuma;
+  private static Formati formati;
 
-  public static FormatDatuma dajInstancu() {
-    if (formatDatuma == null) {
-      formatDatuma = new FormatDatuma();
+  public static Formati dajInstancu() {
+    if (formati == null) {
+      formati = new Formati();
     }
-    return formatDatuma;
+    return formati;
   }
 
   private final DateTimeFormatter datumFormator;
@@ -29,7 +31,9 @@ public class FormatDatuma {
   private final DateTimeFormatter vrijemeFormatorIspis;
   private final DateTimeFormatter datumVrijemeFormatorIspis;
 
-  private FormatDatuma() {
+  private final DecimalFormat decimalFormat;
+
+  private Formati() {
     datumFormator = DateTimeFormatter.ofPattern("d.M.yyyy[.]");
     vrijemeFormator = DateTimeFormatter.ofPattern("H:m[:s]");
     datumVrijemeFormator = DateTimeFormatter.ofPattern("d.M.yyyy[.] H:m[:s]");
@@ -37,6 +41,11 @@ public class FormatDatuma {
     datumFormatorIspis = DateTimeFormatter.ofPattern("dd.MM.yyyy.");
     vrijemeFormatorIspis = DateTimeFormatter.ofPattern("HH:mm");
     datumVrijemeFormatorIspis = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
+
+    var symbols = DecimalFormatSymbols.getInstance();
+    symbols.setDecimalSeparator(',');
+    symbols.setGroupingSeparator('.');
+    decimalFormat = new DecimalFormat("#,##0.00", symbols);
   }
 
   /**
@@ -70,6 +79,16 @@ public class FormatDatuma {
   public String formatiraj(LocalDateTime datumVrijeme) {
     if (datumVrijeme == null) {return "";}
     return datumVrijeme.format(datumVrijemeFormatorIspis);
+  }
+
+  /**
+   * Formatiraj decimalni broj.
+   *
+   * @param broj decimalni broj
+   * @return formatirani decimalni broj
+   */
+  public String formatiraj(double broj) {
+    return decimalFormat.format(broj);
   }
 
   /**

@@ -12,7 +12,7 @@ import edu.unizg.foi.uzdiz.jmojzes21.podaci.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.TuristickaAgencija;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.CitacOpcija;
-import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.FormatDatuma;
+import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.Formati;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.NeispravnaKomandaGreska;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -30,7 +29,7 @@ public class Program {
   // region Početak
 
   public static void main(String[] args) {
-    Locale.setDefault(Locale.ENGLISH);
+
     var program = new Program();
 
     try {
@@ -100,31 +99,37 @@ public class Program {
 
     switch (naziv) {
       case "ITAK": {
+        System.out.println(komanda);
         var k = new KomandaITAK(agencija);
         k.obradiKomanduPregledAranzmana(args);
         break;
       }
       case "ITAP": {
+        System.out.println(komanda);
         var k = new KomandaITAP(agencija);
         k.obradiKomanduDetaljiAranzmana(args);
         break;
       }
       case "IRTA": {
+        System.out.println(komanda);
         var k = new KomandaIRTA(agencija);
         k.obradiKomanduPregledRezervacijaAranzmana(args);
         break;
       }
       case "IRO": {
+        System.out.println(komanda);
         var k = new KomandaIRO(agencija);
         k.obradiKomanduPregledRezervacijaKorisnika(args);
         break;
       }
       case "DRTA": {
+        System.out.println(komanda);
         var k = new KomandaDRTA(agencija);
         k.obradiKomanduDodavanjeRezervacije(args);
         break;
       }
       case "ORTA": {
+        System.out.println(komanda);
         var k = new KomandaORTA(agencija);
         k.obradiKomanduOtkaziRezervaciju(args);
         break;
@@ -245,23 +250,23 @@ public class Program {
     String brojRuckova = stupci.get(index++);
     String brojVecera = stupci.get(index);
 
-    var formatDatuma = FormatDatuma.dajInstancu();
+    var f = Formati.dajInstancu();
     AranzmanGraditelj graditelj = new AranzmanStvarniGraditelj();
 
     graditelj.napraviAranzman(Integer.parseInt(oznaka), naziv)
         .setProgram(program)
-        .setPocetniDatum(formatDatuma.parsirajDatum(pocetniDatum))
-        .setZavrsniDatum(formatDatuma.parsirajDatum(zavrsniDatum))
+        .setPocetniDatum(f.parsirajDatum(pocetniDatum))
+        .setZavrsniDatum(f.parsirajDatum(zavrsniDatum))
         .setCijena(Float.parseFloat(cijena))
         .setMinBrojPutnika(Integer.parseInt(minPutnika))
         .setMaxBrojPutnika(Integer.parseInt(maxPutnika));
 
     if (vrijemeKretanja != null) {
-      graditelj.setVrijemeKretanja(formatDatuma.parsirajVrijeme(vrijemeKretanja));
+      graditelj.setVrijemeKretanja(f.parsirajVrijeme(vrijemeKretanja));
     }
 
     if (vrijemePovratka != null) {
-      graditelj.setVrijemePovratka(formatDatuma.parsirajVrijeme(vrijemePovratka));
+      graditelj.setVrijemePovratka(f.parsirajVrijeme(vrijemePovratka));
     }
 
     if (brojNocenja != null) {
@@ -325,13 +330,13 @@ public class Program {
       throw new Exception(opis);
     }
 
-    var formatDatuma = FormatDatuma.dajInstancu();
+    var f = Formati.dajInstancu();
 
     int index = 0;
     String ime = stupci.get(index++);
     String prezime = stupci.get(index++);
     int oznaka = Integer.parseInt(stupci.get(index++));
-    LocalDateTime vrijemePrijema = formatDatuma.parsirajDatumVrijeme(stupci.get(index));
+    LocalDateTime vrijemePrijema = f.parsirajDatumVrijeme(stupci.get(index));
 
     var korisnik = new Korisnik(ime, prezime);
     return new Rezervacija(korisnik, oznaka, vrijemePrijema);

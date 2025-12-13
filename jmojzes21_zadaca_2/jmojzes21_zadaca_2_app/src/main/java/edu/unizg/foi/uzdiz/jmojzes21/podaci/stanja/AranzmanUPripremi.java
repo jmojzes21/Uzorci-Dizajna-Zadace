@@ -3,7 +3,7 @@ package edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
-import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.FormatDatuma;
+import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.Formati;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,10 +41,10 @@ public class AranzmanUPripremi implements AranzmanStanje {
     filtrirajDuplikate(rezervacije, neispravne);
 
     for (Rezervacija neispravna : neispravne) {
-      var formatDatum = FormatDatuma.dajInstancu();
+      var f = Formati.dajInstancu();
       System.out.printf(
           "Brisanje rezervacije korisnika %s, aranžman %d, vrijeme %s jer korisnik već ima primljenu rezervaciju.\n",
-          neispravna.korisnik(), neispravna.oznakaAranzmana(), formatDatum.formatiraj(neispravna.vrijemePrijema()));
+          neispravna.korisnik(), neispravna.oznakaAranzmana(), f.formatiraj(neispravna.vrijemePrijema()));
       aranzman.ukloni(neispravna);
     }
 

@@ -2,7 +2,7 @@ package edu.unizg.foi.uzdiz.jmojzes21.komande;
 
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.TuristickaAgencija;
-import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.FormatDatuma;
+import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.Formati;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.NeispravnaKomandaGreska;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.RegexKomandeGraditelj;
 import edu.unizg.foi.uzdiz.jmojzes21.tablicni_ispis.TablicniIspisGraditelj;
@@ -62,7 +62,7 @@ public class KomandaIRTA {
 
   private void prikaziRezervacije(List<Rezervacija> rezervacije, boolean prikaziOtkazane) {
 
-    var fd = FormatDatuma.dajInstancu();
+    var f = Formati.dajInstancu();
 
     var tablicniIspis = new TablicniIspisGraditelj()
         .dodajStupac("Ime", 18)
@@ -73,15 +73,17 @@ public class KomandaIRTA {
         .prikazujStupac(prikaziOtkazane)
         .napravi();
 
+    System.out.println("Pregled rezervacija za turistički aranžman");
     tablicniIspis.ispisiZaglavlje();
 
     for (Rezervacija e : rezervacije) {
       List<String> podaci = List.of(
-          e.korisnik().ime(), e.korisnik().prezime(), fd.formatiraj(e.vrijemePrijema()), e.nazivStanja(),
-          (e.vrijemeOtkaza() != null ? fd.formatiraj(e.vrijemeOtkaza()) : "")
+          e.korisnik().ime(), e.korisnik().prezime(), f.formatiraj(e.vrijemePrijema()), e.nazivStanja(),
+          f.formatiraj(e.vrijemeOtkaza())
       );
       tablicniIspis.ispisi(podaci);
     }
+    tablicniIspis.ispisiCrtu();
 
   }
 

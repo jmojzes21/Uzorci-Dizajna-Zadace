@@ -3,7 +3,7 @@ package edu.unizg.foi.uzdiz.jmojzes21.komande;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.TuristickaAgencija;
-import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.FormatDatuma;
+import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.Formati;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.NeispravnaKomandaGreska;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.RegexKomandeGraditelj;
 import java.time.LocalDateTime;
@@ -18,7 +18,7 @@ public class KomandaDRTA {
 
   public void obradiKomanduDodavanjeRezervacije(String args) throws Exception {
 
-    FormatDatuma formatDatuma = FormatDatuma.dajInstancu();
+    Formati f = Formati.dajInstancu();
 
     var uzorak = new RegexKomandeGraditelj()
         .dodajTekst("ime")
@@ -39,7 +39,7 @@ public class KomandaDRTA {
     int oznaka = Integer.parseInt(matcher.group("oznaka"));
     String datum = matcher.group("datum");
     String vrijeme = matcher.group("vrijeme");
-    LocalDateTime vrijemePrijema = formatDatuma.parsirajDatumVrijeme(datum, vrijeme);
+    LocalDateTime vrijemePrijema = f.parsirajDatumVrijeme(datum, vrijeme);
 
     var korisnik = new Korisnik(ime, prezime);
     var rezervacija = new Rezervacija(korisnik, oznaka, vrijemePrijema);
