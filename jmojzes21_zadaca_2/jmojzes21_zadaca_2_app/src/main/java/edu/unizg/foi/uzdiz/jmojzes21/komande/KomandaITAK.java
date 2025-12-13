@@ -17,7 +17,7 @@ public class KomandaITAK {
     this.agencija = agencija;
   }
 
-  public void obradiKomanduPregledAranzmana(String args) throws Exception {
+  public void obradiKomandu(String args) throws Exception {
 
     var f = Formati.dajInstancu();
 

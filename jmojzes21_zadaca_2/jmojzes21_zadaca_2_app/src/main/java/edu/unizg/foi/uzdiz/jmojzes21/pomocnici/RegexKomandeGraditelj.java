@@ -78,6 +78,18 @@ public class RegexKomandeGraditelj {
   }
 
   /**
+   * Dodaj regularni izraz.
+   *
+   * @param izraz regularni izraz
+   * @return graditelj
+   */
+  public RegexKomandeGraditelj dodajIzraz(String naziv, String izraz) {
+    if (!regex.isEmpty()) {regex.append(razmakArgumenata);}
+    regex.append(String.format("(?<%s>(%s))", naziv, izraz));
+    return this;
+  }
+
+  /**
    * Kreiraj regularni izraz.
    *
    * @return regularni izraz

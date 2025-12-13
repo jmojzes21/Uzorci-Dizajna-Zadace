@@ -17,7 +17,7 @@ public class KomandaIRO {
     this.agencija = agencija;
   }
 
-  public void obradiKomanduPregledRezervacijaKorisnika(String args) throws Exception {
+  public void obradiKomandu(String args) throws Exception {
 
     var uzorak = new RegexKomandeGraditelj()
         .dodajTekst("ime")

@@ -1,11 +1,16 @@
 package edu.unizg.foi.uzdiz.jmojzes21;
 
+import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaBP;
 import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaDRTA;
+import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaIP;
 import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaIRO;
 import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaIRTA;
 import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaITAK;
 import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaITAP;
+import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaITAS;
 import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaORTA;
+import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaOTA;
+import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaUP;
 import edu.unizg.foi.uzdiz.jmojzes21.lib.facade.UcitavacPodatakaFacade;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Korisnik;
@@ -101,37 +106,67 @@ public class Program {
       case "ITAK": {
         System.out.println(komanda);
         var k = new KomandaITAK(agencija);
-        k.obradiKomanduPregledAranzmana(args);
+        k.obradiKomandu(args);
         break;
       }
       case "ITAP": {
         System.out.println(komanda);
         var k = new KomandaITAP(agencija);
-        k.obradiKomanduDetaljiAranzmana(args);
+        k.obradiKomandu(args);
         break;
       }
       case "IRTA": {
         System.out.println(komanda);
         var k = new KomandaIRTA(agencija);
-        k.obradiKomanduPregledRezervacijaAranzmana(args);
+        k.obradiKomandu(args);
         break;
       }
       case "IRO": {
         System.out.println(komanda);
         var k = new KomandaIRO(agencija);
-        k.obradiKomanduPregledRezervacijaKorisnika(args);
+        k.obradiKomandu(args);
         break;
       }
       case "DRTA": {
         System.out.println(komanda);
         var k = new KomandaDRTA(agencija);
-        k.obradiKomanduDodavanjeRezervacije(args);
+        k.obradiKomandu(args);
         break;
       }
       case "ORTA": {
         System.out.println(komanda);
         var k = new KomandaORTA(agencija);
-        k.obradiKomanduOtkaziRezervaciju(args);
+        k.obradiKomandu(args);
+        break;
+      }
+      case "OTA": {
+        System.out.println(komanda);
+        var k = new KomandaOTA(agencija);
+        k.obradiKomandu(args);
+        break;
+      }
+      case "IP": {
+        System.out.println(komanda);
+        var k = new KomandaIP(agencija);
+        k.obradiKomandu(args);
+        break;
+      }
+      case "BP": {
+        System.out.println(komanda);
+        var k = new KomandaBP(agencija);
+        k.obradiKomandu(args);
+        break;
+      }
+      case "UP": {
+        System.out.println(komanda);
+        var k = new KomandaUP(agencija);
+        k.obradiKomandu(args);
+        break;
+      }
+      case "ITAS": {
+        System.out.println(komanda);
+        var k = new KomandaITAS(agencija);
+        k.obradiKomandu(args);
         break;
       }
       case "Q": {

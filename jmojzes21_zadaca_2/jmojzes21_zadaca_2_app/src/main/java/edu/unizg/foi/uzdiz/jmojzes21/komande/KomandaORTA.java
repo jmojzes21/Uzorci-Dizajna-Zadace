@@ -12,7 +12,7 @@ public class KomandaORTA {
     this.agencija = agencija;
   }
 
-  public void obradiKomanduOtkaziRezervaciju(String args) throws Exception {
+  public void obradiKomandu(String args) throws Exception {
 
     var uzorak = new RegexKomandeGraditelj()
         .dodajTekst("ime")

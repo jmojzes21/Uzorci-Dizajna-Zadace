@@ -14,7 +14,7 @@ public class KomandaITAP {
     this.agencija = agencija;
   }
 
-  public void obradiKomanduDetaljiAranzmana(String args) throws Exception {
+  public void obradiKomandu(String args) throws Exception {
 
     var uzorak = new RegexKomandeGraditelj()
         .dodajBroj("oznaka")
