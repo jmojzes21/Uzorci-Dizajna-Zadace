@@ -21,7 +21,7 @@ public class TablicniIspis {
     ispisiCrtu();
     for (var stupac : stupci) {
       if (!stupac.prikaziStupac()) {continue;}
-      String sadrzaj = formatirajSadrzaj(stupac, stupac.naziv());
+      String sadrzaj = formatirajSadrzaj(stupac.sirina(), Poravnanje.lijevo, stupac.naziv());
       System.out.print(sadrzaj);
     }
     System.out.println("|");
@@ -71,18 +71,21 @@ public class TablicniIspis {
   }
 
   private String formatirajSadrzaj(StupacTablice stupac, String sadrzaj) {
-    int sirina = stupac.sirina();
+    return formatirajSadrzaj(stupac.sirina(), stupac.poravnanje(), sadrzaj);
+  }
+
+  private String formatirajSadrzaj(int sirina, Poravnanje poravnanje, String sadrzaj) {
 
     if (sadrzaj.length() > sirina) {
       sadrzaj = sadrzaj.substring(0, sirina - 3) + "...";
     }
 
-    int poravnanje = switch (stupac.poravnanje()) {
+    int p = switch (poravnanje) {
       case Poravnanje.lijevo -> -1;
       case Poravnanje.desno -> 1;
     };
 
-    String format = "| %" + (poravnanje * sirina) + "s ";
+    String format = "| %" + (p * sirina) + "s ";
     return String.format(format, sadrzaj);
   }
 

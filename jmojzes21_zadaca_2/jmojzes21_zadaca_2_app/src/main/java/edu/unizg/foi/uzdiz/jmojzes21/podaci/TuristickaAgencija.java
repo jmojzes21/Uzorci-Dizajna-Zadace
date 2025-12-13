@@ -1,5 +1,6 @@
 package edu.unizg.foi.uzdiz.jmojzes21.podaci;
 
+import edu.unizg.foi.uzdiz.jmojzes21.podaci.statistika.StatistikaAranzmana;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -173,6 +174,12 @@ public class TuristickaAgencija extends RezervacijaComposite {
     var agent = new TuristickiAgent(aranzmani);
     agent.otkaziRezervaciju(aranzman, korisnik);
     */
+  }
+
+  public List<StatistikaAranzmana> dajStatistikuAranzmana(List<Aranzman> aranzmani) {
+    return aranzmani.stream()
+        .map(e -> new StatistikaAranzmana(e))
+        .toList();
   }
 
   /**
