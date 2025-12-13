@@ -35,7 +35,7 @@ public class RegexKomandeGraditelj {
    */
   public RegexKomandeGraditelj dodajTekst(String naziv) {
     if (!regex.isEmpty()) {regex.append(razmakArgumenata);}
-    regex.append(String.format("(?<%s>\\w+)", naziv));
+    regex.append(String.format("(?<%s>[\\w\\.\\,\\\\\\/]+)", naziv));
     return this;
   }
 
@@ -48,7 +48,7 @@ public class RegexKomandeGraditelj {
   public RegexKomandeGraditelj dodajTekstOpcionalno(String naziv) {
     regex.append("(");
     regex.append(razmakArgumenata);
-    regex.append(String.format("(?<%s>\\w+)", naziv));
+    regex.append(String.format("(?<%s>[\\w\\.\\,\\\\\\/]+)", naziv));
     regex.append(")?");
     return this;
   }

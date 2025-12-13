@@ -45,7 +45,7 @@ public class AranzmanUPripremi implements AranzmanStanje {
       System.out.printf(
           "Brisanje rezervacije korisnika %s, aranžman %d, vrijeme %s jer korisnik već ima primljenu rezervaciju.\n",
           neispravna.korisnik(), neispravna.oznakaAranzmana(), f.formatiraj(neispravna.vrijemePrijema()));
-      aranzman.ukloni(neispravna);
+      aranzman.obrisi(neispravna);
     }
 
     int brojPrimljenih = aranzman.brojPrimljenih();

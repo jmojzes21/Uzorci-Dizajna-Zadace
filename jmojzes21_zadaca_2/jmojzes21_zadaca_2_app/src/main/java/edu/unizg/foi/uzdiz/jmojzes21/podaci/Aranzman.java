@@ -58,8 +58,14 @@ public class Aranzman extends RezervacijaComposite implements RezervacijaSubject
   }
 
   @Override
-  public void ukloni(RezervacijaComponent r) {
+  public void obrisi(RezervacijaComponent r) {
     djeca.remove(r);
+  }
+
+  @Override
+  public void obrisiSve() {
+    djeca.clear();
+    postaviStanje(new AranzmanUPripremi());
   }
 
   public void zaprimiRezervaciju(Rezervacija rezervacija) throws Exception {

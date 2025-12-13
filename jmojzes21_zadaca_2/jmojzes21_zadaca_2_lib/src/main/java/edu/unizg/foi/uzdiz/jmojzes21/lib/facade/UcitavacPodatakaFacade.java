@@ -254,7 +254,7 @@ public class UcitavacPodatakaFacade {
 
   private String dajSadrzajDatoteke(Path putanja) throws IOException {
     if (Files.notExists(putanja)) {
-      String opis = String.format("Datoteka ne postoji! Putanja: %s\n", putanja);
+      String opis = String.format("Datoteka ne postoji! Putanja: %s", putanja);
       throw new IOException(opis);
     }
 

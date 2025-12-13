@@ -19,8 +19,18 @@ public class TuristickaAgencija extends RezervacijaComposite {
   }
 
   @Override
-  protected void ukloni(RezervacijaComponent r) {
+  public void obrisi(RezervacijaComponent r) {
     djeca.remove(r);
+  }
+
+  @Override
+  public void obrisiSve() {
+    for (var e : djeca) {
+      if (e instanceof RezervacijaComposite c) {
+        c.obrisiSve();
+      }
+    }
+    djeca.clear();
   }
 
   /**
@@ -115,7 +125,7 @@ public class TuristickaAgencija extends RezervacijaComposite {
 
     Aranzman aranzman = dajAranzman(rezervacija.oznakaAranzmana());
     if (aranzman == null) {
-      String opis = String.format("Ne postoji aranžam oznake %d.\n", rezervacija.oznakaAranzmana());
+      String opis = String.format("Ne postoji aranžam oznake %d.", rezervacija.oznakaAranzmana());
       throw new Exception(opis);
     }
 
@@ -166,22 +176,42 @@ public class TuristickaAgencija extends RezervacijaComposite {
   }
 
   /**
-   * Učitaj turističke aranžmane.
+   * Dodaj turističke aranžmane.
    *
    * @param aranzmani aranžmani
    */
-  public void ucitajAranzmane(List<Aranzman> aranzmani) {
-
+  public void dodajAranzmane(List<Aranzman> aranzmani) {
     for (Aranzman aranzman : aranzmani) {
-
-      List<Aranzman> trenutniAranzmani = dajAranzmane();
-      for (var a : trenutniAranzmani) {
-        a.dodajPromatraca(aranzman);
-        aranzman.dodajPromatraca(a);
+      try {
+        dodajAranzman(aranzman);
+      } catch (Exception e) {
+        System.out.println(e.getMessage());
       }
-
-      dodaj(aranzman);
     }
   }
+
+  /**
+   * Dodaj turistički aranžman.
+   *
+   * @param aranzman aranžman
+   */
+  public void dodajAranzman(Aranzman aranzman) throws Exception {
+
+    if (dajAranzman(aranzman.oznaka()) != null) {
+      String opis = String.format("Nije moguće dodati aranžman %d jer navedeni aranžman već postoji!",
+          aranzman.oznaka());
+      throw new Exception(opis);
+    }
+
+    List<Aranzman> trenutniAranzmani = dajAranzmane();
+    for (var a : trenutniAranzmani) {
+      a.dodajPromatraca(aranzman);
+      aranzman.dodajPromatraca(a);
+    }
+
+    dodaj(aranzman);
+
+  }
+
 
 }
