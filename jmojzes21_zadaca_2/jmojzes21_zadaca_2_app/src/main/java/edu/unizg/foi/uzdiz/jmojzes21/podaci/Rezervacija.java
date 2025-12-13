@@ -62,6 +62,12 @@ public class Rezervacija extends RezervacijaComponent implements RezervacijaObse
     stanje.kadaRezervacijaPostalaAktivna(this, aktivirana);
   }
 
+  @Override
+  public void kadaRezervacijaPostalaOtkazana(Rezervacija otkazana) {
+    if (oznakaAranzmana == otkazana.oznakaAranzmana) {return;}
+    stanje.kadaRezervacijaPostalaOtkazana(this, otkazana);
+  }
+
   public RezervacijaStanje stanje() {
     return stanje;
   }

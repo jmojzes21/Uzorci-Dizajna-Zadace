@@ -25,6 +25,8 @@ public interface RezervacijaStanje {
 
   default void kadaRezervacijaPostalaAktivna(Rezervacija trenutna, Rezervacija aktivirana) {}
 
+  default void kadaRezervacijaPostalaOtkazana(Rezervacija trenutna, Rezervacija otkazana) {}
+  
   String dajNaziv();
 
 }

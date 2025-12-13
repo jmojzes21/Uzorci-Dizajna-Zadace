@@ -6,4 +6,6 @@ public interface RezervacijaObserver {
 
   void kadaRezervacijaPostalaAktivna(Rezervacija aktivirana);
 
+  void kadaRezervacijaPostalaOtkazana(Rezervacija otkazana);
+
 }

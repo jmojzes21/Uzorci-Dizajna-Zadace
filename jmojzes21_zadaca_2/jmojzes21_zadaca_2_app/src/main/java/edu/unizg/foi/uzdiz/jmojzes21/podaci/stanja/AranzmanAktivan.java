@@ -3,6 +3,7 @@ package edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AranzmanAktivan implements AranzmanStanje {
@@ -47,6 +48,23 @@ public class AranzmanAktivan implements AranzmanStanje {
     }
 
     zaOtkazati.otkazi();
+    aranzman.obavijestiRezervacijaPostalaOtkazana(zaOtkazati);
+
+    List<Rezervacija> kandidati = new ArrayList<>();
+    kandidati.addAll(aranzman.rezervacijeNaCekanju());
+    kandidati.addAll(aranzman.odgodjeneRezervacije());
+    Rezervacija.sortiraj(kandidati, true);
+
+    for (Rezervacija kandidat : kandidati) {
+      boolean mozePostatiAktivna = aranzman.obavijestiRezervacijaPostajeAktivna(kandidat);
+      if (mozePostatiAktivna) {
+        kandidat.aktiviraj();
+        if (kandidat.jeAktivna()) {
+          aranzman.obavijestiRezervacijaPostalaAktivna(kandidat);
+          break;
+        }
+      }
+    }
 
     provjeriAktivneRezervacije(aranzman);
 
