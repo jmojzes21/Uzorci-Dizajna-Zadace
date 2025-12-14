@@ -13,11 +13,14 @@ public class PostavkeSustava {
   }
 
   private NacinSortiranja nacinSortiranja;
+
   private boolean koristiPrelamanjeTeksta;
+  private boolean ispisDodatnihCrta;
 
   private PostavkeSustava() {
     nacinSortiranja = NacinSortiranja.uzlazno;
     koristiPrelamanjeTeksta = true;
+    ispisDodatnihCrta = true;
   }
 
   public boolean sortirajUzlazno() {
@@ -28,10 +31,16 @@ public class PostavkeSustava {
 
   public boolean koristiPrelamanjeTeksta() {return koristiPrelamanjeTeksta;}
 
+  public boolean ispisDodatnihCrta() {return ispisDodatnihCrta;}
+
   public void postaviNacinSortiranja(NacinSortiranja nacinSortiranja) {this.nacinSortiranja = nacinSortiranja;}
 
   public void postaviPrelamanjeTeksta(boolean prelamanjeTeksta) {
     koristiPrelamanjeTeksta = prelamanjeTeksta;
+  }
+
+  public void postaviIspisDodatnihCrta(boolean ispisDodatnihCrta) {
+    this.ispisDodatnihCrta = ispisDodatnihCrta;
   }
 
 }

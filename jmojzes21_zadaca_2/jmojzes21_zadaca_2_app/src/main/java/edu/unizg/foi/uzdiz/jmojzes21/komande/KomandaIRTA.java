@@ -73,6 +73,7 @@ public class KomandaIRTA {
 
     var tablicniIspis = new TablicniIspisGraditelj()
         .koristiPrelamanjeTeksta(postavke.koristiPrelamanjeTeksta())
+        .postaviIspisDodatnihCrta(postavke.ispisDodatnihCrta())
         .dodajStupac("Ime", 18)
         .dodajStupac("Prezime", 18)
         .dodajStupac("Vrijeme prijema", 24)

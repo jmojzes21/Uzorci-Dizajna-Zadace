@@ -62,6 +62,7 @@ public class KomandaITAK {
 
     var tablicniIspis = new TablicniIspisGraditelj()
         .koristiPrelamanjeTeksta(postavke.koristiPrelamanjeTeksta())
+        .postaviIspisDodatnihCrta(postavke.ispisDodatnihCrta())
         .dodajStupac("Oznaka", 6)
         .poravnajDesno()
         .dodajStupac("Naziv", 40)

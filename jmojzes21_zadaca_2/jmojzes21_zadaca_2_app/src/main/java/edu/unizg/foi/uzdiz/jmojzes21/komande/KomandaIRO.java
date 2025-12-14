@@ -57,6 +57,7 @@ public class KomandaIRO {
 
     var tablicniIspis = new TablicniIspisGraditelj()
         .koristiPrelamanjeTeksta(postavke.koristiPrelamanjeTeksta())
+        .postaviIspisDodatnihCrta(postavke.ispisDodatnihCrta())
         .dodajStupac("Vrijeme prijema", 24)
         .dodajStupac("Oznaka aranžmana", 16)
         .poravnajDesno()

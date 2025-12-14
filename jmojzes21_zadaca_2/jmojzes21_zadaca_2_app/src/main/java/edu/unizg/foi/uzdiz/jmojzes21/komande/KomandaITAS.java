@@ -66,6 +66,7 @@ public class KomandaITAS {
 
     var tablicniIspis = new TablicniIspisGraditelj()
         .koristiPrelamanjeTeksta(postavke.koristiPrelamanjeTeksta())
+        .postaviIspisDodatnihCrta(postavke.ispisDodatnihCrta())
         .dodajStupac("Oznaka", 8)
         .poravnajDesno()
         .dodajStupac("Ukupno rezervacija", 20)

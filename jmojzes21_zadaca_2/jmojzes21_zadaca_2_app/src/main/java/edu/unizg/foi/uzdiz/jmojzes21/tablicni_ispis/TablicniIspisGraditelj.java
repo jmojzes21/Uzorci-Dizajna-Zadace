@@ -12,6 +12,7 @@ public class TablicniIspisGraditelj {
   private final List<StupacTablice> stupci;
 
   private boolean prelamanjeTeksta = false;
+  private boolean ispisDodatnihCrta = false;
 
   public TablicniIspisGraditelj() {
     stupci = new ArrayList<>();
@@ -80,6 +81,11 @@ public class TablicniIspisGraditelj {
     return this;
   }
 
+  public TablicniIspisGraditelj postaviIspisDodatnihCrta(boolean ispisDodatnihCrta) {
+    this.ispisDodatnihCrta = ispisDodatnihCrta;
+    return this;
+  }
+
   /**
    * Napravi tablični ispis
    *
@@ -89,10 +95,13 @@ public class TablicniIspisGraditelj {
     ITablicniIspis tablicniIspis = new TablicniIspis(stupci);
 
     if (prelamanjeTeksta) {
-      return new TablicniIspisPrelamanje(tablicniIspis);
+      tablicniIspis = new TablicniIspisPrelamanje(tablicniIspis);
     }
-
+    if (ispisDodatnihCrta) {
+      tablicniIspis = new TablicniIspisDodatneCrte(tablicniIspis);
+    }
+    
     return tablicniIspis;
   }
-  
+
 }
