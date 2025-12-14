@@ -1,6 +1,7 @@
 package edu.unizg.foi.uzdiz.jmojzes21.podaci;
 
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.AranzmanAktivan;
+import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.AranzmanOtkazan;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.AranzmanPopunjen;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.AranzmanStanje;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.AranzmanUPripremi;
@@ -78,6 +79,23 @@ public class Aranzman extends RezervacijaComposite implements RezervacijaSubject
 
   public void aktiviraj() throws Exception {
     stanje.aktiviraj(this);
+  }
+
+  public void otkazi() throws Exception {
+
+    if (stanje instanceof AranzmanOtkazan) {
+      String opis = String.format("Nije moguće otkazati aranžman %d jer je on već otkazan.", oznaka);
+      throw new Exception(opis);
+
+    }
+
+    List<Rezervacija> rezervacije = rezervacije();
+    for (var r : rezervacije) {
+      r.otkazi();
+      obavijestiRezervacijaPostalaOtkazana(r);
+    }
+
+    postaviStanje(new AranzmanOtkazan());
   }
 
   @Override
@@ -169,6 +187,10 @@ public class Aranzman extends RezervacijaComposite implements RezervacijaSubject
 
   public boolean jePopunjen() {
     return stanje instanceof AranzmanPopunjen;
+  }
+
+  public boolean jeOtkazan() {
+    return stanje instanceof AranzmanOtkazan;
   }
 
   public List<Rezervacija> rezervacije() {
