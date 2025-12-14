@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Omogućuje ispis u obliku tablice.
  */
-public class TablicniIspis {
+public class TablicniIspis implements ITablicniIspis {
 
   private final List<StupacTablice> stupci;
 
@@ -17,6 +17,7 @@ public class TablicniIspis {
   /**
    * Ispisuje zaglavlje tablice (nazive stupaca).
    */
+  @Override
   public void ispisiZaglavlje() {
     ispisiCrtu();
     for (var stupac : stupci) {
@@ -33,6 +34,7 @@ public class TablicniIspis {
    *
    * @param podaci podaci koje je potrebno ispisati, broj elemenata mora biti jednak broju stupaca
    */
+  @Override
   public void ispisi(List<String> podaci) {
 
     if (podaci.size() != stupci.size()) {
@@ -53,6 +55,7 @@ public class TablicniIspis {
   /**
    * Ispisuje crtu u širini tablice.
    */
+  @Override
   public void ispisiCrtu() {
     System.out.print("|");
 
@@ -69,6 +72,9 @@ public class TablicniIspis {
     System.out.print("=".repeat(brojCrta));
     System.out.println("|");
   }
+
+  @Override
+  public List<StupacTablice> stupci() {return stupci;}
 
   private String formatirajSadrzaj(StupacTablice stupac, String sadrzaj) {
     return formatirajSadrzaj(stupac.sirina(), stupac.poravnanje(), sadrzaj);

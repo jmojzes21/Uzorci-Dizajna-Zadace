@@ -11,6 +11,8 @@ public class TablicniIspisGraditelj {
 
   private final List<StupacTablice> stupci;
 
+  private boolean prelamanjeTeksta = false;
+
   public TablicniIspisGraditelj() {
     stupci = new ArrayList<>();
   }
@@ -73,13 +75,24 @@ public class TablicniIspisGraditelj {
     return this;
   }
 
+  public TablicniIspisGraditelj koristiPrelamanjeTeksta(boolean prelamanjeTeksta) {
+    this.prelamanjeTeksta = prelamanjeTeksta;
+    return this;
+  }
+
   /**
    * Napravi tablični ispis
    *
    * @return tablični ispis
    */
-  public TablicniIspis napravi() {
-    return new TablicniIspis(stupci);
-  }
+  public ITablicniIspis napravi() {
+    ITablicniIspis tablicniIspis = new TablicniIspis(stupci);
 
+    if (prelamanjeTeksta) {
+      return new TablicniIspisPrelamanje(tablicniIspis);
+    }
+
+    return tablicniIspis;
+  }
+  
 }
