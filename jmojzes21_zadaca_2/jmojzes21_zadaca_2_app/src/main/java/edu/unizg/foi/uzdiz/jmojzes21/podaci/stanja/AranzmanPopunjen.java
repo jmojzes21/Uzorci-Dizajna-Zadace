@@ -28,6 +28,9 @@ public class AranzmanPopunjen implements AranzmanStanje {
   }
 
   @Override
+  public void aktiviraj(Aranzman aranzman) throws Exception {}
+
+  @Override
   public void otkaziRezervaciju(Aranzman aranzman, Korisnik korisnik) throws Exception {
 
     Rezervacija zaOtkazati = dajRezervacijuKorisnika(aranzman, korisnik);
@@ -68,6 +71,7 @@ public class AranzmanPopunjen implements AranzmanStanje {
 
     if (brojAktivnih < aranzman.maxBrojPutnika()) {
       aranzman.postaviStanje(new AranzmanAktivan());
+      
     } else if (brojAktivnih < aranzman.minBrojPutnika()) {
       for (var r : aktivneRezervacije) {
         r.zaprimi();

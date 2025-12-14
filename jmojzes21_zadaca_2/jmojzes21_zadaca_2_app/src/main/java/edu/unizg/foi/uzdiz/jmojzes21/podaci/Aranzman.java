@@ -86,7 +86,6 @@ public class Aranzman extends RezervacijaComposite implements RezervacijaSubject
     if (stanje instanceof AranzmanOtkazan) {
       String opis = String.format("Nije moguće otkazati aranžman %d jer je on već otkazan.", oznaka);
       throw new Exception(opis);
-
     }
 
     List<Rezervacija> rezervacije = rezervacije();
@@ -96,6 +95,11 @@ public class Aranzman extends RezervacijaComposite implements RezervacijaSubject
     }
 
     postaviStanje(new AranzmanOtkazan());
+    
+  }
+
+  public void provjeriAktivneRezervacije() {
+    stanje.provjeriAktivneRezervacije(this);
   }
 
   @Override
@@ -123,10 +127,6 @@ public class Aranzman extends RezervacijaComposite implements RezervacijaSubject
     for (Rezervacija r : rezervacije) {
       r.kadaRezervacijaPostalaOtkazana(otkazana);
     }
-  }
-
-  public void provjeriAktivneRezervacije() {
-    stanje.provjeriAktivneRezervacije(this);
   }
 
   @Override

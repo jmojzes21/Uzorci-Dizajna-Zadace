@@ -6,6 +6,9 @@ import java.time.LocalDateTime;
 public class RezervacijaPrimljena implements RezervacijaStanje {
 
   @Override
+  public void zaprimi(Rezervacija rezervacija) {}
+
+  @Override
   public void aktiviraj(Rezervacija rezervacija) {
     rezervacija.postaviStanje(new RezervacijaAktivna());
   }
@@ -14,7 +17,7 @@ public class RezervacijaPrimljena implements RezervacijaStanje {
   public void staviNaCekanje(Rezervacija rezervacija) {
     rezervacija.postaviStanje(new RezervacijaNaCekanju());
   }
-  
+
   @Override
   public void odgodi(Rezervacija rezervacija) {
     rezervacija.postaviStanje(new RezervacijaOdgodjena());
@@ -25,6 +28,17 @@ public class RezervacijaPrimljena implements RezervacijaStanje {
     rezervacija.setVrijemeOtkaza(LocalDateTime.now());
     rezervacija.postaviStanje(new RezervacijaOtkazana());
   }
+
+  @Override
+  public boolean kadaRezervacijaPostajeAktivna(Rezervacija trenutna, Rezervacija postajeAktivna) {
+    return true;
+  }
+
+  @Override
+  public void kadaRezervacijaPostalaAktivna(Rezervacija trenutna, Rezervacija aktivirana) {}
+
+  @Override
+  public void kadaRezervacijaPostalaOtkazana(Rezervacija trenutna, Rezervacija otkazana) {}
 
   @Override
   public String dajNaziv() {

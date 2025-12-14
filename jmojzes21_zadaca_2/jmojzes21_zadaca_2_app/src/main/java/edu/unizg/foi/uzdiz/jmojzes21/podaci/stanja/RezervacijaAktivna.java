@@ -12,13 +12,16 @@ public class RezervacijaAktivna implements RezervacijaStanje {
   }
 
   @Override
-  public void odgodi(Rezervacija rezervacija) {
-    rezervacija.postaviStanje(new RezervacijaOdgodjena());
-  }
+  public void aktiviraj(Rezervacija rezervacija) {}
 
   @Override
   public void staviNaCekanje(Rezervacija rezervacija) {
     rezervacija.postaviStanje(new RezervacijaNaCekanju());
+  }
+
+  @Override
+  public void odgodi(Rezervacija rezervacija) {
+    rezervacija.postaviStanje(new RezervacijaOdgodjena());
   }
 
   @Override
@@ -64,11 +67,13 @@ public class RezervacijaAktivna implements RezervacijaStanje {
 
         rezervacija.odgodi();
         rezervacija.dajAranzman().provjeriAktivneRezervacije();
-        
-      }
 
+      }
     }
   }
+
+  @Override
+  public void kadaRezervacijaPostalaOtkazana(Rezervacija trenutna, Rezervacija otkazana) {}
 
   @Override
   public String dajNaziv() {

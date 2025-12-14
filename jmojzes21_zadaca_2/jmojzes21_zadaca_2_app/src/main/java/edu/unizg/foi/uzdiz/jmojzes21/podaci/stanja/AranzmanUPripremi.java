@@ -96,6 +96,9 @@ public class AranzmanUPripremi implements AranzmanStanje {
   }
 
   @Override
+  public void provjeriAktivneRezervacije(Aranzman aranzman) {}
+
+  @Override
   public String dajNaziv() {
     return "U pripremi";
   }

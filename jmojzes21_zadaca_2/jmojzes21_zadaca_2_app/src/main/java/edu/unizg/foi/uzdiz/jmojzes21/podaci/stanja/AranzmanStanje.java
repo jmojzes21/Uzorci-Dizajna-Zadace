@@ -6,19 +6,13 @@ import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
 
 public interface AranzmanStanje {
 
-  default void zaprimiRezervaciju(Aranzman aranzman, Rezervacija rezervacija) throws Exception {
-    throw new RuntimeException();
-  }
+  void zaprimiRezervaciju(Aranzman aranzman, Rezervacija rezervacija) throws Exception;
 
-  default void postaviUPripremi(Aranzman aranzman) {throw new RuntimeException();}
+  void aktiviraj(Aranzman aranzman) throws Exception;
 
-  default void aktiviraj(Aranzman aranzman) throws Exception {throw new RuntimeException();}
+  void otkaziRezervaciju(Aranzman aranzman, Korisnik korisnik) throws Exception;
 
-  default void popuni(Aranzman aranzman) {throw new RuntimeException();}
-
-  default void otkaziRezervaciju(Aranzman aranzman, Korisnik korisnik) throws Exception {}
-
-  default void provjeriAktivneRezervacije(Aranzman aranzman) {}
+  void provjeriAktivneRezervacije(Aranzman aranzman);
 
   String dajNaziv();
 

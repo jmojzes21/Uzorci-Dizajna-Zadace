@@ -37,6 +37,9 @@ public class AranzmanAktivan implements AranzmanStanje {
   }
 
   @Override
+  public void aktiviraj(Aranzman aranzman) throws Exception {}
+
+  @Override
   public void otkaziRezervaciju(Aranzman aranzman, Korisnik korisnik) throws Exception {
 
     Rezervacija zaOtkazati = dajRezervacijuKorisnika(aranzman, korisnik);
