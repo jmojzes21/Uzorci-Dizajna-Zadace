@@ -1,5 +1,6 @@
 package edu.unizg.foi.uzdiz.jmojzes21.komande;
 
+import edu.unizg.foi.uzdiz.jmojzes21.PostavkeSustava;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.TuristickaAgencija;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.statistika.StatistikaAranzmana;
@@ -60,9 +61,11 @@ public class KomandaITAS {
 
   private void prikaziStatistiku(List<StatistikaAranzmana> statistika) {
 
+    var postavke = PostavkeSustava.dajInstancu();
     var f = Formati.dajInstancu();
 
     var tablicniIspis = new TablicniIspisGraditelj()
+        .koristiPrelamanjeTeksta(postavke.koristiPrelamanjeTeksta())
         .dodajStupac("Oznaka", 8)
         .poravnajDesno()
         .dodajStupac("Ukupno rezervacija", 20)

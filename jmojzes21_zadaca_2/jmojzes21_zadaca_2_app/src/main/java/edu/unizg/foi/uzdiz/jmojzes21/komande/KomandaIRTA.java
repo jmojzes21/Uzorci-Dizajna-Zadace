@@ -66,12 +66,13 @@ public class KomandaIRTA {
 
   private void prikaziRezervacije(List<Rezervacija> rezervacije, boolean prikaziOtkazane) {
 
-    boolean sortirajUzlazno = PostavkeSustava.dajInstancu().sortirajUzlazno();
-    rezervacije = Rezervacija.sortiraj(rezervacije, sortirajUzlazno);
-
+    var postavke = PostavkeSustava.dajInstancu();
     var f = Formati.dajInstancu();
 
+    rezervacije = Rezervacija.sortiraj(rezervacije, postavke.sortirajUzlazno());
+
     var tablicniIspis = new TablicniIspisGraditelj()
+        .koristiPrelamanjeTeksta(postavke.koristiPrelamanjeTeksta())
         .dodajStupac("Ime", 18)
         .dodajStupac("Prezime", 18)
         .dodajStupac("Vrijeme prijema", 24)

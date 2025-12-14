@@ -50,12 +50,13 @@ public class KomandaIRO {
 
   private void prikaziRezervacije(List<Rezervacija> rezervacije) {
 
-    boolean sortirajUzlazno = PostavkeSustava.dajInstancu().sortirajUzlazno();
-    rezervacije = Rezervacija.sortiraj(rezervacije, sortirajUzlazno);
-
+    var postavke = PostavkeSustava.dajInstancu();
     var f = Formati.dajInstancu();
 
+    rezervacije = Rezervacija.sortiraj(rezervacije, postavke.sortirajUzlazno());
+
     var tablicniIspis = new TablicniIspisGraditelj()
+        .koristiPrelamanjeTeksta(postavke.koristiPrelamanjeTeksta())
         .dodajStupac("Vrijeme prijema", 24)
         .dodajStupac("Oznaka aranžmana", 16)
         .poravnajDesno()

@@ -55,12 +55,13 @@ public class KomandaITAK {
 
   private void prikaziAranzmane(List<Aranzman> aranzmani) {
 
-    boolean sortirajUzlazno = PostavkeSustava.dajInstancu().sortirajUzlazno();
-    aranzmani = Aranzman.sortiraj(aranzmani, sortirajUzlazno);
-
+    var postavke = PostavkeSustava.dajInstancu();
     var f = Formati.dajInstancu();
 
+    aranzmani = Aranzman.sortiraj(aranzmani, postavke.sortirajUzlazno());
+
     var tablicniIspis = new TablicniIspisGraditelj()
+        .koristiPrelamanjeTeksta(postavke.koristiPrelamanjeTeksta())
         .dodajStupac("Oznaka", 6)
         .poravnajDesno()
         .dodajStupac("Naziv", 40)

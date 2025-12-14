@@ -13,17 +13,25 @@ public class PostavkeSustava {
   }
 
   private NacinSortiranja nacinSortiranja;
+  private boolean koristiPrelamanjeTeksta;
 
   private PostavkeSustava() {
     nacinSortiranja = NacinSortiranja.uzlazno;
+    koristiPrelamanjeTeksta = true;
   }
 
   public boolean sortirajUzlazno() {
     return nacinSortiranja == NacinSortiranja.uzlazno;
   }
-  
+
   public NacinSortiranja nacinSortiranja() {return nacinSortiranja;}
 
+  public boolean koristiPrelamanjeTeksta() {return koristiPrelamanjeTeksta;}
+
   public void postaviNacinSortiranja(NacinSortiranja nacinSortiranja) {this.nacinSortiranja = nacinSortiranja;}
+
+  public void postaviPrelamanjeTeksta(boolean prelamanjeTeksta) {
+    koristiPrelamanjeTeksta = prelamanjeTeksta;
+  }
 
 }
