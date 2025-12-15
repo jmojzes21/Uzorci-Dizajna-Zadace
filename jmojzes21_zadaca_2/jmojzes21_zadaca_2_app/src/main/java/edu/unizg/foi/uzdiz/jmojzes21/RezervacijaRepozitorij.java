@@ -19,12 +19,16 @@ public class RezervacijaRepozitorij {
 
     List<Rezervacija> rezervacije = new ArrayList<>();
 
-    for (List<String> stupci : csvRedci) {
+    for (List<String> redci : csvRedci) {
+      String csvRedak = redci.getFirst();
+      List<String> stupci = redci.subList(1, redci.size());
+
       try {
         Rezervacija rezervacija = parsirajRezervaciju(stupci);
         rezervacije.add(rezervacija);
       } catch (Exception e) {
-        System.out.println(e.getMessage());
+        System.out.printf("[Greška] %s\n", e.getMessage());
+        System.out.println(csvRedak);
       }
     }
 

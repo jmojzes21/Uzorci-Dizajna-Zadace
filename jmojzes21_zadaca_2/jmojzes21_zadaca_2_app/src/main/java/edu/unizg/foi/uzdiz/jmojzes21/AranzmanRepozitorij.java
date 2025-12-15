@@ -18,12 +18,16 @@ public class AranzmanRepozitorij {
 
     List<Aranzman> aranzmani = new ArrayList<>();
 
-    for (List<String> stupci : csvRedci) {
+    for (List<String> redci : csvRedci) {
+      String csvRedak = redci.getFirst();
+      List<String> stupci = redci.subList(1, redci.size());
+
       try {
         Aranzman aranzman = parsirajAranzman(stupci);
         aranzmani.add(aranzman);
       } catch (Exception e) {
-        System.out.println(e.getMessage());
+        System.out.printf("[Greška] %s\n", e.getMessage());
+        System.out.println(csvRedak);
       }
     }
 

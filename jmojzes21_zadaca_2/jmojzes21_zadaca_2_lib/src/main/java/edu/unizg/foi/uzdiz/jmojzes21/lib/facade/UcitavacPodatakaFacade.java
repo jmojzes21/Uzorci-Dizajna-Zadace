@@ -50,7 +50,10 @@ public class UcitavacPodatakaFacade {
 
       try {
         provjeriCsvRedakAranzmana(redak);
-        rezultat.add(redak.elementi());
+
+        List<String> elementi = new ArrayList<>(redak.elementi());
+        elementi.addFirst(redak.linija());
+        rezultat.add(elementi);
       } catch (CsvFormatGreska e) {
         EvidencijaGresaka.dajInstancu().evidentiraj(e);
       }
@@ -88,7 +91,10 @@ public class UcitavacPodatakaFacade {
 
       try {
         provjeriCsvRedakRezervacije(redak);
-        rezultat.add(redak.elementi());
+        
+        List<String> elementi = new ArrayList<>(redak.elementi());
+        elementi.addFirst(redak.linija());
+        rezultat.add(elementi);
       } catch (CsvFormatGreska e) {
         EvidencijaGresaka.dajInstancu().evidentiraj(e);
       }
