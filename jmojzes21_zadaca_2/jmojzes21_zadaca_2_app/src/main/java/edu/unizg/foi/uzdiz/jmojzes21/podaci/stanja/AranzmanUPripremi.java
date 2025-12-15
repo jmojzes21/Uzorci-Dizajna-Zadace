@@ -17,16 +17,12 @@ public class AranzmanUPripremi implements AranzmanStanje {
     aranzman.dodaj(rezervacija);
     rezervacija.zaprimi();
 
-    int brojPrimljenih = aranzman.primljeneRezervacije().size();
-
-    if (brojPrimljenih >= aranzman.minBrojPutnika()) {
-      aranzman.aktiviraj();
-    }
+    provjeriStanje(aranzman);
 
   }
 
   @Override
-  public void aktiviraj(Aranzman aranzman) throws Exception {
+  public void aktiviraj(Aranzman aranzman) {
 
     List<Rezervacija> rezervacije = aranzman.primljeneRezervacije();
 
@@ -37,6 +33,7 @@ public class AranzmanUPripremi implements AranzmanStanje {
       neispravna.odgodi();
     }
 
+    rezervacije = aranzman.primljeneRezervacije();
     int brojPrimljenih = aranzman.brojPrimljenih();
 
     if (brojPrimljenih < aranzman.minBrojPutnika()) {
@@ -72,33 +69,48 @@ public class AranzmanUPripremi implements AranzmanStanje {
   @Override
   public void otkaziRezervaciju(Aranzman aranzman, Korisnik korisnik) throws Exception {
 
-    Rezervacija zaOtkazati = dajRezervacijuKorisnika(aranzman, korisnik);
+    Rezervacija rezervacija = dajRezervacijuKorisnika(aranzman, korisnik);
 
-    if (zaOtkazati == null) {
+    if (rezervacija == null) {
       String opis = String.format("Korisnik %s nema rezervaciju za aranžman %d!", korisnik.punoIme(),
           aranzman.oznaka());
       throw new Exception(opis);
     }
 
-    boolean bilaPrimljena = zaOtkazati.jePrimljena();
-    zaOtkazati.otkazi();
+    if (rezervacija.jePrimljena()) {
+      otkaziPrimljenu(aranzman, rezervacija);
+      return;
+    }
 
-    if (bilaPrimljena) {
-      List<Rezervacija> rezervacije = aranzman.odgodjeneRezervacije();
-      Rezervacija odgodjena = rezervacije.stream()
-          .filter(e -> e.korisnik().equals(korisnik))
-          .min(Comparator.comparing(Rezervacija::vrijemePrijema))
-          .orElse(null);
+    rezervacija.otkazi();
 
-      if (odgodjena != null) {
-        odgodjena.zaprimi();
-      }
+  }
+
+  private void otkaziPrimljenu(Aranzman aranzman, Rezervacija primljena) {
+
+    primljena.otkazi();
+
+    Rezervacija odgodjena = dajOdgodjenuRezervacijuKorisnika(aranzman, primljena.korisnik());
+    if (odgodjena != null) {
+      odgodjena.zaprimi();
     }
 
   }
 
   @Override
-  public void provjeriAktivneRezervacije(Aranzman aranzman) {}
+  public void provjeriStanje(Aranzman aranzman) {
+
+    int brojPrimljenih = aranzman.primljeneRezervacije().size();
+
+    if (brojPrimljenih >= aranzman.minBrojPutnika()) {
+      try {
+        aranzman.aktiviraj();
+      } catch (Exception e) {
+        System.out.println(e.getMessage());
+      }
+    }
+
+  }
 
   @Override
   public String dajNaziv() {
@@ -140,20 +152,18 @@ public class AranzmanUPripremi implements AranzmanStanje {
 
   private Rezervacija dajRezervacijuKorisnika(Aranzman aranzman, Korisnik korisnik) {
     List<Rezervacija> rezervacije = aranzman.primljeneRezervacije();
-    Rezervacija rezervacija = rezervacije.stream()
+    return rezervacije.stream()
         .filter(e -> e.korisnik().equals(korisnik))
-        .findFirst().orElse(null);
+        .findFirst()
+        .orElse(dajOdgodjenuRezervacijuKorisnika(aranzman, korisnik));
+  }
 
-    if (rezervacija == null) {
-      rezervacije = new ArrayList<>();
-      rezervacije.addAll(aranzman.odgodjeneRezervacije());
-      rezervacija = rezervacije.stream()
-          .filter(e -> e.korisnik().equals(korisnik))
-          .min(Comparator.comparing(Rezervacija::vrijemePrijema))
-          .orElse(null);
-    }
-
-    return rezervacija;
+  private Rezervacija dajOdgodjenuRezervacijuKorisnika(Aranzman aranzman, Korisnik korisnik) {
+    List<Rezervacija> rezervacije = aranzman.odgodjeneRezervacije();
+    return rezervacije.stream()
+        .filter(e -> e.korisnik().equals(korisnik))
+        .min(Comparator.comparing(Rezervacija::vrijemePrijema))
+        .orElse(null);
   }
 
 }

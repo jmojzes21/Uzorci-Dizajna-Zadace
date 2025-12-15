@@ -12,16 +12,25 @@ public class AranzmanPopunjen implements AranzmanStanje {
   @Override
   public void zaprimiRezervaciju(Aranzman aranzman, Rezervacija rezervacija) throws Exception {
 
+    if (korisnikImaAktivnuRezervaciju(aranzman, rezervacija)) {
+      String opis = String.format("Korisnik %s već ima aktivnu rezervaciju za aranžman %d.", rezervacija.korisnik(),
+          aranzman.oznaka());
+      throw new Exception(opis);
+    }
+
     aranzman.dodaj(rezervacija);
 
     List<Rezervacija> aktivne = aranzman.aktivneRezervacije();
     Rezervacija najnovijaAktivna = aranzman.dajNajnovijuRezervaciju(aktivne);
 
     if (rezervacija.vrijemePrijema().isBefore(najnovijaAktivna.vrijemePrijema())) {
-      najnovijaAktivna.staviNaCekanje();
-      rezervacija.zaprimi();
-      rezervacija.aktiviraj();
-      return;
+      boolean mozePostatiAktivna = aranzman.obavijestiRezervacijaPostajeAktivna(rezervacija);
+      if (mozePostatiAktivna) {
+        najnovijaAktivna.staviNaCekanje();
+        rezervacija.zaprimi();
+        rezervacija.aktiviraj();
+        return;
+      }
     }
 
     rezervacija.staviNaCekanje();
@@ -29,25 +38,32 @@ public class AranzmanPopunjen implements AranzmanStanje {
   }
 
   @Override
-  public void aktiviraj(Aranzman aranzman) throws Exception {}
+  public void aktiviraj(Aranzman aranzman) {}
 
   @Override
   public void otkaziRezervaciju(Aranzman aranzman, Korisnik korisnik) throws Exception {
 
-    Rezervacija zaOtkazati = dajRezervacijuKorisnika(aranzman, korisnik);
+    Rezervacija rezervacija = dajRezervacijuKorisnika(aranzman, korisnik);
 
-    if (zaOtkazati == null) {
+    if (rezervacija == null) {
       String opis = String.format("Korisnik %s nema rezervaciju za aranžman %d!", korisnik.punoIme(),
           aranzman.oznaka());
       throw new Exception(opis);
     }
 
-    boolean bilaAktivna = zaOtkazati.jeAktivna();
-    zaOtkazati.otkazi();
+    if (rezervacija.jeAktivna()) {
+      otkaziAktivnu(aranzman, rezervacija);
+      return;
+    }
 
-    if (!bilaAktivna) {return;}
-    
-    aranzman.obavijestiRezervacijaPostalaOtkazana(zaOtkazati);
+    rezervacija.otkazi();
+
+  }
+
+  private void otkaziAktivnu(Aranzman aranzman, Rezervacija rezervacija) {
+
+    rezervacija.otkazi();
+    aranzman.obavijestiRezervacijaPostalaOtkazana(rezervacija);
 
     List<Rezervacija> kandidati = new ArrayList<>();
     kandidati.addAll(aranzman.rezervacijeNaCekanju());
@@ -65,29 +81,32 @@ public class AranzmanPopunjen implements AranzmanStanje {
       }
     }
 
-    provjeriAktivneRezervacije(aranzman);
+    provjeriStanje(aranzman);
 
   }
 
   @Override
-  public void provjeriAktivneRezervacije(Aranzman aranzman) {
+  public void provjeriStanje(Aranzman aranzman) {
+
     List<Rezervacija> aktivneRezervacije = aranzman.aktivneRezervacije();
     int brojAktivnih = aktivneRezervacije.size();
 
     if (brojAktivnih < aranzman.maxBrojPutnika()) {
       aranzman.postaviStanje(new AranzmanAktivan());
-
-    } else if (brojAktivnih < aranzman.minBrojPutnika()) {
-      for (var r : aktivneRezervacije) {
-        r.zaprimi();
-      }
-      aranzman.postaviStanje(new AranzmanUPripremi());
+      aranzman.provjeriStanje();
     }
+
   }
 
   @Override
   public String dajNaziv() {
     return "Popunjen";
+  }
+
+  private boolean korisnikImaAktivnuRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
+    List<Rezervacija> rezervacije = aranzman.aktivneRezervacije();
+    return rezervacije.stream()
+        .anyMatch(e -> e.korisnik().equals(rezervacija.korisnik()));
   }
 
   private Rezervacija dajRezervacijuKorisnika(Aranzman aranzman, Korisnik korisnik) {

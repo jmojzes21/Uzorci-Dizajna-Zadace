@@ -66,7 +66,7 @@ public class RezervacijaAktivna implements RezervacijaStanje {
                 + aktivirana.oznakaAranzmana());
 
         rezervacija.odgodi();
-        rezervacija.dajAranzman().provjeriAktivneRezervacije();
+        rezervacija.dajAranzman().provjeriStanje();
 
       }
     }

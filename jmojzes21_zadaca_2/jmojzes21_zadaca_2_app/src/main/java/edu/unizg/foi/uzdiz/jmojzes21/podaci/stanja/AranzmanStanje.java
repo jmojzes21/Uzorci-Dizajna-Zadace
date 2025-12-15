@@ -12,7 +12,7 @@ public interface AranzmanStanje {
 
   void otkaziRezervaciju(Aranzman aranzman, Korisnik korisnik) throws Exception;
 
-  void provjeriAktivneRezervacije(Aranzman aranzman);
+  void provjeriStanje(Aranzman aranzman);
 
   String dajNaziv();
 

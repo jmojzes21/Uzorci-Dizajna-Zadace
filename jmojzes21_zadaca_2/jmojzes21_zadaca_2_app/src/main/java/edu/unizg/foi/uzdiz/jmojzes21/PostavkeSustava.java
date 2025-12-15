@@ -19,8 +19,8 @@ public class PostavkeSustava {
 
   private PostavkeSustava() {
     nacinSortiranja = NacinSortiranja.uzlazno;
-    koristiPrelamanjeTeksta = true;
-    ispisDodatnihCrta = true;
+    koristiPrelamanjeTeksta = false;
+    ispisDodatnihCrta = false;
   }
 
   public boolean sortirajUzlazno() {

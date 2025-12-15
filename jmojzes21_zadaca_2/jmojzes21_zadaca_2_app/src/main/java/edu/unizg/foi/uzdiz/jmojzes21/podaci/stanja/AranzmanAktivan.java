@@ -3,7 +3,6 @@ package edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -30,56 +29,45 @@ public class AranzmanAktivan implements AranzmanStanje {
     rezervacija.aktiviraj();
     aranzman.obavijestiRezervacijaPostalaAktivna(rezervacija);
 
-    int brojAktivnih = aranzman.brojAktivnih();
-    if (brojAktivnih >= aranzman.maxBrojPutnika()) {
-      aranzman.postaviStanje(new AranzmanPopunjen());
-    }
+    provjeriStanje(aranzman);
 
   }
 
   @Override
-  public void aktiviraj(Aranzman aranzman) throws Exception {}
+  public void aktiviraj(Aranzman aranzman) {}
 
   @Override
   public void otkaziRezervaciju(Aranzman aranzman, Korisnik korisnik) throws Exception {
 
-    Rezervacija zaOtkazati = dajRezervacijuKorisnika(aranzman, korisnik);
+    Rezervacija rezervacija = dajRezervacijuKorisnika(aranzman, korisnik);
 
-    if (zaOtkazati == null) {
+    if (rezervacija == null) {
       String opis = String.format("Korisnik %s nema rezervaciju za aranžman %d!", korisnik.punoIme(),
           aranzman.oznaka());
       throw new Exception(opis);
     }
 
-    boolean bilaAktivna = zaOtkazati.jeAktivna();
-    zaOtkazati.otkazi();
-
-    if (!bilaAktivna) {return;}
-
-    aranzman.obavijestiRezervacijaPostalaOtkazana(zaOtkazati);
-
-    List<Rezervacija> kandidati = new ArrayList<>();
-    kandidati.addAll(aranzman.rezervacijeNaCekanju());
-    kandidati.addAll(aranzman.odgodjeneRezervacije());
-    Rezervacija.sortiraj(kandidati, true);
-
-    for (Rezervacija kandidat : kandidati) {
-      boolean mozePostatiAktivna = aranzman.obavijestiRezervacijaPostajeAktivna(kandidat);
-      if (mozePostatiAktivna) {
-        kandidat.aktiviraj();
-        if (kandidat.jeAktivna()) {
-          aranzman.obavijestiRezervacijaPostalaAktivna(kandidat);
-          break;
-        }
-      }
+    if (rezervacija.jeAktivna()) {
+      otkaziAktivnu(aranzman, rezervacija);
+      return;
     }
 
-    provjeriAktivneRezervacije(aranzman);
+    rezervacija.otkazi();
+
+  }
+
+  private void otkaziAktivnu(Aranzman aranzman, Rezervacija rezervacija) {
+
+    rezervacija.otkazi();
+    aranzman.obavijestiRezervacijaPostalaOtkazana(rezervacija);
+
+    provjeriStanje(aranzman);
 
   }
 
   @Override
-  public void provjeriAktivneRezervacije(Aranzman aranzman) {
+  public void provjeriStanje(Aranzman aranzman) {
+
     List<Rezervacija> aktivneRezervacije = aranzman.aktivneRezervacije();
     int brojAktivnih = aktivneRezervacije.size();
 
@@ -89,6 +77,11 @@ public class AranzmanAktivan implements AranzmanStanje {
       }
       aranzman.postaviStanje(new AranzmanUPripremi());
     }
+
+    if (brojAktivnih >= aranzman.maxBrojPutnika()) {
+      aranzman.postaviStanje(new AranzmanPopunjen());
+    }
+
   }
 
   @Override
@@ -104,20 +97,18 @@ public class AranzmanAktivan implements AranzmanStanje {
 
   private Rezervacija dajRezervacijuKorisnika(Aranzman aranzman, Korisnik korisnik) {
     List<Rezervacija> rezervacije = aranzman.aktivneRezervacije();
-    Rezervacija rezervacija = rezervacije.stream()
+    return rezervacije.stream()
         .filter(e -> e.korisnik().equals(korisnik))
-        .findFirst().orElse(null);
+        .findFirst()
+        .orElse(dajOdgodjenuRezervacijuKorisnika(aranzman, korisnik));
+  }
 
-    if (rezervacija == null) {
-      rezervacije = new ArrayList<>();
-      rezervacije.addAll(aranzman.odgodjeneRezervacije());
-      rezervacija = rezervacije.stream()
-          .filter(e -> e.korisnik().equals(korisnik))
-          .min(Comparator.comparing(Rezervacija::vrijemePrijema))
-          .orElse(null);
-    }
-
-    return rezervacija;
+  private Rezervacija dajOdgodjenuRezervacijuKorisnika(Aranzman aranzman, Korisnik korisnik) {
+    List<Rezervacija> rezervacije = aranzman.odgodjeneRezervacije();
+    return rezervacije.stream()
+        .filter(e -> e.korisnik().equals(korisnik))
+        .min(Comparator.comparing(Rezervacija::vrijemePrijema))
+        .orElse(null);
   }
 
 }

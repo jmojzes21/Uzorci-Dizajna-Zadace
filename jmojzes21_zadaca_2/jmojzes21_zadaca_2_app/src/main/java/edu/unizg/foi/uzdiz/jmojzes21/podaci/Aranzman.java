@@ -95,11 +95,11 @@ public class Aranzman extends RezervacijaComposite implements RezervacijaSubject
     }
 
     postaviStanje(new AranzmanOtkazan());
-    
+
   }
 
-  public void provjeriAktivneRezervacije() {
-    stanje.provjeriAktivneRezervacije(this);
+  public void provjeriStanje() {
+    stanje.provjeriStanje(this);
   }
 
   @Override
