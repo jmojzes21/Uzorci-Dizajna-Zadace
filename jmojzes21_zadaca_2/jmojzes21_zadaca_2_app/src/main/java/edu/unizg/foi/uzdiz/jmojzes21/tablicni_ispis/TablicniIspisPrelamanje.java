@@ -22,6 +22,8 @@ public class TablicniIspisPrelamanje extends TablicniIspisDecorator {
 
     for (int i = 0; i < stupci.size(); i++) {
       StupacTablice stupac = stupci.get(i);
+      if (!stupac.prikaziStupac()) {continue;}
+
       String tekst = podaci.get(i);
 
       if (tekst.length() > stupac.sirina()) {
@@ -43,20 +45,17 @@ public class TablicniIspisPrelamanje extends TablicniIspisDecorator {
   private List<String> prelomiTekst(String tekst, int sirina) {
     List<String> redci = new ArrayList<>();
 
-    while (tekst.length() > sirina) {
-      int index = tekst.lastIndexOf(' ', sirina);
-      if (index == -1) {
-        redci.add(tekst);
-        break;
-      }
-
-      String dio = tekst.substring(0, index);
-      redci.add(dio);
-
-      tekst = tekst.substring(index + 1).trim();
+    int index = tekst.lastIndexOf(' ', sirina);
+    if (index == -1) {
+      redci.add(tekst);
+      return redci;
     }
 
-    redci.add(tekst);
+    String dio1 = tekst.substring(0, index).trim();
+    String dio2 = tekst.substring(index + 1).trim();
+
+    redci.add(dio1);
+    redci.add(dio2);
     return redci;
   }
 

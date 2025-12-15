@@ -10,6 +10,7 @@ import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaITAP;
 import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaITAS;
 import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaORTA;
 import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaOTA;
+import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaPOTI;
 import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaUP;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
@@ -164,6 +165,12 @@ public class Program {
         k.obradiKomandu(args);
         break;
       }
+      case "POTI": {
+        System.out.println(komanda);
+        var k = new KomandaPOTI();
+        k.obradiKomandu(args);
+        break;
+      }
       case "Q": {
         zaprimajKomandeKorisnika = false;
         break;
@@ -189,6 +196,7 @@ public class Program {
     System.out.println("BP   - Brisanje podataka, BP [A|R]");
     System.out.println("UP   - Učitavanje podataka, UP [A|R] nazivDatoteke");
     System.out.println("ITAS - Ispis statističkih podataka, ITAS [od do]");
+    System.out.println("POTI - Postavi postavke tabličnog ispisa, POTI naziv vrijednost");
     System.out.println("Q    - Izlaz");
   }
 
