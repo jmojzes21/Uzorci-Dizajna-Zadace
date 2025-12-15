@@ -24,7 +24,7 @@ public class RezervacijaRepozitorij {
         Rezervacija rezervacija = parsirajRezervaciju(stupci);
         rezervacije.add(rezervacija);
       } catch (Exception e) {
-        EvidencijaGresaka.dajInstancu().evidentiraj(e);
+        System.out.println(e.getMessage());
       }
     }
 

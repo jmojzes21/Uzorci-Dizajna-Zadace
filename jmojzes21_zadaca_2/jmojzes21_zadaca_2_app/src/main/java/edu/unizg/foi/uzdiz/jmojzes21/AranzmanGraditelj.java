@@ -40,6 +40,6 @@ public interface AranzmanGraditelj {
 
   AranzmanGraditelj setPrijevoz(List<String> prijevoz);
 
-  Aranzman dajAranzman();
+  Aranzman dajAranzman() throws Exception;
 
 }

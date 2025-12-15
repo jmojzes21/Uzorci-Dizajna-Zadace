@@ -28,7 +28,7 @@ public class AranzmanDirektor {
    * @return turistički aranžman
    */
   public Aranzman napraviAranzman(int oznaka, String naziv, String program, LocalDate pocetniDatum,
-      LocalDate zavrsniDatum, float cijena, int minPutnika, int maxPutnika) {
+      LocalDate zavrsniDatum, float cijena, int minPutnika, int maxPutnika) throws Exception {
     return graditelj.napraviAranzman(oznaka, naziv)
         .setProgram(program)
         .setPocetniDatum(pocetniDatum)

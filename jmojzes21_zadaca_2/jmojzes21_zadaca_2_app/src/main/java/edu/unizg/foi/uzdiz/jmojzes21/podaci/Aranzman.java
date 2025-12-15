@@ -283,7 +283,7 @@ public class Aranzman extends RezervacijaComposite implements RezervacijaSubject
    * @return sortirani turistički aranžmani
    */
   public static List<Aranzman> sortiraj(List<Aranzman> aranzmani, boolean uzlazno) {
-    var comparator = Comparator.comparing(Aranzman::pocetniDatum);
+    var comparator = Comparator.comparing(Aranzman::pocetniDatum).thenComparing(Aranzman::vrijemeKretanja);
     if (!uzlazno) {comparator = comparator.reversed();}
     return aranzmani.stream().sorted(comparator).toList();
   }

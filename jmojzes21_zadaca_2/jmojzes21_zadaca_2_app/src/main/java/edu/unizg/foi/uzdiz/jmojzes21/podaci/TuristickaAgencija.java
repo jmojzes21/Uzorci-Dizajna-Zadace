@@ -54,8 +54,7 @@ public class TuristickaAgencija extends RezervacijaComposite {
   public List<Aranzman> dajAranzmane(LocalDate datumOd, LocalDate datumDo) {
     List<Aranzman> aranzmani = dajAranzmane();
     return aranzmani.stream()
-        .filter(e -> e.pocetniDatum().compareTo(datumOd) >= 0
-            && e.pocetniDatum().compareTo(datumDo) <= 0)
+        .filter(e -> !e.pocetniDatum().isAfter(datumDo) && !e.zavrsniDatum().isBefore(datumOd))
         .toList();
   }
 

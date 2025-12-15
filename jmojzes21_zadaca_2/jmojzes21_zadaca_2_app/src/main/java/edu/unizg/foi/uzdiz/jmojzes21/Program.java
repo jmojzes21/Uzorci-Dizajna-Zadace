@@ -51,15 +51,25 @@ public class Program {
     String putanjaRezervacije = opcije.get("--rta");
 
     if (putanjaAranzmani != null) {
-      var aranzmanRepo = new AranzmanRepozitorij();
-      List<Aranzman> aranzmani = aranzmanRepo.ucitajAranzmane(Path.of(putanjaAranzmani));
-      agencija.dodajAranzmane(aranzmani);
+      try {
+        var aranzmanRepo = new AranzmanRepozitorij();
+        List<Aranzman> aranzmani = aranzmanRepo.ucitajAranzmane(Path.of(putanjaAranzmani));
+        agencija.dodajAranzmane(aranzmani);
+      } catch (Exception e) {
+        System.out.println("Učitavanje aranžmana nije uspjelo!");
+        System.out.println(e.getMessage());
+      }
     }
 
     if (putanjaRezervacije != null) {
-      var rezervacijaRepo = new RezervacijaRepozitorij();
-      List<Rezervacija> rezervacije = rezervacijaRepo.ucitajRezervacije(Path.of(putanjaRezervacije));
-      agencija.zaprimiRezervacije(rezervacije);
+      try {
+        var rezervacijaRepo = new RezervacijaRepozitorij();
+        List<Rezervacija> rezervacije = rezervacijaRepo.ucitajRezervacije(Path.of(putanjaRezervacije));
+        agencija.zaprimiRezervacije(rezervacije);
+      } catch (Exception e) {
+        System.out.println("Učitavanje rezervacija nije uspjelo!");
+        System.out.println(e.getMessage());
+      }
     }
 
     obradiKomandeKorisnika();

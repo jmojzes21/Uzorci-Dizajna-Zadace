@@ -23,7 +23,7 @@ public class AranzmanRepozitorij {
         Aranzman aranzman = parsirajAranzman(stupci);
         aranzmani.add(aranzman);
       } catch (Exception e) {
-        EvidencijaGresaka.dajInstancu().evidentiraj(e);
+        System.out.println(e.getMessage());
       }
     }
 

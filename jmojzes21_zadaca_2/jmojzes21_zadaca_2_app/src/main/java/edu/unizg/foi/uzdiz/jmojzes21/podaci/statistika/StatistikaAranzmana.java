@@ -7,7 +7,7 @@ import java.util.List;
 
 public class StatistikaAranzmana {
 
-  private int oznaka = 0;
+  private final Aranzman aranzman;
 
   private int ukupanBrojRezervacija = 0;
   private int brojAktivnihRezervacija = 0;
@@ -19,7 +19,7 @@ public class StatistikaAranzmana {
 
   public StatistikaAranzmana(Aranzman aranzman) {
 
-    oznaka = aranzman.oznaka();
+    this.aranzman = aranzman;
 
     List<Rezervacija> rezervacije = aranzman.rezervacije();
     ukupanBrojRezervacija = rezervacije.size();
@@ -45,8 +45,8 @@ public class StatistikaAranzmana {
 
   }
 
-  public int oznaka() {
-    return oznaka;
+  public Aranzman aranzman() {
+    return this.aranzman;
   }
 
   public int ukupanBrojRezervacija() {

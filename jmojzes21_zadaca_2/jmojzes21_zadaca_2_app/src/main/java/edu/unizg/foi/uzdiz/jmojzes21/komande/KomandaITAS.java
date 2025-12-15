@@ -9,6 +9,7 @@ import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.NeispravnaKomandaGreska;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.RegexKomandeGraditelj;
 import edu.unizg.foi.uzdiz.jmojzes21.tablicni_ispis.TablicniIspisGraditelj;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 public class KomandaITAS {
@@ -64,11 +65,15 @@ public class KomandaITAS {
     var postavke = PostavkeSustava.dajInstancu();
     var f = Formati.dajInstancu();
 
+    statistika = sortirajStatistiku(statistika, postavke.sortirajUzlazno());
+
     var tablicniIspis = new TablicniIspisGraditelj()
         .koristiPrelamanjeTeksta(postavke.koristiPrelamanjeTeksta())
         .postaviIspisDodatnihCrta(postavke.ispisDodatnihCrta())
         .dodajStupac("Oznaka", 8)
         .poravnajDesno()
+        .dodajStupac("naziv", 20)
+        .poravnajLijevo()
         .dodajStupac("Ukupno rezervacija", 20)
         .poravnajDesno()
         .dodajStupac("Broj aktivnih", 16)
@@ -88,7 +93,8 @@ public class KomandaITAS {
 
     for (StatistikaAranzmana e : statistika) {
       List<String> podaci = List.of(
-          Integer.toString(e.oznaka()), Integer.toString(e.ukupanBrojRezervacija()),
+          Integer.toString(e.aranzman().oznaka()), e.aranzman().naziv(),
+          Integer.toString(e.ukupanBrojRezervacija()),
           Integer.toString(e.brojAktivnihRezervacija()), Integer.toString(e.brojRezervacijaNaCekanju()),
           Integer.toString(e.brojOdgodjenihRezervacija()), Integer.toString(e.brojOtkazanihRezervacija()),
           f.formatiraj(e.ukupanPrihod())
@@ -99,5 +105,12 @@ public class KomandaITAS {
 
   }
 
+  private List<StatistikaAranzmana> sortirajStatistiku(List<StatistikaAranzmana> statistika, boolean uzlazno) {
+    var comparator = Comparator
+        .comparing((StatistikaAranzmana e) -> e.aranzman().pocetniDatum())
+        .thenComparing((StatistikaAranzmana e) -> e.aranzman().vrijemeKretanja());
+    if (!uzlazno) {comparator = comparator.reversed();}
+    return statistika.stream().sorted(comparator).toList();
+  }
 
 }
