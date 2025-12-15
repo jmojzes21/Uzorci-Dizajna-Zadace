@@ -1,6 +1,7 @@
 package edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja;
 
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
+import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman.StanjeId;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
 import java.util.ArrayList;
@@ -110,6 +111,11 @@ public class AranzmanUPripremi implements AranzmanStanje {
       }
     }
 
+  }
+
+  @Override
+  public StanjeId dajId() {
+    return StanjeId.uPripremi;
   }
 
   @Override

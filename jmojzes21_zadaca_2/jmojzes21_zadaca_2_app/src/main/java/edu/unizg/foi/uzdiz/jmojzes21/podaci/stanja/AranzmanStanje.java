@@ -1,6 +1,7 @@
 package edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja;
 
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
+import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman.StanjeId;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
 
@@ -13,6 +14,8 @@ public interface AranzmanStanje {
   void otkaziRezervaciju(Aranzman aranzman, Korisnik korisnik) throws Exception;
 
   void provjeriStanje(Aranzman aranzman);
+
+  StanjeId dajId();
 
   String dajNaziv();
 

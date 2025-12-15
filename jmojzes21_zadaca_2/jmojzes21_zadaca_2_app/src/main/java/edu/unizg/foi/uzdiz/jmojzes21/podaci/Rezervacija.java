@@ -1,17 +1,16 @@
 package edu.unizg.foi.uzdiz.jmojzes21.podaci;
 
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.RezervacijaAktivna;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.RezervacijaNaCekanju;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.RezervacijaNova;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.RezervacijaOdgodjena;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.RezervacijaOtkazana;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.RezervacijaPrimljena;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.RezervacijaStanje;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
 public class Rezervacija extends RezervacijaComponent implements RezervacijaObserver {
+
+  public enum StanjeId {
+    nova, primljena, aktivna, naCekanju, odgodjena, otkazana
+  }
 
   private Korisnik korisnik;
 
@@ -75,29 +74,33 @@ public class Rezervacija extends RezervacijaComponent implements RezervacijaObse
   public void postaviStanje(RezervacijaStanje stanje) {
     this.stanje = stanje;
   }
+  
+  public StanjeId idStanja() {
+    return stanje.dajId();
+  }
 
   public String nazivStanja() {
     return stanje.dajNaziv();
   }
 
   public boolean jePrimljena() {
-    return stanje instanceof RezervacijaPrimljena;
+    return idStanja() == StanjeId.primljena;
   }
 
   public boolean jeAktivna() {
-    return stanje instanceof RezervacijaAktivna;
+    return idStanja() == StanjeId.aktivna;
   }
 
   public boolean jeNaCekanju() {
-    return stanje instanceof RezervacijaNaCekanju;
+    return idStanja() == StanjeId.naCekanju;
   }
 
   public boolean jeOtkazana() {
-    return stanje instanceof RezervacijaOtkazana;
+    return idStanja() == StanjeId.otkazana;
   }
 
   public boolean jeOdgodjena() {
-    return stanje instanceof RezervacijaOdgodjena;
+    return idStanja() == StanjeId.odgodjena;
   }
 
   public Aranzman dajAranzman() {

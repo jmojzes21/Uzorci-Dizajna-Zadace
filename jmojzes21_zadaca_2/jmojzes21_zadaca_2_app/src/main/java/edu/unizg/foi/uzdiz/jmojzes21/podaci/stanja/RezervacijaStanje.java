@@ -1,6 +1,7 @@
 package edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja;
 
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
+import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija.StanjeId;
 
 public interface RezervacijaStanje {
 
@@ -19,6 +20,8 @@ public interface RezervacijaStanje {
   void kadaRezervacijaPostalaAktivna(Rezervacija trenutna, Rezervacija aktivirana);
 
   void kadaRezervacijaPostalaOtkazana(Rezervacija trenutna, Rezervacija otkazana);
+
+  StanjeId dajId();
 
   String dajNaziv();
 

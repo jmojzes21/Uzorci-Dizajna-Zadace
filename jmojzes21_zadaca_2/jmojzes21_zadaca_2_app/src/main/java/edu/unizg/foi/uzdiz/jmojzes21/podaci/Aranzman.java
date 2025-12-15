@@ -1,8 +1,6 @@
 package edu.unizg.foi.uzdiz.jmojzes21.podaci;
 
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.AranzmanAktivan;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.AranzmanOtkazan;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.AranzmanPopunjen;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.AranzmanStanje;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.AranzmanUPripremi;
 import java.time.LocalDate;
@@ -15,6 +13,10 @@ import java.util.List;
  * Turistički aranžman.
  */
 public class Aranzman extends RezervacijaComposite implements RezervacijaSubject, RezervacijaObserver {
+
+  public enum StanjeId {
+    uPripremi, aktivan, popunjen, otkazan
+  }
 
   private int oznaka;
   private String naziv;
@@ -173,24 +175,12 @@ public class Aranzman extends RezervacijaComposite implements RezervacijaSubject
     this.stanje = stanje;
   }
 
+  public StanjeId idStanja() {
+    return stanje.dajId();
+  }
+
   public String nazivStanja() {
     return stanje.dajNaziv();
-  }
-
-  public boolean jeUPripremi() {
-    return stanje instanceof AranzmanUPripremi;
-  }
-
-  public boolean jeAktivan() {
-    return stanje instanceof AranzmanAktivan;
-  }
-
-  public boolean jePopunjen() {
-    return stanje instanceof AranzmanPopunjen;
-  }
-
-  public boolean jeOtkazan() {
-    return stanje instanceof AranzmanOtkazan;
   }
 
   public List<Rezervacija> rezervacije() {

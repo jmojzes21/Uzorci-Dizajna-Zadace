@@ -1,6 +1,7 @@
 package edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja;
 
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
+import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman.StanjeId;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
 
@@ -26,6 +27,11 @@ public class AranzmanOtkazan implements AranzmanStanje {
 
   @Override
   public void provjeriStanje(Aranzman aranzman) {}
+
+  @Override
+  public StanjeId dajId() {
+    return StanjeId.otkazan;
+  }
 
   @Override
   public String dajNaziv() {

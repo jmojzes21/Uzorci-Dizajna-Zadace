@@ -2,6 +2,7 @@ package edu.unizg.foi.uzdiz.jmojzes21.podaci.statistika;
 
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
+import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija.StanjeId;
 import java.util.List;
 
 public class StatistikaAranzmana {
@@ -24,14 +25,19 @@ public class StatistikaAranzmana {
     ukupanBrojRezervacija = rezervacije.size();
 
     for (var r : rezervacije) {
-      if (r.jeAktivna()) {
-        brojAktivnihRezervacija++;
-      } else if (r.jeNaCekanju()) {
-        brojRezervacijaNaCekanju++;
-      } else if (r.jeOdgodjena()) {
-        brojOdgodjenihRezervacija++;
-      } else if (r.jeOtkazana()) {
-        brojOtkazanihRezervacija++;
+      switch (r.idStanja()) {
+        case StanjeId.aktivna:
+          brojAktivnihRezervacija++;
+          break;
+        case StanjeId.naCekanju:
+          brojRezervacijaNaCekanju++;
+          break;
+        case StanjeId.odgodjena:
+          brojOdgodjenihRezervacija++;
+          break;
+        case StanjeId.otkazana:
+          brojOtkazanihRezervacija++;
+          break;
       }
     }
 

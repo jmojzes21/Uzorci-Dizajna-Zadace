@@ -1,6 +1,7 @@
 package edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja;
 
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
+import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman.StanjeId;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
 import java.util.Comparator;
@@ -82,6 +83,11 @@ public class AranzmanAktivan implements AranzmanStanje {
       aranzman.postaviStanje(new AranzmanPopunjen());
     }
 
+  }
+
+  @Override
+  public StanjeId dajId() {
+    return StanjeId.aktivan;
   }
 
   @Override
