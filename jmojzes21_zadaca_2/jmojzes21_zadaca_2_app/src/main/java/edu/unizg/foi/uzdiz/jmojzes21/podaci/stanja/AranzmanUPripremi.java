@@ -3,8 +3,8 @@ package edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
-import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.Formati;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,14 +20,7 @@ public class AranzmanUPripremi implements AranzmanStanje {
     int brojPrimljenih = aranzman.primljeneRezervacije().size();
 
     if (brojPrimljenih >= aranzman.minBrojPutnika()) {
-
       aranzman.aktiviraj();
-
-      var rezervacije = aranzman.rezervacije();
-      if (!rezervacije.contains(rezervacija)) {
-        throw new Exception("Rezervacije je obrisana.");
-      }
-
     }
 
   }
@@ -41,11 +34,7 @@ public class AranzmanUPripremi implements AranzmanStanje {
     filtrirajDuplikate(rezervacije, neispravne);
 
     for (Rezervacija neispravna : neispravne) {
-      var f = Formati.dajInstancu();
-      System.out.printf(
-          "Brisanje rezervacije korisnika %s, aranžman %d, vrijeme %s jer korisnik već ima primljenu rezervaciju.\n",
-          neispravna.korisnik(), neispravna.oznakaAranzmana(), f.formatiraj(neispravna.vrijemePrijema()));
-      aranzman.obrisi(neispravna);
+      neispravna.odgodi();
     }
 
     int brojPrimljenih = aranzman.brojPrimljenih();
@@ -91,7 +80,20 @@ public class AranzmanUPripremi implements AranzmanStanje {
       throw new Exception(opis);
     }
 
+    boolean bilaPrimljena = zaOtkazati.jePrimljena();
     zaOtkazati.otkazi();
+
+    if (bilaPrimljena) {
+      List<Rezervacija> rezervacije = aranzman.odgodjeneRezervacije();
+      Rezervacija odgodjena = rezervacije.stream()
+          .filter(e -> e.korisnik().equals(korisnik))
+          .min(Comparator.comparing(Rezervacija::vrijemePrijema))
+          .orElse(null);
+
+      if (odgodjena != null) {
+        odgodjena.zaprimi();
+      }
+    }
 
   }
 
@@ -138,10 +140,20 @@ public class AranzmanUPripremi implements AranzmanStanje {
 
   private Rezervacija dajRezervacijuKorisnika(Aranzman aranzman, Korisnik korisnik) {
     List<Rezervacija> rezervacije = aranzman.primljeneRezervacije();
-    return rezervacije.stream()
+    Rezervacija rezervacija = rezervacije.stream()
         .filter(e -> e.korisnik().equals(korisnik))
         .findFirst().orElse(null);
+
+    if (rezervacija == null) {
+      rezervacije = new ArrayList<>();
+      rezervacije.addAll(aranzman.odgodjeneRezervacije());
+      rezervacija = rezervacije.stream()
+          .filter(e -> e.korisnik().equals(korisnik))
+          .min(Comparator.comparing(Rezervacija::vrijemePrijema))
+          .orElse(null);
+    }
+
+    return rezervacija;
   }
 
 }
-

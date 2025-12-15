@@ -1,6 +1,7 @@
 package edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja;
 
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
+import java.time.LocalDateTime;
 
 public class RezervacijaNaCekanju implements RezervacijaStanje {
 
@@ -22,7 +23,8 @@ public class RezervacijaNaCekanju implements RezervacijaStanje {
 
   @Override
   public void otkazi(Rezervacija rezervacija) {
-    rezervacija.postaviStanje(new RezervacijaOdgodjena());
+    rezervacija.setVrijemeOtkaza(LocalDateTime.now());
+    rezervacija.postaviStanje(new RezervacijaOtkazana());
   }
 
   @Override

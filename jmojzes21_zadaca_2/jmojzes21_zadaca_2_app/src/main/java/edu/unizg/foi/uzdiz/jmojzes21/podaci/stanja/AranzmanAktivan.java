@@ -4,6 +4,7 @@ import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class AranzmanAktivan implements AranzmanStanje {
@@ -50,7 +51,11 @@ public class AranzmanAktivan implements AranzmanStanje {
       throw new Exception(opis);
     }
 
+    boolean bilaAktivna = zaOtkazati.jeAktivna();
     zaOtkazati.otkazi();
+
+    if (!bilaAktivna) {return;}
+
     aranzman.obavijestiRezervacijaPostalaOtkazana(zaOtkazati);
 
     List<Rezervacija> kandidati = new ArrayList<>();
@@ -99,9 +104,20 @@ public class AranzmanAktivan implements AranzmanStanje {
 
   private Rezervacija dajRezervacijuKorisnika(Aranzman aranzman, Korisnik korisnik) {
     List<Rezervacija> rezervacije = aranzman.aktivneRezervacije();
-    return rezervacije.stream()
+    Rezervacija rezervacija = rezervacije.stream()
         .filter(e -> e.korisnik().equals(korisnik))
         .findFirst().orElse(null);
+
+    if (rezervacija == null) {
+      rezervacije = new ArrayList<>();
+      rezervacije.addAll(aranzman.odgodjeneRezervacije());
+      rezervacija = rezervacije.stream()
+          .filter(e -> e.korisnik().equals(korisnik))
+          .min(Comparator.comparing(Rezervacija::vrijemePrijema))
+          .orElse(null);
+    }
+
+    return rezervacija;
   }
 
 }

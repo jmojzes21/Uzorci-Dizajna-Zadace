@@ -4,6 +4,7 @@ import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class AranzmanPopunjen implements AranzmanStanje {
@@ -41,7 +42,11 @@ public class AranzmanPopunjen implements AranzmanStanje {
       throw new Exception(opis);
     }
 
+    boolean bilaAktivna = zaOtkazati.jeAktivna();
     zaOtkazati.otkazi();
+
+    if (!bilaAktivna) {return;}
+    
     aranzman.obavijestiRezervacijaPostalaOtkazana(zaOtkazati);
 
     List<Rezervacija> kandidati = new ArrayList<>();
@@ -71,7 +76,7 @@ public class AranzmanPopunjen implements AranzmanStanje {
 
     if (brojAktivnih < aranzman.maxBrojPutnika()) {
       aranzman.postaviStanje(new AranzmanAktivan());
-      
+
     } else if (brojAktivnih < aranzman.minBrojPutnika()) {
       for (var r : aktivneRezervacije) {
         r.zaprimi();
@@ -87,9 +92,21 @@ public class AranzmanPopunjen implements AranzmanStanje {
 
   private Rezervacija dajRezervacijuKorisnika(Aranzman aranzman, Korisnik korisnik) {
     List<Rezervacija> rezervacije = aranzman.aktivneRezervacije();
-    return rezervacije.stream()
+    Rezervacija rezervacija = rezervacije.stream()
         .filter(e -> e.korisnik().equals(korisnik))
         .findFirst().orElse(null);
+
+    if (rezervacija == null) {
+      rezervacije = new ArrayList<>();
+      rezervacije.addAll(aranzman.rezervacijeNaCekanju());
+      rezervacije.addAll(aranzman.odgodjeneRezervacije());
+      rezervacija = rezervacije.stream()
+          .filter(e -> e.korisnik().equals(korisnik))
+          .min(Comparator.comparing(Rezervacija::vrijemePrijema))
+          .orElse(null);
+    }
+
+    return rezervacija;
   }
 
 }
