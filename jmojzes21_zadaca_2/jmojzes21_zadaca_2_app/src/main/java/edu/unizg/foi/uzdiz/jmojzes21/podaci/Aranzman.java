@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Turistički aranžman.
  */
-public class Aranzman extends RezervacijaComposite implements RezervacijaSubject, RezervacijaObserver {
+public class Aranzman extends PutovanjeComposite implements RezervacijaSubject, RezervacijaObserver {
 
   public enum StanjeId {
     uPripremi, aktivan, popunjen, otkazan
@@ -52,7 +52,7 @@ public class Aranzman extends RezervacijaComposite implements RezervacijaSubject
   }
 
   @Override
-  public void dodaj(RezervacijaComponent r) {
+  public void dodaj(PutovanjeComponent r) {
     if (!(r instanceof Rezervacija)) {
       throw new RuntimeException("Nije moguće dodati " + r.getClass().getName() + " u turistički aranžman!");
     }
@@ -61,7 +61,7 @@ public class Aranzman extends RezervacijaComposite implements RezervacijaSubject
   }
 
   @Override
-  public void obrisi(RezervacijaComponent r) {
+  public void obrisi(PutovanjeComponent r) {
     djeca.remove(r);
   }
 

@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
-public class Rezervacija extends RezervacijaComponent implements RezervacijaObserver {
+public class Rezervacija extends PutovanjeComponent implements RezervacijaObserver {
 
   public enum StanjeId {
     nova, primljena, aktivna, naCekanju, odgodjena, otkazana
@@ -74,7 +74,7 @@ public class Rezervacija extends RezervacijaComponent implements RezervacijaObse
   public void postaviStanje(RezervacijaStanje stanje) {
     this.stanje = stanje;
   }
-  
+
   public StanjeId idStanja() {
     return stanje.dajId();
   }

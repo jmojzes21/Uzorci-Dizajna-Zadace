@@ -9,10 +9,10 @@ import java.util.List;
 /**
  * Turistička agencija.
  */
-public class TuristickaAgencija extends RezervacijaComposite {
+public class TuristickaAgencija extends PutovanjeComposite {
 
   @Override
-  protected void dodaj(RezervacijaComponent r) {
+  protected void dodaj(PutovanjeComponent r) {
     if (!(r instanceof Aranzman)) {
       throw new RuntimeException("Nije moguće dodati " + r.getClass().getName() + " u turističku agenciju!");
     }
@@ -21,14 +21,14 @@ public class TuristickaAgencija extends RezervacijaComposite {
   }
 
   @Override
-  public void obrisi(RezervacijaComponent r) {
+  public void obrisi(PutovanjeComponent r) {
     djeca.remove(r);
   }
 
   @Override
   public void obrisiSve() {
     for (var e : djeca) {
-      if (e instanceof RezervacijaComposite c) {
+      if (e instanceof PutovanjeComposite c) {
         c.obrisiSve();
       }
     }
