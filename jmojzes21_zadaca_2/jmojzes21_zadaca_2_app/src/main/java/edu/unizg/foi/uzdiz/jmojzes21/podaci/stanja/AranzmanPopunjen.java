@@ -87,6 +87,11 @@ public class AranzmanPopunjen implements AranzmanStanje {
   }
 
   @Override
+  public void aktivirajRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
+    rezervacija.staviNaCekanje();
+  }
+
+  @Override
   public void provjeriStanje(Aranzman aranzman) {
 
     List<Rezervacija> aktivneRezervacije = aranzman.aktivneRezervacije();

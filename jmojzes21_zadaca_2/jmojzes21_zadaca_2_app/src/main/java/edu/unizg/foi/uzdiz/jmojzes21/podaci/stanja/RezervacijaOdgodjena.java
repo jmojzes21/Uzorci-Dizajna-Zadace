@@ -18,7 +18,9 @@ public class RezervacijaOdgodjena implements RezervacijaStanje {
   }
 
   @Override
-  public void staviNaCekanje(Rezervacija rezervacija) {}
+  public void staviNaCekanje(Rezervacija rezervacija) {
+    rezervacija.postaviStanje(new RezervacijaNaCekanju());
+  }
 
   @Override
   public void odgodi(Rezervacija rezervacija) {}
@@ -41,16 +43,8 @@ public class RezervacijaOdgodjena implements RezervacijaStanje {
   public void kadaRezervacijaPostalaOtkazana(Rezervacija trenutna, Rezervacija otkazana) {
 
     if (trenutna.korisnik().equals(otkazana.korisnik())) {
-
       Aranzman aranzman = trenutna.dajAranzman();
-
-      boolean mozePostatiAktivna = aranzman.obavijestiRezervacijaPostajeAktivna(trenutna);
-
-      if (mozePostatiAktivna) {
-        trenutna.aktiviraj();
-        aranzman.obavijestiRezervacijaPostalaAktivna(trenutna);
-      }
-
+      aranzman.aktivirajRezervaciju(trenutna);
     }
 
   }

@@ -99,6 +99,9 @@ public class AranzmanUPripremi implements AranzmanStanje {
   }
 
   @Override
+  public void aktivirajRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {}
+
+  @Override
   public void provjeriStanje(Aranzman aranzman) {
 
     int brojPrimljenih = aranzman.primljeneRezervacije().size();

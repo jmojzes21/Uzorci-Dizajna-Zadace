@@ -67,6 +67,19 @@ public class AranzmanAktivan implements AranzmanStanje {
   }
 
   @Override
+  public void aktivirajRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
+
+    boolean mozePostatiAktivna = aranzman.obavijestiRezervacijaPostajeAktivna(rezervacija);
+
+    if (mozePostatiAktivna) {
+      rezervacija.aktiviraj();
+      aranzman.obavijestiRezervacijaPostalaAktivna(rezervacija);
+      aranzman.provjeriStanje();
+    }
+
+  }
+
+  @Override
   public void provjeriStanje(Aranzman aranzman) {
 
     List<Rezervacija> aktivneRezervacije = aranzman.aktivneRezervacije();

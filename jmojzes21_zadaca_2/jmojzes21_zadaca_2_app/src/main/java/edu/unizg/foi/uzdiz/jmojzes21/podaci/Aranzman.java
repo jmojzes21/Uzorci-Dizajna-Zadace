@@ -79,6 +79,10 @@ public class Aranzman extends RezervacijaComposite implements RezervacijaSubject
     stanje.otkaziRezervaciju(this, korisnik);
   }
 
+  public void aktivirajRezervaciju(Rezervacija rezervacija) {
+    stanje.aktivirajRezervaciju(this, rezervacija);
+  }
+
   public void aktiviraj() throws Exception {
     stanje.aktiviraj(this);
   }

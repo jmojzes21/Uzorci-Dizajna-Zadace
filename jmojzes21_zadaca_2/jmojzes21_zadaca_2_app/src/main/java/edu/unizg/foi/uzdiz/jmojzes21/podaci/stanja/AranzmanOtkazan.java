@@ -26,6 +26,9 @@ public class AranzmanOtkazan implements AranzmanStanje {
   }
 
   @Override
+  public void aktivirajRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {}
+
+  @Override
   public void provjeriStanje(Aranzman aranzman) {}
 
   @Override

@@ -13,6 +13,8 @@ public interface AranzmanStanje {
 
   void otkaziRezervaciju(Aranzman aranzman, Korisnik korisnik) throws Exception;
 
+  void aktivirajRezervaciju(Aranzman aranzman, Rezervacija rezervacija);
+  
   void provjeriStanje(Aranzman aranzman);
 
   StanjeId dajId();
