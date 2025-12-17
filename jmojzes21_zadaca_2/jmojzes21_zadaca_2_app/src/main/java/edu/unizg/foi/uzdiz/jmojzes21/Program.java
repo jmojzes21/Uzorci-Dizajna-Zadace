@@ -108,75 +108,65 @@ public class Program {
     String naziv = dijelovi[0].toUpperCase();
     String args = dijelovi[1];
 
+    ispisiKomandu(komanda);
+
     switch (naziv) {
       case "ITAK": {
-        System.out.println(komanda);
         var k = new KomandaITAK(agencija);
         k.obradiKomandu(args);
         break;
       }
       case "ITAP": {
-        System.out.println(komanda);
         var k = new KomandaITAP(agencija);
         k.obradiKomandu(args);
         break;
       }
       case "IRTA": {
-        System.out.println(komanda);
         var k = new KomandaIRTA(agencija);
         k.obradiKomandu(args);
         break;
       }
       case "IRO": {
-        System.out.println(komanda);
         var k = new KomandaIRO(agencija);
         k.obradiKomandu(args);
         break;
       }
       case "DRTA": {
-        System.out.println(komanda);
         var k = new KomandaDRTA(agencija);
         k.obradiKomandu(args);
         break;
       }
       case "ORTA": {
-        System.out.println(komanda);
         var k = new KomandaORTA(agencija);
         k.obradiKomandu(args);
         break;
       }
       case "OTA": {
-        System.out.println(komanda);
         var k = new KomandaOTA(agencija);
         k.obradiKomandu(args);
         break;
       }
       case "IP": {
-        System.out.println(komanda);
         var k = new KomandaIP();
         k.obradiKomandu(args);
         break;
       }
       case "BP": {
-        System.out.println(komanda);
         var k = new KomandaBP(agencija);
         k.obradiKomandu(args);
         break;
       }
       case "UP": {
-        System.out.println(komanda);
         var k = new KomandaUP(agencija);
         k.obradiKomandu(args);
         break;
       }
       case "ITAS": {
-        System.out.println(komanda);
         var k = new KomandaITAS(agencija);
         k.obradiKomandu(args);
         break;
       }
       case "POTI": {
-        System.out.println(komanda);
         var k = new KomandaPOTI();
         k.obradiKomandu(args);
         break;
@@ -186,6 +176,7 @@ public class Program {
         break;
       }
       default: {
+        System.out.println("Nepoznata komanda.");
         pregledKomandi();
         break;
       }
@@ -208,6 +199,10 @@ public class Program {
     System.out.println("ITAS - Ispis statističkih podataka, ITAS [od do]");
     System.out.println("POTI - Postavi postavke tabličnog ispisa, POTI naziv vrijednost");
     System.out.println("Q    - Izlaz");
+  }
+
+  private void ispisiKomandu(String komanda) {
+    System.out.println("Izvrši komandu: " + komanda);
   }
 
   // endregion

@@ -4,7 +4,7 @@ import java.util.List;
 
 public class CsvRedakIterator {
 
-  private List<CsvRedak> redci;
+  private final List<CsvRedak> redci;
   private int pozicija = 0;
 
   public CsvRedakIterator(List<CsvRedak> redci) {

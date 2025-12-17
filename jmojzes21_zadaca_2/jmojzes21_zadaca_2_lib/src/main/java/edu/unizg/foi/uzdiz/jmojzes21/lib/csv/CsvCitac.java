@@ -83,9 +83,9 @@ public class CsvCitac {
   }
 
   /**
-   * Vraća sve csv retke koji su učitani iz csv zapisa.
+   * Dohvati iterator za csv retke.
    *
-   * @return lista csv redaka
+   * @return iterator za csv retke
    */
   public CsvRedakIterator csvRedci() {
     return new CsvRedakIterator(csvRedci);

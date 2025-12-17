@@ -91,7 +91,7 @@ public class UcitavacPodatakaFacade {
 
       try {
         provjeriCsvRedakRezervacije(redak);
-        
+
         List<String> elementi = new ArrayList<>(redak.elementi());
         elementi.addFirst(redak.linija());
         rezultat.add(elementi);

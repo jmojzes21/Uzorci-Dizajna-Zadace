@@ -4,7 +4,7 @@ import java.util.List;
 
 public class CsvStupacIterator {
 
-  private List<String> stupci;
+  private final List<String> stupci;
   private int pozicija = 0;
 
   public CsvStupacIterator(List<String> stupci) {
