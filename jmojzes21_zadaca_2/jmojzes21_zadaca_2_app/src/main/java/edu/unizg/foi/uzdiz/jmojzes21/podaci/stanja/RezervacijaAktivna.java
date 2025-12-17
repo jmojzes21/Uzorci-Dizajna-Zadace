@@ -41,9 +41,6 @@ public class RezervacijaAktivna implements RezervacijaStanje {
 
       if (aranzman1.preklapaSe(aranzman2)) {
         if (postajeAktivna.vrijemePrijema().isAfter(trenutna.vrijemePrijema())) {
-          System.out.println(
-              "Rezervacija " + postajeAktivna.korisnik().punoIme() + " " + postajeAktivna.oznakaAranzmana()
-                  + " ne može postati aktivna.");
           return false;
         }
       }
@@ -62,10 +59,6 @@ public class RezervacijaAktivna implements RezervacijaStanje {
       Aranzman aranzman2 = aktivirana.dajAranzman();
 
       if (aranzman1.preklapaSe(aranzman2)) {
-        System.out.println(
-            "Preklapanje " + rezervacija.korisnik().punoIme() + " " + rezervacija.oznakaAranzmana() + " s rezervacijom "
-                + aktivirana.oznakaAranzmana());
-
         rezervacija.odgodi();
         rezervacija.dajAranzman().provjeriStanje();
 

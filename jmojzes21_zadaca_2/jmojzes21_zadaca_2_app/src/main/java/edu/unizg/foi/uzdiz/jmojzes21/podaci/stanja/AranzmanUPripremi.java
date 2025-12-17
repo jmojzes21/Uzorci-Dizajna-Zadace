@@ -38,8 +38,6 @@ public class AranzmanUPripremi implements AranzmanStanje {
     int brojPrimljenih = aranzman.brojPrimljenih();
 
     if (brojPrimljenih < aranzman.minBrojPutnika()) {
-      System.out.printf("Aranžman %d ne može postati aktivan jer nema dovoljno primljenih rezervacija!\n",
-          aranzman.oznaka());
       return;
     }
 
@@ -53,8 +51,6 @@ public class AranzmanUPripremi implements AranzmanStanje {
     brojPrimljenih = aranzman.brojPrimljenih();
 
     if (brojPrimljenih < aranzman.minBrojPutnika()) {
-      System.out.printf("Aranžman %d ne može postati aktivan jer nema dovoljno primljenih rezervacija!\n",
-          aranzman.oznaka());
       return;
     }
 
