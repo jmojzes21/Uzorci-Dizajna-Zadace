@@ -27,4 +27,8 @@ public class CsvRedak {
 
   public List<String> elementi() {return elementi;}
 
+  public CsvStupacIterator dajIteratorStupaca() {
+    return new CsvStupacIterator(elementi);
+  }
+  
 }

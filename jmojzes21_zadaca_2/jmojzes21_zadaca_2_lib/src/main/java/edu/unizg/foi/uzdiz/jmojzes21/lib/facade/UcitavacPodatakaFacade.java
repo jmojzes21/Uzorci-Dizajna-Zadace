@@ -111,7 +111,7 @@ public class UcitavacPodatakaFacade {
       throw new CsvFormatGreska(opis, redak);
     }
 
-    CsvStupacIterator stupci = new CsvStupacIterator(redak.elementi());
+    CsvStupacIterator stupci = redak.dajIteratorStupaca();
 
     stupacJeInt(stupci.sljedeci(), true, redak, "Oznaka");
     stupacPostoji(stupci.sljedeci(), redak, "Naziv");
@@ -141,7 +141,7 @@ public class UcitavacPodatakaFacade {
       throw new CsvFormatGreska(opis, redak);
     }
 
-    CsvStupacIterator stupci = new CsvStupacIterator(redak.elementi());
+    CsvStupacIterator stupci = redak.dajIteratorStupaca();
 
     stupacPostoji(stupci.sljedeci(), redak, "Ime");
     stupacPostoji(stupci.sljedeci(), redak, "Prezime");
