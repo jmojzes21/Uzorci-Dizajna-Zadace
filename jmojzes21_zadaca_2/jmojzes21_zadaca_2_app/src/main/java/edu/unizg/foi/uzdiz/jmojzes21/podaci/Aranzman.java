@@ -235,18 +235,6 @@ public class Aranzman extends PutovanjeComposite implements RezervacijaSubject, 
         .toList();
   }
 
-  public List<Rezervacija> filtrirajRezervacije(boolean prikaziPrimljene, boolean prikaziAktivne,
-      boolean prikaziNaCekanju, boolean prikaziOtkazane, boolean prikaziOdgodjene) {
-    return djeca.stream()
-        .map(e -> (Rezervacija) e)
-        .filter(e -> prikaziPrimljene && e.jePrimljena()
-            || prikaziAktivne && e.jeAktivna()
-            || prikaziNaCekanju && e.jeNaCekanju()
-            || prikaziOtkazane && e.jeOtkazana()
-            || prikaziOdgodjene && e.jeOdgodjena())
-        .toList();
-  }
-
   public int brojPrimljenih() {
     return Math.toIntExact(djeca.stream()
         .map(e -> (Rezervacija) e)

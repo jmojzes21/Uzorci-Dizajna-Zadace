@@ -2,11 +2,13 @@ package edu.unizg.foi.uzdiz.jmojzes21.komande;
 
 import edu.unizg.foi.uzdiz.jmojzes21.PostavkeSustava;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
+import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija.StanjeId;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.TuristickaAgencija;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.Formati;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.NeispravnaKomandaGreska;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.RegexKomandeGraditelj;
 import edu.unizg.foi.uzdiz.jmojzes21.tablicni_ispis.TablicniIspisGraditelj;
+import java.util.ArrayList;
 import java.util.List;
 
 public class KomandaIRTA {
@@ -48,8 +50,26 @@ public class KomandaIRTA {
     }
     boolean prikaziOtkazane = filter.contains("O");
 
-    List<Rezervacija> rezervacije = agencija.dajRezervacijeAranzmana(oznaka, prikaziPrimljeneAktivne, prikaziNaCekanju,
-        prikaziOtkazane, prikaziOdgodjene);
+    List<StanjeId> prikaziStanja = new ArrayList<>();
+
+    if (prikaziPrimljeneAktivne) {
+      prikaziStanja.add(StanjeId.primljena);
+      prikaziStanja.add(StanjeId.aktivna);
+    }
+
+    if (prikaziNaCekanju) {
+      prikaziStanja.add(StanjeId.naCekanju);
+    }
+
+    if (prikaziOdgodjene) {
+      prikaziStanja.add(StanjeId.odgodjena);
+    }
+
+    if (prikaziOtkazane) {
+      prikaziStanja.add(StanjeId.otkazana);
+    }
+
+    List<Rezervacija> rezervacije = agencija.dajRezervacijeAranzmana(oznaka, prikaziStanja);
 
     if (rezervacije == null) {
       System.out.println("Aranžman ne postoji.");
