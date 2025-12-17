@@ -42,6 +42,7 @@ public class UcitavacPodatakaFacade {
               "Vrijeme povratka", "Cijena", "Min broj putnika", "Maks broj putnika", "Broj noćenja",
               "Doplata za jednokrevetnu sobu", "Prijevoz", "Broj doručka", "Broj ručkova", "Broj večera"});
     } catch (Exception e) {
+      redci.prvi();
       EvidencijaGresaka.dajInstancu().evidentiraj(e);
     }
 
@@ -83,6 +84,7 @@ public class UcitavacPodatakaFacade {
       CsvRedak infoRedak = redci.sljedeci();
       provjeriCsvInfoRedak(infoRedak, new String[]{"Ime", "Prezime", "Oznaka aranžmana", "Datum i vrijeme"});
     } catch (Exception e) {
+      redci.prvi();
       EvidencijaGresaka.dajInstancu().evidentiraj(e);
     }
 

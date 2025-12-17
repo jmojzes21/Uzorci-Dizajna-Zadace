@@ -11,6 +11,10 @@ public class CsvRedakIterator {
     this.redci = redci;
   }
 
+  public void prvi() {
+    pozicija = 0;
+  }
+
   public boolean imaSljedeci() {
     return pozicija < redci.size();
   }
