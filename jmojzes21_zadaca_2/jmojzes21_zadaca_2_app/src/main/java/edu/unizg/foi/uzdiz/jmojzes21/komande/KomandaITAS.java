@@ -72,7 +72,7 @@ public class KomandaITAS {
         .postaviIspisDodatnihCrta(postavke.ispisDodatnihCrta())
         .dodajStupac("Oznaka", 8)
         .poravnajDesno()
-        .dodajStupac("naziv", 20)
+        .dodajStupac("naziv", 30)
         .poravnajLijevo()
         .dodajStupac("Ukupno rezervacija", 20)
         .poravnajDesno()

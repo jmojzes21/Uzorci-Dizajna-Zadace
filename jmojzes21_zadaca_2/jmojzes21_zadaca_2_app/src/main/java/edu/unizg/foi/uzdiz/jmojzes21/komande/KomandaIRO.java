@@ -59,10 +59,10 @@ public class KomandaIRO {
         .koristiPrelamanjeTeksta(postavke.koristiPrelamanjeTeksta())
         .postaviIspisDodatnihCrta(postavke.ispisDodatnihCrta())
         .dodajStupac("Vrijeme prijema", 24)
-        .dodajStupac("Oznaka aranžmana", 16)
+        .dodajStupac("Oznaka", 6)
         .poravnajDesno()
-        .dodajStupac("Naziv aranžmana", 20)
-        .dodajStupac("Status", 18)
+        .dodajStupac("Naziv aranžmana", 30)
+        .dodajStupac("Vrsta", 14)
         .napravi();
 
     System.out.println("Pregled rezervacija za osobu");

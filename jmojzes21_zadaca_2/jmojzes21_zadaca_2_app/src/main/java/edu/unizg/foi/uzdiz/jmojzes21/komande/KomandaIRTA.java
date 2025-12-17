@@ -97,7 +97,7 @@ public class KomandaIRTA {
         .dodajStupac("Ime", 18)
         .dodajStupac("Prezime", 18)
         .dodajStupac("Vrijeme prijema", 24)
-        .dodajStupac("Status", 18)
+        .dodajStupac("Vrsta", 14)
         .dodajStupac("Vrijeme otkaza", 24)
         .prikazujStupac(prikaziOtkazane)
         .napravi();
