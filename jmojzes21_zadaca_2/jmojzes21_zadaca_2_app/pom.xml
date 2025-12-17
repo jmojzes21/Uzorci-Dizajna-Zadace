@@ -24,7 +24,7 @@
   </dependencies>
 
   <build>
-    <finalName>jmojzes21_zadaca_2</finalName>
+    <finalName>jmojzes21_zadaca_2_app</finalName>
 
     <plugins>
 

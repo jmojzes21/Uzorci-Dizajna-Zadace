@@ -41,7 +41,7 @@ public class UcitavacPodatakaFacade {
           new String[]{"Oznaka", "Naziv", "Program", "Početni datum", "Završni datum", "Vrijeme kretanja",
               "Vrijeme povratka", "Cijena", "Min broj putnika", "Maks broj putnika", "Broj noćenja",
               "Doplata za jednokrevetnu sobu", "Prijevoz", "Broj doručka", "Broj ručkova", "Broj večera"});
-    } catch (CsvFormatGreska e) {
+    } catch (Exception e) {
       EvidencijaGresaka.dajInstancu().evidentiraj(e);
     }
 
@@ -54,7 +54,7 @@ public class UcitavacPodatakaFacade {
         List<String> elementi = new ArrayList<>(redak.elementi());
         elementi.addFirst(redak.linija());
         rezultat.add(elementi);
-      } catch (CsvFormatGreska e) {
+      } catch (Exception e) {
         EvidencijaGresaka.dajInstancu().evidentiraj(e);
       }
     }
@@ -82,7 +82,7 @@ public class UcitavacPodatakaFacade {
     try {
       CsvRedak infoRedak = redci.sljedeci();
       provjeriCsvInfoRedak(infoRedak, new String[]{"Ime", "Prezime", "Oznaka aranžmana", "Datum i vrijeme"});
-    } catch (CsvFormatGreska e) {
+    } catch (Exception e) {
       EvidencijaGresaka.dajInstancu().evidentiraj(e);
     }
 
@@ -95,7 +95,7 @@ public class UcitavacPodatakaFacade {
         List<String> elementi = new ArrayList<>(redak.elementi());
         elementi.addFirst(redak.linija());
         rezultat.add(elementi);
-      } catch (CsvFormatGreska e) {
+      } catch (Exception e) {
         EvidencijaGresaka.dajInstancu().evidentiraj(e);
       }
     }
