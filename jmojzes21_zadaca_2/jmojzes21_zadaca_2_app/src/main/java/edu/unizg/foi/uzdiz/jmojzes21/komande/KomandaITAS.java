@@ -106,9 +106,7 @@ public class KomandaITAS {
   }
 
   private List<StatistikaAranzmana> sortirajStatistiku(List<StatistikaAranzmana> statistika, boolean uzlazno) {
-    var comparator = Comparator
-        .comparing((StatistikaAranzmana e) -> e.aranzman().pocetniDatum())
-        .thenComparing((StatistikaAranzmana e) -> e.aranzman().vrijemeKretanja());
+    var comparator = Comparator.comparing((StatistikaAranzmana e) -> e.aranzman().pocetniDatum());
     if (!uzlazno) {comparator = comparator.reversed();}
     return statistika.stream().sorted(comparator).toList();
   }
