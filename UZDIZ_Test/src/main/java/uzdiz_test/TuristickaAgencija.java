@@ -32,17 +32,12 @@ public class TuristickaAgencija {
 
   }
 
-  public void izvrsiKomandu(String komanda) {
+  public List<String> izvrsiKomandu(String komanda) {
     writer.println(komanda);
-    writer.flush();
-  }
-
-  public List<String> dajRezervacije(String oznaka) {
-    writer.println("IRTA " + oznaka);
     writer.flush();
     return readLines();
   }
-
+  
   public List<String> readLines() {
 
     List<String> lines = new ArrayList<>();
