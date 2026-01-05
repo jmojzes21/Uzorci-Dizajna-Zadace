@@ -29,7 +29,9 @@ public class Formati {
 
   private final DateTimeFormatter datumFormatorIspis;
   private final DateTimeFormatter vrijemeFormatorIspis;
+  private final DateTimeFormatter vrijemeSekundeFormatorIspis;
   private final DateTimeFormatter datumVrijemeFormatorIspis;
+  private final DateTimeFormatter datumVrijemeSekundeFormatorIspis;
 
   private final DecimalFormat decimalFormat;
 
@@ -40,7 +42,9 @@ public class Formati {
 
     datumFormatorIspis = DateTimeFormatter.ofPattern("dd.MM.yyyy.");
     vrijemeFormatorIspis = DateTimeFormatter.ofPattern("HH:mm");
-    datumVrijemeFormatorIspis = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
+    vrijemeSekundeFormatorIspis = DateTimeFormatter.ofPattern("HH:mm:ss");
+    datumVrijemeFormatorIspis = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm");
+    datumVrijemeSekundeFormatorIspis = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
 
     var symbols = DecimalFormatSymbols.getInstance();
     symbols.setDecimalSeparator(',');
@@ -60,25 +64,49 @@ public class Formati {
   }
 
   /**
-   * Formatiraj vrijeme.
+   * Formatiraj vrijeme, ne prikaži sekunde.
    *
    * @param vrijeme vrijeme
    * @return vrijeme tekst ili prazno ako je null
    */
   public String formatiraj(LocalTime vrijeme) {
+    return formatiraj(vrijeme, false);
+  }
+
+  /**
+   * Formatiraj vrijeme.
+   *
+   * @param vrijeme vrijeme
+   * @param sekunde prikaži sekunde
+   * @return vrijeme tekst ili prazno ako je null
+   */
+  public String formatiraj(LocalTime vrijeme, boolean sekunde) {
     if (vrijeme == null) {return "";}
-    return vrijeme.format(vrijemeFormatorIspis);
+    var formator = sekunde ? vrijemeSekundeFormatorIspis : vrijemeFormatorIspis;
+    return vrijeme.format(formator);
+  }
+
+  /**
+   * Formatiraj datum i vrijeme, prikaži sekunde.
+   *
+   * @param datumVrijeme datum i vrijeme
+   * @return datum i vrijeme tekst ili prazno ako je null
+   */
+  public String formatiraj(LocalDateTime datumVrijeme) {
+    return formatiraj(datumVrijeme, true);
   }
 
   /**
    * Formatiraj datum i vrijeme.
    *
    * @param datumVrijeme datum i vrijeme
+   * @param sekunde      prikaži sekunde
    * @return datum i vrijeme tekst ili prazno ako je null
    */
-  public String formatiraj(LocalDateTime datumVrijeme) {
+  public String formatiraj(LocalDateTime datumVrijeme, boolean sekunde) {
     if (datumVrijeme == null) {return "";}
-    return datumVrijeme.format(datumVrijemeFormatorIspis);
+    var formator = sekunde ? datumVrijemeSekundeFormatorIspis : datumVrijemeFormatorIspis;
+    return datumVrijeme.format(formator);
   }
 
   /**
