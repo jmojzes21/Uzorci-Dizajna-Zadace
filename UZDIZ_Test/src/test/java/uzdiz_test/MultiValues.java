@@ -4,7 +4,7 @@ import java.util.List;
 
 public class MultiValues {
 
-  private List<String> values;
+  private final List<String> values;
 
   public MultiValues(List<String> values) {
     this.values = values;
@@ -14,4 +14,8 @@ public class MultiValues {
     return values.stream().anyMatch(e -> value.contains(e));
   }
 
+  @Override
+  public String toString() {
+    return values.getFirst();
+  }
 }

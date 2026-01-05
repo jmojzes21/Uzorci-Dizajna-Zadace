@@ -521,11 +521,14 @@ public class TuristickaAgencijaTest {
   }
 
   private void postojiRedak(List<String> redci, Object... elementi) {
-    assertTrue(redci.stream().anyMatch(e -> redakSadrziElemente(e, elementi)));
+    assertTrue(redci.stream().anyMatch(e -> redakSadrziElemente(e, elementi)),
+        () -> "Ne postoji redak: " + String.join(", ", Arrays.stream(elementi).map(e -> e.toString()).toList()));
   }
 
   private void nePostojiRedak(List<String> redci, Object... elementi) {
-    assertFalse(redci.stream().anyMatch(e -> redakSadrziElemente(e, elementi)));
+    assertFalse(redci.stream().anyMatch(e -> redakSadrziElemente(e, elementi)),
+        () -> "Redak ne smije postojati: " + String.join(", ",
+            Arrays.stream(elementi).map(e -> e.toString()).toList()));
   }
 
   private boolean redakSadrziElemente(String redak, Object... elementi) {
@@ -545,7 +548,7 @@ public class TuristickaAgencijaTest {
         return aranzman.contains(redak);
       }
       return false;
-    }));
+    }), () -> "Turistički aranžman treba biti u stanju " + aranzman.toString());
 
   }
 
