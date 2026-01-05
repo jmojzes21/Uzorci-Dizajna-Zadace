@@ -19,14 +19,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TuristickaAgencija {
 
-  private Properties properties = new Properties();
+  private final Properties properties = new Properties();
   private Process process;
   private PrintWriter writer;
   private BufferedReader reader;
 
-  private Queue<String> inputQueue = new ConcurrentLinkedQueue<>();
+  private final Queue<String> inputQueue = new ConcurrentLinkedQueue<>();
   private Thread readInputThread;
-  private AtomicBoolean readingInput = new AtomicBoolean(true);
+  private final AtomicBoolean readingInput = new AtomicBoolean(true);
 
   public TuristickaAgencija() {
 
@@ -37,7 +37,7 @@ public class TuristickaAgencija {
     writer.flush();
     return readLines();
   }
-  
+
   public List<String> readLines() {
 
     List<String> lines = new ArrayList<>();

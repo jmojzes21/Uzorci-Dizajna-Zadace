@@ -15,7 +15,7 @@ public class TuristickaAgencijaTest {
 
   // region Početak
 
-  private static TuristickaAgencija agencija = new TuristickaAgencija();
+  private static final TuristickaAgencija agencija = new TuristickaAgencija();
 
   @BeforeAll
   public static void prijeSvih() throws Exception {
