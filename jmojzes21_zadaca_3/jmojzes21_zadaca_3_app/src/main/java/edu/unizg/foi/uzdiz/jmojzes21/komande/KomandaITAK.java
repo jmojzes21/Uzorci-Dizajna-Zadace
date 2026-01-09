@@ -10,38 +10,29 @@ import edu.unizg.foi.uzdiz.jmojzes21.tablicni_ispis.TablicniIspisGraditelj;
 import java.time.LocalDate;
 import java.util.List;
 
-public class KomandaITAK {
+public class KomandaITAK implements IKomanda {
 
-  private final TuristickaAgencija agencija;
+  private final LocalDate datumOd;
+  private final LocalDate datumDo;
 
-  public KomandaITAK(TuristickaAgencija agencija) {
-    this.agencija = agencija;
+  public KomandaITAK(LocalDate datumOd, LocalDate datumDo) {
+    this.datumOd = datumOd;
+    this.datumDo = datumDo;
   }
 
-  public void obradiKomandu(String args) throws Exception {
+  public KomandaITAK() {
+    this.datumOd = null;
+    this.datumDo = null;
+  }
 
-    var f = Formati.dajInstancu();
+  @Override
+  public void izvrsi(TuristickaAgencija agencija) {
 
     List<Aranzman> aranzmani;
 
-    if (args.isEmpty()) {
+    if (datumOd == null || datumDo == null) {
       aranzmani = agencija.dajAranzmane();
     } else {
-
-      var uzorak = new RegexKomandeGraditelj()
-          .dodajDatum("od")
-          .dodajDatum("do")
-          .dajUzorak();
-
-      var matcher = uzorak.matcher(args);
-      if (!matcher.matches()) {
-        String opis = "ITAK [od do]";
-        throw new NeispravnaKomandaGreska(opis);
-      }
-
-      LocalDate datumOd = f.parsirajDatum(matcher.group("od"));
-      LocalDate datumDo = f.parsirajDatum(matcher.group("do"));
-
       aranzmani = agencija.dajAranzmane(datumOd, datumDo);
     }
 
@@ -96,6 +87,36 @@ public class KomandaITAK {
     tablicniIspis.ispisiCrtu();
 
 
+  }
+
+
+  public static class Kreator extends KomandaKreator {
+
+    @Override
+    public IKomanda parsiraj(String args) throws Exception {
+
+      if (args.isEmpty()) {
+        return new KomandaITAK();
+      }
+
+      var f = Formati.dajInstancu();
+
+      var uzorak = new RegexKomandeGraditelj()
+          .dodajDatum("od")
+          .dodajDatum("do")
+          .dajUzorak();
+
+      var matcher = uzorak.matcher(args);
+      if (!matcher.matches()) {
+        String opis = "ITAK [od do]";
+        throw new NeispravnaKomandaGreska(opis);
+      }
+
+      LocalDate datumOd = f.parsirajDatum(matcher.group("od"));
+      LocalDate datumDo = f.parsirajDatum(matcher.group("do"));
+
+      return new KomandaITAK(datumOd, datumDo);
+    }
   }
 
 }

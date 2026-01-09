@@ -12,38 +12,29 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 
-public class KomandaITAS {
+public class KomandaITAS implements IKomanda {
 
-  private final TuristickaAgencija agencija;
+  private final LocalDate datumOd;
+  private final LocalDate datumDo;
 
-  public KomandaITAS(TuristickaAgencija agencija) {
-    this.agencija = agencija;
+  public KomandaITAS(LocalDate datumOd, LocalDate datumDo) {
+    this.datumOd = datumOd;
+    this.datumDo = datumDo;
   }
 
-  public void obradiKomandu(String args) throws Exception {
+  public KomandaITAS() {
+    this.datumOd = null;
+    this.datumDo = null;
+  }
 
-    var f = Formati.dajInstancu();
+  @Override
+  public void izvrsi(TuristickaAgencija agencija) {
 
     List<Aranzman> aranzmani;
 
-    if (args.isEmpty()) {
+    if (datumOd == null || datumDo == null) {
       aranzmani = agencija.dajAranzmane();
     } else {
-
-      var uzorak = new RegexKomandeGraditelj()
-          .dodajDatum("od")
-          .dodajDatum("do")
-          .dajUzorak();
-
-      var matcher = uzorak.matcher(args);
-      if (!matcher.matches()) {
-        String opis = "ITAS [od do]";
-        throw new NeispravnaKomandaGreska(opis);
-      }
-
-      LocalDate datumOd = f.parsirajDatum(matcher.group("od"));
-      LocalDate datumDo = f.parsirajDatum(matcher.group("do"));
-
       aranzmani = agencija.dajAranzmane(datumOd, datumDo);
     }
 
@@ -52,10 +43,6 @@ public class KomandaITAS {
       return;
     }
 
-    dajStatistikuAranzmana(aranzmani);
-  }
-
-  private void dajStatistikuAranzmana(List<Aranzman> aranzmani) {
     List<StatistikaAranzmana> statistika = agencija.dajStatistikuAranzmana(aranzmani);
     prikaziStatistiku(statistika);
   }
@@ -109,6 +96,36 @@ public class KomandaITAS {
     var comparator = Comparator.comparing((StatistikaAranzmana e) -> e.aranzman().pocetniDatum());
     if (!uzlazno) {comparator = comparator.reversed();}
     return statistika.stream().sorted(comparator).toList();
+  }
+
+
+  public static class Kreator extends KomandaKreator {
+
+    @Override
+    public IKomanda parsiraj(String args) throws Exception {
+
+      if (args.isEmpty()) {
+        return new KomandaITAS();
+      }
+
+      var f = Formati.dajInstancu();
+
+      var uzorak = new RegexKomandeGraditelj()
+          .dodajDatum("od")
+          .dodajDatum("do")
+          .dajUzorak();
+
+      var matcher = uzorak.matcher(args);
+      if (!matcher.matches()) {
+        String opis = "ITAS [od do]";
+        throw new NeispravnaKomandaGreska(opis);
+      }
+
+      LocalDate datumOd = f.parsirajDatum(matcher.group("od"));
+      LocalDate datumDo = f.parsirajDatum(matcher.group("do"));
+
+      return new KomandaITAS(datumOd, datumDo);
+    }
   }
 
 }

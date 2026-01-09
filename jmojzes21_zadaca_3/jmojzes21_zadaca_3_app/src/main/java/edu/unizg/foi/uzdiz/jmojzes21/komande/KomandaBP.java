@@ -6,46 +6,56 @@ import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.NeispravnaKomandaGreska;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.RegexKomandeGraditelj;
 import java.util.List;
 
-public class KomandaBP {
+public class KomandaBP implements IKomanda {
 
-  private final TuristickaAgencija agencija;
+  private final String odabir;
 
-  public KomandaBP(TuristickaAgencija agencija) {
-    this.agencija = agencija;
+  public KomandaBP(String odabir) {
+    this.odabir = odabir;
   }
 
-  public void obradiKomandu(String args) throws Exception {
+  @Override
+  public void izvrsi(TuristickaAgencija agencija) {
 
-    var uzorak = new RegexKomandeGraditelj()
-        .dodajIzraz("odabir", "(A)|(R)")
-        .dajUzorak();
-
-    var matcher = uzorak.matcher(args);
-    if (!matcher.matches()) {
-      String opis = "BP [A|R]";
-      throw new NeispravnaKomandaGreska(opis);
-    }
-
-    String odabir = matcher.group("odabir");
     switch (odabir) {
       case "A":
-        obrisiSveAranzmane();
+        obrisiSveAranzmane(agencija);
         break;
       case "R":
-        obrisiSveRezervacije();
+        obrisiSveRezervacije(agencija);
         break;
     }
 
   }
 
-  private void obrisiSveAranzmane() {
+  private void obrisiSveAranzmane(TuristickaAgencija agencija) {
     agencija.obrisiSve();
   }
 
-  private void obrisiSveRezervacije() {
+  private void obrisiSveRezervacije(TuristickaAgencija agencija) {
     List<Aranzman> aranzmani = agencija.dajAranzmane();
     for (var e : aranzmani) {
       e.obrisiSve();
+    }
+  }
+
+  public static class Kreator extends KomandaKreator {
+
+    @Override
+    public IKomanda parsiraj(String args) throws Exception {
+
+      var uzorak = new RegexKomandeGraditelj()
+          .dodajIzraz("odabir", "(A)|(R)")
+          .dajUzorak();
+
+      var matcher = uzorak.matcher(args);
+      if (!matcher.matches()) {
+        String opis = "BP [A|R]";
+        throw new NeispravnaKomandaGreska(opis);
+      }
+
+      String odabir = matcher.group("odabir");
+      return new KomandaBP(odabir);
     }
   }
 

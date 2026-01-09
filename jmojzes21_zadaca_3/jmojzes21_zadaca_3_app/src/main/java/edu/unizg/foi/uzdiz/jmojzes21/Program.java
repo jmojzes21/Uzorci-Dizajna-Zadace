@@ -1,22 +1,13 @@
 package edu.unizg.foi.uzdiz.jmojzes21;
 
-import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaBP;
-import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaDRTA;
-import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaIP;
-import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaIRO;
-import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaIRTA;
-import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaITAK;
-import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaITAP;
-import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaITAS;
-import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaORTA;
-import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaOTA;
-import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaPOTI;
-import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaUP;
+import edu.unizg.foi.uzdiz.jmojzes21.komande.IKomanda;
+import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaKreator;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.podaci.TuristickaAgencija;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.CitacOpcija;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.NeispravnaKomandaGreska;
+import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.NepoznataKomanda;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
@@ -89,8 +80,11 @@ public class Program {
 
         try {
           obradiKomanduKorisnika(linija.trim());
+        } catch (NepoznataKomanda e) {
+          System.out.println(e.getMessage());
+          pregledKomandi();
         } catch (NeispravnaKomandaGreska e) {
-          System.out.println("Neispravan format komande! Ispravan format: " + e.getMessage());
+          System.out.println("Neispravna komanda! Ispravan format: " + e.getMessage());
         } catch (Exception e) {
           System.out.println(e.getMessage());
         }
@@ -98,89 +92,25 @@ public class Program {
     }
   }
 
-  private void obradiKomanduKorisnika(String komanda) throws Exception {
+  private void obradiKomanduKorisnika(String komandaTekst) throws Exception {
 
-    if (komanda.isEmpty()) {
+    if (komandaTekst.isEmpty()) {
       return;
     }
 
-    String[] dijelovi = razdvojiKomandu(komanda);
+    String[] dijelovi = razdvojiKomandu(komandaTekst);
     String naziv = dijelovi[0].toUpperCase();
     String args = dijelovi[1];
 
-    ispisiKomandu(komanda);
+    ispisiKomandu(komandaTekst);
 
-    switch (naziv) {
-      case "ITAK": {
-        var k = new KomandaITAK(agencija);
-        k.obradiKomandu(args);
-        break;
-      }
-      case "ITAP": {
-        var k = new KomandaITAP(agencija);
-        k.obradiKomandu(args);
-        break;
-      }
-      case "IRTA": {
-        var k = new KomandaIRTA(agencija);
-        k.obradiKomandu(args);
-        break;
-      }
-      case "IRO": {
-        var k = new KomandaIRO(agencija);
-        k.obradiKomandu(args);
-        break;
-      }
-      case "DRTA": {
-        var k = new KomandaDRTA(agencija);
-        k.obradiKomandu(args);
-        break;
-      }
-      case "ORTA": {
-        var k = new KomandaORTA(agencija);
-        k.obradiKomandu(args);
-        break;
-      }
-      case "OTA": {
-        var k = new KomandaOTA(agencija);
-        k.obradiKomandu(args);
-        break;
-      }
-      case "IP": {
-        var k = new KomandaIP();
-        k.obradiKomandu(args);
-        break;
-      }
-      case "BP": {
-        var k = new KomandaBP(agencija);
-        k.obradiKomandu(args);
-        break;
-      }
-      case "UP": {
-        var k = new KomandaUP(agencija);
-        k.obradiKomandu(args);
-        break;
-      }
-      case "ITAS": {
-        var k = new KomandaITAS(agencija);
-        k.obradiKomandu(args);
-        break;
-      }
-      case "POTI": {
-        var k = new KomandaPOTI();
-        k.obradiKomandu(args);
-        break;
-      }
-      case "Q": {
-        zaprimajKomandeKorisnika = false;
-        break;
-      }
-      default: {
-        System.out.println("Nepoznata komanda.");
-        pregledKomandi();
-        break;
-      }
+    if (naziv.equals("Q")) {
+      zaprimajKomandeKorisnika = false;
+      return;
     }
+
+    IKomanda komanda = KomandaKreator.parsirajKomandu(naziv, args);
+    komanda.izvrsi(agencija);
 
   }
 

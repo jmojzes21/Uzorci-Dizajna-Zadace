@@ -11,35 +11,21 @@ import edu.unizg.foi.uzdiz.jmojzes21.tablicni_ispis.TablicniIspisGraditelj;
 import java.util.ArrayList;
 import java.util.List;
 
-public class KomandaIRTA {
+public class KomandaIRTA implements IKomanda {
 
-  private final TuristickaAgencija agencija;
 
-  public KomandaIRTA(TuristickaAgencija agencija) {
-    this.agencija = agencija;
+  private final int oznaka;
+  private final String filter;
+
+  public KomandaIRTA(int oznaka, String filter) {
+    this.oznaka = oznaka;
+    this.filter = filter != null ? filter : "PAČODO";
   }
 
-  public void obradiKomandu(String args) throws Exception {
+  @Override
+  public void izvrsi(TuristickaAgencija agencija) {
 
-    var uzorak = new RegexKomandeGraditelj()
-        .dodajBroj("oznaka")
-        .dodajTekstOpcionalno("filter")
-        .dajUzorak();
-
-    var matcher = uzorak.matcher(args);
-    if (!matcher.matches()) {
-      String opis = "IRTA oznaka [PA|Č|O|OD]";
-      throw new NeispravnaKomandaGreska(opis);
-    }
-
-    int oznaka = Integer.parseInt(matcher.group("oznaka"));
-    String filter = matcher.group("filter");
-    if (filter == null) {filter = "PAČODO";}
-
-    prikaziRezervacijeAranzmana(oznaka, filter);
-  }
-
-  private void prikaziRezervacijeAranzmana(int oznaka, String filter) {
+    String filter = this.filter;
 
     boolean prikaziPrimljeneAktivne = filter.contains("PA");
     boolean prikaziNaCekanju = filter.contains("Č");
@@ -114,6 +100,29 @@ public class KomandaIRTA {
     }
     tablicniIspis.ispisiCrtu();
 
+  }
+
+  public static class Kreator extends KomandaKreator {
+
+    @Override
+    public IKomanda parsiraj(String args) throws Exception {
+
+      var uzorak = new RegexKomandeGraditelj()
+          .dodajBroj("oznaka")
+          .dodajTekstOpcionalno("filter")
+          .dajUzorak();
+
+      var matcher = uzorak.matcher(args);
+      if (!matcher.matches()) {
+        String opis = "IRTA oznaka [PA|Č|O|OD]";
+        throw new NeispravnaKomandaGreska(opis);
+      }
+
+      int oznaka = Integer.parseInt(matcher.group("oznaka"));
+      String filter = matcher.group("filter");
+
+      return new KomandaIRTA(oznaka, filter);
+    }
   }
 
 }

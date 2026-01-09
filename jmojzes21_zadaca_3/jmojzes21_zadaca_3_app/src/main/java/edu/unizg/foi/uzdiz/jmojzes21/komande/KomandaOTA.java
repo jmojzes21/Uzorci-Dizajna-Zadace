@@ -5,27 +5,16 @@ import edu.unizg.foi.uzdiz.jmojzes21.podaci.TuristickaAgencija;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.NeispravnaKomandaGreska;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.RegexKomandeGraditelj;
 
-public class KomandaOTA {
+public class KomandaOTA implements IKomanda {
 
-  private final TuristickaAgencija agencija;
+  private final int oznaka;
 
-  public KomandaOTA(TuristickaAgencija agencija) {
-    this.agencija = agencija;
+  public KomandaOTA(int oznaka) {
+    this.oznaka = oznaka;
   }
 
-  public void obradiKomandu(String args) throws Exception {
-
-    var uzorak = new RegexKomandeGraditelj()
-        .dodajBroj("oznaka")
-        .dajUzorak();
-
-    var matcher = uzorak.matcher(args);
-    if (!matcher.matches()) {
-      String opis = "OTA oznaka";
-      throw new NeispravnaKomandaGreska(opis);
-    }
-
-    int oznaka = Integer.parseInt(matcher.group("oznaka"));
+  @Override
+  public void izvrsi(TuristickaAgencija agencija) {
 
     Aranzman aranzman = agencija.dajAranzman(oznaka);
 
@@ -41,6 +30,27 @@ public class KomandaOTA {
       System.out.println(e.getMessage());
     }
 
+  }
+
+
+  public static class Kreator extends KomandaKreator {
+
+    @Override
+    public IKomanda parsiraj(String args) throws Exception {
+
+      var uzorak = new RegexKomandeGraditelj()
+          .dodajBroj("oznaka")
+          .dajUzorak();
+
+      var matcher = uzorak.matcher(args);
+      if (!matcher.matches()) {
+        String opis = "OTA oznaka";
+        throw new NeispravnaKomandaGreska(opis);
+      }
+
+      int oznaka = Integer.parseInt(matcher.group("oznaka"));
+      return new KomandaOTA(oznaka);
+    }
   }
 
 }

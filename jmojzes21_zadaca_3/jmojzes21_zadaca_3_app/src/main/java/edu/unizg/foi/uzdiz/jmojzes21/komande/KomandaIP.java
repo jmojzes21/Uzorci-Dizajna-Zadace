@@ -2,17 +2,23 @@ package edu.unizg.foi.uzdiz.jmojzes21.komande;
 
 import edu.unizg.foi.uzdiz.jmojzes21.PostavkeSustava;
 import edu.unizg.foi.uzdiz.jmojzes21.PostavkeSustava.NacinSortiranja;
+import edu.unizg.foi.uzdiz.jmojzes21.podaci.TuristickaAgencija;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.NeispravnaKomandaGreska;
 
-public class KomandaIP {
+public class KomandaIP implements IKomanda {
 
-  public KomandaIP() {}
+  private final String odabir;
 
-  public void obradiKomandu(String args) throws Exception {
+  public KomandaIP(String odabir) {
+    this.odabir = odabir;
+  }
+
+  @Override
+  public void izvrsi(TuristickaAgencija agencija) {
 
     var postavke = PostavkeSustava.dajInstancu();
 
-    switch (args) {
+    switch (odabir) {
       case "N":
         postavke.postaviNacinSortiranja(NacinSortiranja.uzlazno);
         break;
@@ -24,6 +30,14 @@ public class KomandaIP {
         throw new NeispravnaKomandaGreska(opis);
     }
 
+  }
+
+  public static class Kreator extends KomandaKreator {
+
+    @Override
+    public IKomanda parsiraj(String args) throws Exception {
+      return new KomandaIP(args);
+    }
   }
 
 }

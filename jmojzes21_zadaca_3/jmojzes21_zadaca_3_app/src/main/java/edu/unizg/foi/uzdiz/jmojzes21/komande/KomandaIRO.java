@@ -10,34 +10,22 @@ import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.RegexKomandeGraditelj;
 import edu.unizg.foi.uzdiz.jmojzes21.tablicni_ispis.TablicniIspisGraditelj;
 import java.util.List;
 
-public class KomandaIRO {
+public class KomandaIRO implements IKomanda {
 
-  private final TuristickaAgencija agencija;
+  private final String ime;
+  private final String prezime;
 
-  public KomandaIRO(TuristickaAgencija agencija) {
-    this.agencija = agencija;
+  public KomandaIRO(String ime, String prezime) {
+    this.ime = ime;
+    this.prezime = prezime;
   }
 
-  public void obradiKomandu(String args) throws Exception {
-
-    var uzorak = new RegexKomandeGraditelj()
-        .dodajTekst("ime")
-        .dodajTekst("prezime")
-        .dajUzorak();
-
-    var matcher = uzorak.matcher(args);
-    if (!matcher.matches()) {
-      String opis = "IRO ime prezime";
-      throw new NeispravnaKomandaGreska(opis);
-    }
-
-    String ime = matcher.group("ime");
-    String prezime = matcher.group("prezime");
-
-    prikaziRezervacijeKorisnika(ime, prezime);
+  @Override
+  public void izvrsi(TuristickaAgencija agencija) {
+    prikaziRezervacijeKorisnika(agencija, ime, prezime);
   }
 
-  private void prikaziRezervacijeKorisnika(String ime, String prezime) {
+  private void prikaziRezervacijeKorisnika(TuristickaAgencija agencija, String ime, String prezime) {
 
     List<Rezervacija> rezervacije = agencija.dajRezervacijeKorisnika(ime, prezime);
     if (rezervacije.isEmpty()) {
@@ -77,6 +65,29 @@ public class KomandaIRO {
     }
     tablicniIspis.ispisiCrtu();
 
+  }
+
+  public static class Kreator extends KomandaKreator {
+
+    @Override
+    public IKomanda parsiraj(String args) throws Exception {
+
+      var uzorak = new RegexKomandeGraditelj()
+          .dodajTekst("ime")
+          .dodajTekst("prezime")
+          .dajUzorak();
+
+      var matcher = uzorak.matcher(args);
+      if (!matcher.matches()) {
+        String opis = "IRO ime prezime";
+        throw new NeispravnaKomandaGreska(opis);
+      }
+
+      String ime = matcher.group("ime");
+      String prezime = matcher.group("prezime");
+
+      return new KomandaIRO(ime, prezime);
+    }
   }
 
 }

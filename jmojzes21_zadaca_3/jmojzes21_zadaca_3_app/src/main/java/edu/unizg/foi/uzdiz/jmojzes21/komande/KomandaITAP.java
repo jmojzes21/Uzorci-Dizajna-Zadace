@@ -6,27 +6,16 @@ import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.Formati;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.NeispravnaKomandaGreska;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.RegexKomandeGraditelj;
 
-public class KomandaITAP {
+public class KomandaITAP implements IKomanda {
 
-  private final TuristickaAgencija agencija;
+  private final int oznaka;
 
-  public KomandaITAP(TuristickaAgencija agencija) {
-    this.agencija = agencija;
+  public KomandaITAP(int oznaka) {
+    this.oznaka = oznaka;
   }
 
-  public void obradiKomandu(String args) throws Exception {
-
-    var uzorak = new RegexKomandeGraditelj()
-        .dodajBroj("oznaka")
-        .dajUzorak();
-
-    var matcher = uzorak.matcher(args);
-    if (!matcher.matches()) {
-      String opis = "ITAP oznaka";
-      throw new NeispravnaKomandaGreska(opis);
-    }
-
-    int oznaka = Integer.parseInt(matcher.group("oznaka"));
+  @Override
+  public void izvrsi(TuristickaAgencija agencija) {
 
     Aranzman aranzman = agencija.dajAranzman(oznaka);
 
@@ -60,6 +49,26 @@ public class KomandaITAP {
     System.out.printf("Broj večera: %d\n", a.brojVecera());
     System.out.printf("Status: %s\n", a.nazivStanja());
 
+  }
+
+  public static class Kreator extends KomandaKreator {
+
+    @Override
+    public IKomanda parsiraj(String args) throws Exception {
+
+      var uzorak = new RegexKomandeGraditelj()
+          .dodajBroj("oznaka")
+          .dajUzorak();
+
+      var matcher = uzorak.matcher(args);
+      if (!matcher.matches()) {
+        String opis = "ITAP oznaka";
+        throw new NeispravnaKomandaGreska(opis);
+      }
+
+      int oznaka = Integer.parseInt(matcher.group("oznaka"));
+      return new KomandaITAP(oznaka);
+    }
   }
 
 }
