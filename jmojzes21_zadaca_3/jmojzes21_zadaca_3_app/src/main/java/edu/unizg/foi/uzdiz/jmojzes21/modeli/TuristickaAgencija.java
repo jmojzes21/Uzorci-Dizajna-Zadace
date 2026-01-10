@@ -1,6 +1,6 @@
-package edu.unizg.foi.uzdiz.jmojzes21.podaci;
+package edu.unizg.foi.uzdiz.jmojzes21.modeli;
 
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.statistika.StatistikaAranzmana;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.statistika.StatistikaAranzmana;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;

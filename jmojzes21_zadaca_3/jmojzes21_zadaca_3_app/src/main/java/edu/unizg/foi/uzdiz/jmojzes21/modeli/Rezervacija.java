@@ -1,7 +1,7 @@
-package edu.unizg.foi.uzdiz.jmojzes21.podaci;
+package edu.unizg.foi.uzdiz.jmojzes21.modeli;
 
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.RezervacijaNova;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.RezervacijaStanje;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.stanja.RezervacijaNova;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.stanja.RezervacijaStanje;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;

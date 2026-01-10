@@ -1,10 +1,10 @@
-package edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja;
+package edu.unizg.foi.uzdiz.jmojzes21.modeli.stanja;
 
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija.StanjeId;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija.StanjeId;
 import java.time.LocalDateTime;
 
-public class RezervacijaNova implements RezervacijaStanje {
+public class RezervacijaNaCekanju implements RezervacijaStanje {
 
   @Override
   public void zaprimi(Rezervacija rezervacija) {
@@ -17,14 +17,10 @@ public class RezervacijaNova implements RezervacijaStanje {
   }
 
   @Override
-  public void staviNaCekanje(Rezervacija rezervacija) {
-    rezervacija.postaviStanje(new RezervacijaNaCekanju());
-  }
+  public void staviNaCekanje(Rezervacija rezervacija) {}
 
   @Override
-  public void odgodi(Rezervacija rezervacija) {
-    rezervacija.postaviStanje(new RezervacijaOdgodjena());
-  }
+  public void odgodi(Rezervacija rezervacija) {}
 
   @Override
   public void otkazi(Rezervacija rezervacija) {
@@ -45,12 +41,12 @@ public class RezervacijaNova implements RezervacijaStanje {
 
   @Override
   public StanjeId dajId() {
-    return StanjeId.nova;
+    return StanjeId.naCekanju;
   }
 
   @Override
   public String dajNaziv() {
-    return "Nova";
+    return "Na čekanju";
   }
 
 }

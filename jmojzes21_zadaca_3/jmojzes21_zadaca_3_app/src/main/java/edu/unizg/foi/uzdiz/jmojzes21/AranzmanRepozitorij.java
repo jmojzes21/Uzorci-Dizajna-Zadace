@@ -1,7 +1,9 @@
 package edu.unizg.foi.uzdiz.jmojzes21;
 
 import edu.unizg.foi.uzdiz.jmojzes21.lib.facade.UcitavacPodatakaFacade;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.Aranzman;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.graditelji.AranzmanGraditelj;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.graditelji.AranzmanStvarniGraditelj;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.Formati;
 import java.io.IOException;
 import java.nio.file.Path;

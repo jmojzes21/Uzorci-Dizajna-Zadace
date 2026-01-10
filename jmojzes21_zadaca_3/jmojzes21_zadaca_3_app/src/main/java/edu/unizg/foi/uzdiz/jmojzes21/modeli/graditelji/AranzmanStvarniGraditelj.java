@@ -1,6 +1,6 @@
-package edu.unizg.foi.uzdiz.jmojzes21;
+package edu.unizg.foi.uzdiz.jmojzes21.modeli.graditelji;
 
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.Aranzman;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;

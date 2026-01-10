@@ -2,9 +2,9 @@ package edu.unizg.foi.uzdiz.jmojzes21.komande;
 
 import edu.unizg.foi.uzdiz.jmojzes21.AranzmanRepozitorij;
 import edu.unizg.foi.uzdiz.jmojzes21.RezervacijaRepozitorij;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.TuristickaAgencija;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.Aranzman;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.TuristickaAgencija;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.NeispravnaKomandaGreska;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.RegexKomandeGraditelj;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package edu.unizg.foi.uzdiz.jmojzes21.podaci;
+package edu.unizg.foi.uzdiz.jmojzes21.modeli;
 
 public interface RezervacijaSubject {
 

@@ -1,9 +1,9 @@
-package edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja;
+package edu.unizg.foi.uzdiz.jmojzes21.modeli.stanja;
 
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman.StanjeId;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Korisnik;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.Aranzman;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.Aranzman.StanjeId;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.Korisnik;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;

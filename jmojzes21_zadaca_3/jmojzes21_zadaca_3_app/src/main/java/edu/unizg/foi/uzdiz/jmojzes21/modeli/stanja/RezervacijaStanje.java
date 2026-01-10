@@ -1,7 +1,7 @@
-package edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja;
+package edu.unizg.foi.uzdiz.jmojzes21.modeli.stanja;
 
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija.StanjeId;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija.StanjeId;
 
 public interface RezervacijaStanje {
 

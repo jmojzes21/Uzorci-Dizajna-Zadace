@@ -1,8 +1,8 @@
 package edu.unizg.foi.uzdiz.jmojzes21;
 
 import edu.unizg.foi.uzdiz.jmojzes21.lib.facade.UcitavacPodatakaFacade;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Korisnik;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.Korisnik;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.Formati;
 import java.io.IOException;
 import java.nio.file.Path;

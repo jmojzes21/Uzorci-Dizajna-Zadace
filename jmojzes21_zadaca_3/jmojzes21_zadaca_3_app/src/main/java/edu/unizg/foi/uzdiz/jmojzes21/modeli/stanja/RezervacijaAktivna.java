@@ -1,8 +1,8 @@
-package edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja;
+package edu.unizg.foi.uzdiz.jmojzes21.modeli.stanja;
 
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija.StanjeId;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.Aranzman;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija.StanjeId;
 import java.time.LocalDateTime;
 
 public class RezervacijaAktivna implements RezervacijaStanje {

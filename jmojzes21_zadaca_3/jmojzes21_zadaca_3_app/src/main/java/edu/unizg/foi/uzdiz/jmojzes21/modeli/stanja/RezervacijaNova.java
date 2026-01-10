@@ -1,11 +1,10 @@
-package edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja;
+package edu.unizg.foi.uzdiz.jmojzes21.modeli.stanja;
 
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija.StanjeId;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija.StanjeId;
 import java.time.LocalDateTime;
 
-public class RezervacijaOdgodjena implements RezervacijaStanje {
+public class RezervacijaNova implements RezervacijaStanje {
 
   @Override
   public void zaprimi(Rezervacija rezervacija) {
@@ -23,7 +22,9 @@ public class RezervacijaOdgodjena implements RezervacijaStanje {
   }
 
   @Override
-  public void odgodi(Rezervacija rezervacija) {}
+  public void odgodi(Rezervacija rezervacija) {
+    rezervacija.postaviStanje(new RezervacijaOdgodjena());
+  }
 
   @Override
   public void otkazi(Rezervacija rezervacija) {
@@ -40,23 +41,16 @@ public class RezervacijaOdgodjena implements RezervacijaStanje {
   public void kadaRezervacijaPostalaAktivna(Rezervacija trenutna, Rezervacija aktivirana) {}
 
   @Override
-  public void kadaRezervacijaPostalaOtkazana(Rezervacija trenutna, Rezervacija otkazana) {
-
-    if (trenutna.korisnik().equals(otkazana.korisnik())) {
-      Aranzman aranzman = trenutna.dajAranzman();
-      aranzman.aktivirajRezervaciju(trenutna);
-    }
-
-  }
+  public void kadaRezervacijaPostalaOtkazana(Rezervacija trenutna, Rezervacija otkazana) {}
 
   @Override
   public StanjeId dajId() {
-    return StanjeId.odgodjena;
+    return StanjeId.nova;
   }
 
   @Override
   public String dajNaziv() {
-    return "Odgođena";
+    return "Nova";
   }
 
 }

@@ -1,8 +1,8 @@
 package edu.unizg.foi.uzdiz.jmojzes21.komande;
 
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Korisnik;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.TuristickaAgencija;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.Korisnik;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.TuristickaAgencija;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.Formati;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.NeispravnaKomandaGreska;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.RegexKomandeGraditelj;

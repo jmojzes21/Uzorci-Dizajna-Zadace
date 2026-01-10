@@ -2,9 +2,9 @@ package edu.unizg.foi.uzdiz.jmojzes21;
 
 import edu.unizg.foi.uzdiz.jmojzes21.komande.IKomanda;
 import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaKreator;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Aranzman;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.Rezervacija;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.TuristickaAgencija;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.Aranzman;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.TuristickaAgencija;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.CitacOpcija;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.NeispravnaKomandaGreska;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.NepoznataKomanda;

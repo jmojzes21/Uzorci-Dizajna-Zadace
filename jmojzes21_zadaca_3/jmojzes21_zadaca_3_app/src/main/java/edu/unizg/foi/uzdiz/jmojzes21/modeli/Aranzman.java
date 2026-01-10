@@ -1,8 +1,8 @@
-package edu.unizg.foi.uzdiz.jmojzes21.podaci;
+package edu.unizg.foi.uzdiz.jmojzes21.modeli;
 
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.AranzmanOtkazan;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.AranzmanStanje;
-import edu.unizg.foi.uzdiz.jmojzes21.podaci.stanja.AranzmanUPripremi;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.stanja.AranzmanOtkazan;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.stanja.AranzmanStanje;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.stanja.AranzmanUPripremi;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
