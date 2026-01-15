@@ -1,19 +1,23 @@
 package edu.unizg.foi.uzdiz.jmojzes21.modeli.stanja;
 
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Aranzman;
-import edu.unizg.foi.uzdiz.jmojzes21.modeli.Aranzman.StanjeId;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija.StanjeId;
 import java.util.List;
-import java.util.Map;
 
-public class AranzmanUPripremi implements AranzmanStanje {
+public class AranzmanUPripremi extends AranzmanStanje {
 
   @Override
-  public void zaprimiRezervaciju(Aranzman aranzman, Rezervacija rezervacija) throws Exception {
+  public void zaprimiRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
+
+    Rezervacija postojeca = dajRezervacijuKorisnika(aranzman, rezervacija.korisnik(), List.of(StanjeId.primljena));
+
+    if (postojeca != null) {
+      aranzman.dodaj(rezervacija);
+      rezervacija.odgodi();
+      return;
+    }
 
     aranzman.dodaj(rezervacija);
     rezervacija.zaprimi();
@@ -26,30 +30,20 @@ public class AranzmanUPripremi implements AranzmanStanje {
   public void aktiviraj(Aranzman aranzman) {
 
     List<Rezervacija> rezervacije = aranzman.primljeneRezervacije();
-
-    List<Rezervacija> neispravne = new ArrayList<>();
-    filtrirajDuplikate(rezervacije, neispravne);
-
-    for (Rezervacija neispravna : neispravne) {
-      neispravna.odgodi();
-    }
-
-    rezervacije = aranzman.primljeneRezervacije();
-    int brojPrimljenih = aranzman.brojPrimljenih();
+    int brojPrimljenih = rezervacije.size();
 
     if (brojPrimljenih < aranzman.minBrojPutnika()) {
       return;
     }
 
     for (Rezervacija rezervacija : rezervacije) {
-      boolean mozePostatiAktivna = aranzman.obavijestiRezervacijaPostajeAktivna(rezervacija);
+      boolean mozePostatiAktivna = aranzman.dajAgenciju().rezervacijaMozePostatiAktivna(rezervacija);
       if (!mozePostatiAktivna) {
         rezervacija.odgodi();
       }
     }
 
     brojPrimljenih = aranzman.brojPrimljenih();
-
     if (brojPrimljenih < aranzman.minBrojPutnika()) {
       return;
     }
@@ -64,14 +58,15 @@ public class AranzmanUPripremi implements AranzmanStanje {
   }
 
   @Override
-  public void otkaziRezervaciju(Aranzman aranzman, Korisnik korisnik) throws Exception {
+  public void otkaziRezervaciju(Aranzman aranzman, Korisnik korisnik) {
 
-    Rezervacija rezervacija = dajRezervacijuKorisnika(aranzman, korisnik);
+    Rezervacija rezervacija = dajRezervacijuKorisnika(aranzman, korisnik,
+        List.of(StanjeId.primljena, StanjeId.odgodjena));
 
     if (rezervacija == null) {
       String opis = String.format("Korisnik %s nema rezervaciju za aranžman %d!", korisnik.punoIme(),
           aranzman.oznaka());
-      throw new Exception(opis);
+      throw new RuntimeException(opis);
     }
 
     if (rezervacija.jePrimljena()) {
@@ -87,7 +82,7 @@ public class AranzmanUPripremi implements AranzmanStanje {
 
     primljena.otkazi();
 
-    Rezervacija odgodjena = dajOdgodjenuRezervacijuKorisnika(aranzman, primljena.korisnik());
+    Rezervacija odgodjena = dajRezervacijuKorisnika(aranzman, primljena.korisnik(), List.of(StanjeId.odgodjena));
     if (odgodjena != null) {
       odgodjena.zaprimi();
     }
@@ -103,72 +98,19 @@ public class AranzmanUPripremi implements AranzmanStanje {
     int brojPrimljenih = aranzman.primljeneRezervacije().size();
 
     if (brojPrimljenih >= aranzman.minBrojPutnika()) {
-      try {
-        aranzman.aktiviraj();
-      } catch (Exception e) {
-        System.out.println(e.getMessage());
-      }
+      aranzman.aktiviraj();
     }
 
   }
 
   @Override
-  public StanjeId dajId() {
-    return StanjeId.uPripremi;
+  public Aranzman.StanjeId dajId() {
+    return Aranzman.StanjeId.uPripremi;
   }
 
   @Override
   public String dajNaziv() {
     return "U pripremi";
-  }
-
-  /**
-   * Filtriraj rezervacije korisnika tako da korisnik ima samo jednu rezervaciju. Ostale rezervacije postaju
-   * neispravne.
-   *
-   * @param rezervacije rezervacije
-   * @param neispravne  neispravne rezervacije
-   */
-  private void filtrirajDuplikate(List<Rezervacija> rezervacije, List<Rezervacija> neispravne) {
-
-    Map<Korisnik, Rezervacija> ispravneRezervacije = new HashMap<>();
-
-    for (Rezervacija rezervacija : rezervacije) {
-
-      Korisnik korisnik = rezervacija.korisnik();
-
-      if (!ispravneRezervacije.containsKey(korisnik)) {
-        ispravneRezervacije.put(korisnik, rezervacija);
-        continue;
-      }
-
-      Rezervacija ispravnaRezervacija = ispravneRezervacije.get(korisnik);
-
-      if (rezervacija.vrijemePrijema().isAfter(ispravnaRezervacija.vrijemePrijema())) {
-        neispravne.add(rezervacija);
-      } else {
-        neispravne.add(ispravnaRezervacija);
-        ispravneRezervacije.put(korisnik, rezervacija);
-      }
-
-    }
-
-  }
-
-  private Rezervacija dajRezervacijuKorisnika(Aranzman aranzman, Korisnik korisnik) {
-    List<Rezervacija> rezervacije = aranzman.primljeneRezervacije();
-    return rezervacije.stream()
-        .filter(e -> e.korisnik().equals(korisnik))
-        .findFirst()
-        .orElse(dajOdgodjenuRezervacijuKorisnika(aranzman, korisnik));
-  }
-
-  private Rezervacija dajOdgodjenuRezervacijuKorisnika(Aranzman aranzman, Korisnik korisnik) {
-    List<Rezervacija> rezervacije = aranzman.odgodjeneRezervacije();
-    return rezervacije.stream()
-        .filter(e -> e.korisnik().equals(korisnik))
-        .min(Comparator.comparing(Rezervacija::vrijemePrijema))
-        .orElse(null);
   }
 
 }

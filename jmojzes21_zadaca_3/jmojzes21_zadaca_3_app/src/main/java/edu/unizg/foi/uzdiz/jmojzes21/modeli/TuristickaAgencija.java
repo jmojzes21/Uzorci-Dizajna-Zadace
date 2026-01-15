@@ -101,7 +101,6 @@ public class TuristickaAgencija extends PutovanjeComposite {
    * @return rezervacije korisnika
    */
   public List<Rezervacija> dajRezervacijeKorisnika(String ime, String prezime) {
-
     var korisnik = new Korisnik(ime, prezime);
     List<Rezervacija> rezervacijeKorisnika = new ArrayList<>();
 
@@ -110,6 +109,30 @@ public class TuristickaAgencija extends PutovanjeComposite {
       List<Rezervacija> rezervacije = aranzman.rezervacije();
       rezervacijeKorisnika.addAll(rezervacije.stream()
           .filter(e -> e.korisnik().equals(korisnik))
+          .toList());
+    }
+
+    return rezervacijeKorisnika;
+  }
+
+  /**
+   * Dohvati sve rezervacije sa svih aranžmana određenog korisnika.
+   *
+   * @param ime     ime korisnika
+   * @param prezime prezime korisnika
+   * @param filter  prikaži samo rezervacije čije je stanje uključeno u filter
+   * @return rezervacije korisnika
+   */
+  public List<Rezervacija> dajRezervacijeKorisnika(String ime, String prezime, List<Rezervacija.StanjeId> filter) {
+    var korisnik = new Korisnik(ime, prezime);
+    List<Rezervacija> rezervacijeKorisnika = new ArrayList<>();
+
+    List<Aranzman> aranzmani = dajAranzmane();
+    for (var aranzman : aranzmani) {
+      List<Rezervacija> rezervacije = aranzman.rezervacije();
+      rezervacijeKorisnika.addAll(rezervacije.stream()
+          .filter(e -> e.korisnik().equals(korisnik))
+          .filter(e -> filter.contains(e.idStanja()))
           .toList());
     }
 
@@ -172,6 +195,10 @@ public class TuristickaAgencija extends PutovanjeComposite {
     var korisnik = new Korisnik(ime, prezime);
     aranzman.otkaziRezervaciju(korisnik);
 
+  }
+
+  public boolean rezervacijaMozePostatiAktivna(Rezervacija postajeAktivna) {
+    return upravljanjeRezervacijama.mozePostatiAktivna(this, postajeAktivna);
   }
 
   public List<StatistikaAranzmana> dajStatistikuAranzmana(List<Aranzman> aranzmani) {

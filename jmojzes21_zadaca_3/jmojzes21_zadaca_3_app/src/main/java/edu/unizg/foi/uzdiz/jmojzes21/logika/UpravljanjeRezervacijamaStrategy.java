@@ -1,6 +1,10 @@
 package edu.unizg.foi.uzdiz.jmojzes21.logika;
 
-public abstract class UpravljanjeRezervacijamaStrategy {
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.TuristickaAgencija;
 
+public abstract class UpravljanjeRezervacijamaStrategy {
+  
+  public abstract boolean mozePostatiAktivna(TuristickaAgencija agencija, Rezervacija rezervacija);
 
 }

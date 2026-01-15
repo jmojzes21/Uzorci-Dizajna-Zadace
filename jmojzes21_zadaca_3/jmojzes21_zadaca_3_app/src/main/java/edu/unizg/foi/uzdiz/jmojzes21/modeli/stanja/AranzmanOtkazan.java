@@ -5,24 +5,24 @@ import edu.unizg.foi.uzdiz.jmojzes21.modeli.Aranzman.StanjeId;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
 
-public class AranzmanOtkazan implements AranzmanStanje {
+public class AranzmanOtkazan extends AranzmanStanje {
 
   @Override
-  public void zaprimiRezervaciju(Aranzman aranzman, Rezervacija rezervacija) throws Exception {
+  public void zaprimiRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
     String opis = String.format("Nije moguće zaprimi rezervaciju jer je aranžman %d otkazan.", aranzman.oznaka());
-    throw new Exception(opis);
+    throw new RuntimeException(opis);
   }
 
   @Override
-  public void aktiviraj(Aranzman aranzman) throws Exception {
+  public void aktiviraj(Aranzman aranzman) {
     String opis = String.format("Nije moguće aktivirati aranžman %d jer je otkazan.", aranzman.oznaka());
-    throw new Exception(opis);
+    throw new RuntimeException(opis);
   }
 
   @Override
-  public void otkaziRezervaciju(Aranzman aranzman, Korisnik korisnik) throws Exception {
+  public void otkaziRezervaciju(Aranzman aranzman, Korisnik korisnik) {
     String opis = String.format("Nije moguće otkazati rezervaciju za aranžman %d jer je otkazan.", aranzman.oznaka());
-    throw new Exception(opis);
+    throw new RuntimeException(opis);
   }
 
   @Override

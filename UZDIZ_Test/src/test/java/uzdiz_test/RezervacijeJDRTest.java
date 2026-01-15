@@ -19,7 +19,7 @@ public class RezervacijeJDRTest {
 
   @BeforeAll
   public static void prijeSvih() throws Exception {
-    agencija.pokreni();
+    agencija.pokreni(List.of("--ta", "aranzmani.csv", "--rta", "rezervacije.csv", "--jdr"));
   }
 
   @AfterAll
@@ -242,7 +242,23 @@ public class RezervacijeJDRTest {
   }
 
   @Test
-  public void primljeni_duplikat() {
+  public void primljeni_duplikat_aranzman_u_pripremi() {
+
+    agencija.izvrsiKomandu("DRTA Bruno Bruno 5 " + datumVrijeme("1.7.2025 8:00"));
+    // postaje aktivna
+
+    agencija.izvrsiKomandu("DRTA Bruno Bruno 5 " + datumVrijeme("1.7.2025 10:00"));
+    // postaje odgođena
+
+    List<String> redci = rezervacijeAranzmana("5");
+    postojiRedak(redci, "Bruno", "8:00", Rezervacija.primljena);
+    postojiRedak(redci, "Bruno", "10:00", Rezervacija.odgodjena);
+    nePostojiRedak(redci, Rezervacija.aktivna);
+
+  }
+
+  @Test
+  public void primljeni_duplikat_aranzman_ne_moze_postati_aktivan() {
 
     agencija.izvrsiKomandu("DRTA Bruno Bruno 1 " + datumVrijeme("1.6.2025 10:00"));
     // postaje odgođena
@@ -253,6 +269,18 @@ public class RezervacijeJDRTest {
     nePostojiRedak(redci, Rezervacija.aktivna);
 
     provjeriStanjeAranzmana("1", Aranzman.uPripremi);
+
+  }
+
+  @Test
+  public void primljeni_duplikat_aranzman_aktivan() {
+
+    agencija.izvrsiKomandu("DRTA Bruno Bruno 3 " + datumVrijeme("1.6.2025 10:00"));
+    // postaje odgođena
+
+    List<String> redci = rezervacijeAranzmana("3");
+    postojiRedak(redci, "Bruno", "8:10", Rezervacija.aktivna);
+    postojiRedak(redci, "Bruno", "10:00", Rezervacija.odgodjena);
 
   }
 
@@ -367,6 +395,21 @@ public class RezervacijeJDRTest {
   }
 
   @Test
+  public void otkazi_aktivnu_postoji_odgodjena() {
+
+    agencija.izvrsiKomandu("DRTA Bruno Bruno 3 " + datumVrijeme("1.6.2025 10:00"));
+    // postaje odgođena
+
+    agencija.izvrsiKomandu("ORTA Bruno Bruno 3");
+
+    List<String> redci = rezervacijeAranzmana("3");
+    postojiRedak(redci, "Bruno", "8:10", Rezervacija.otkazana);
+    postojiRedak(redci, "Bruno", "10:00", Rezervacija.aktivna);
+    nePostojiRedak(redci, "Bruno", Rezervacija.odgodjena);
+
+  }
+
+  @Test
   public void otkazi_aktivnu_postoji_na_cekanju() {
 
     agencija.izvrsiKomandu("DRTA Darko Darko 10 " + datumVrijeme("2.8.2025 8:00"));
@@ -384,7 +427,7 @@ public class RezervacijeJDRTest {
   }
 
   @Test
-  public void otkazi_aktivnu_odgodjena_postaje_aktivna() {
+  public void otkazi_aktivnu_na_drugom_aranzmanu_odgodjena_postaje_aktivna() {
 
     agencija.izvrsiKomandu("DRTA Bruno Bruno 16 " + datumVrijeme("1.9.2025 8:00"));
     // postaje aktivna
@@ -405,7 +448,7 @@ public class RezervacijeJDRTest {
   }
 
   @Test
-  public void otkazi_aktivnu_2_odgodjene_postaju_aktivne() {
+  public void otkazi_aktivnu_na_drugim_aranzmanima_2_odgodjene_postaju_aktivne() {
 
     agencija.izvrsiKomandu("DRTA Bruno Bruno 16 " + datumVrijeme("1.9.2025 8:00"));
     // postaje aktivna

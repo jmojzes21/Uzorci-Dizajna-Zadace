@@ -15,8 +15,6 @@ public interface RezervacijaStanje {
 
   void otkazi(Rezervacija rezervacija);
 
-  boolean kadaRezervacijaPostajeAktivna(Rezervacija trenutna, Rezervacija postajeAktivna);
-
   void kadaRezervacijaPostalaAktivna(Rezervacija trenutna, Rezervacija aktivirana);
 
   void kadaRezervacijaPostalaOtkazana(Rezervacija trenutna, Rezervacija otkazana);

@@ -5,19 +5,12 @@ import edu.unizg.foi.uzdiz.jmojzes21.modeli.Aranzman.StanjeId;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
-public class AranzmanPopunjen implements AranzmanStanje {
+public class AranzmanPopunjen extends AranzmanStanje {
 
   @Override
-  public void zaprimiRezervaciju(Aranzman aranzman, Rezervacija rezervacija) throws Exception {
-
-    if (korisnikImaAktivnuRezervaciju(aranzman, rezervacija)) {
-      String opis = String.format("Korisnik %s već ima aktivnu rezervaciju za aranžman %d.", rezervacija.korisnik(),
-          aranzman.oznaka());
-      throw new Exception(opis);
-    }
+  public void zaprimiRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
 
     aranzman.dodaj(rezervacija);
 
@@ -25,7 +18,7 @@ public class AranzmanPopunjen implements AranzmanStanje {
     Rezervacija najnovijaAktivna = aranzman.dajNajnovijuRezervaciju(aktivne);
 
     if (rezervacija.vrijemePrijema().isBefore(najnovijaAktivna.vrijemePrijema())) {
-      boolean mozePostatiAktivna = aranzman.obavijestiRezervacijaPostajeAktivna(rezervacija);
+      boolean mozePostatiAktivna = aranzman.dajAgenciju().rezervacijaMozePostatiAktivna(rezervacija);
       if (mozePostatiAktivna) {
         najnovijaAktivna.staviNaCekanje();
         rezervacija.zaprimi();
@@ -42,14 +35,15 @@ public class AranzmanPopunjen implements AranzmanStanje {
   public void aktiviraj(Aranzman aranzman) {}
 
   @Override
-  public void otkaziRezervaciju(Aranzman aranzman, Korisnik korisnik) throws Exception {
+  public void otkaziRezervaciju(Aranzman aranzman, Korisnik korisnik) {
 
-    Rezervacija rezervacija = dajRezervacijuKorisnika(aranzman, korisnik);
+    Rezervacija rezervacija = dajRezervacijuKorisnika(aranzman, korisnik,
+        List.of(Rezervacija.StanjeId.aktivna, Rezervacija.StanjeId.odgodjena, Rezervacija.StanjeId.naCekanju));
 
     if (rezervacija == null) {
       String opis = String.format("Korisnik %s nema rezervaciju za aranžman %d!", korisnik.punoIme(),
           aranzman.oznaka());
-      throw new Exception(opis);
+      throw new RuntimeException(opis);
     }
 
     if (rezervacija.jeAktivna()) {
@@ -72,7 +66,7 @@ public class AranzmanPopunjen implements AranzmanStanje {
     Rezervacija.sortiraj(kandidati, true);
 
     for (Rezervacija kandidat : kandidati) {
-      boolean mozePostatiAktivna = aranzman.obavijestiRezervacijaPostajeAktivna(kandidat);
+      boolean mozePostatiAktivna = aranzman.dajAgenciju().rezervacijaMozePostatiAktivna(kandidat);
       if (mozePostatiAktivna) {
         kandidat.aktiviraj();
         if (kandidat.jeAktivna()) {
@@ -112,31 +106,6 @@ public class AranzmanPopunjen implements AranzmanStanje {
   @Override
   public String dajNaziv() {
     return "Popunjen";
-  }
-
-  private boolean korisnikImaAktivnuRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
-    List<Rezervacija> rezervacije = aranzman.aktivneRezervacije();
-    return rezervacije.stream()
-        .anyMatch(e -> e.korisnik().equals(rezervacija.korisnik()));
-  }
-
-  private Rezervacija dajRezervacijuKorisnika(Aranzman aranzman, Korisnik korisnik) {
-    List<Rezervacija> rezervacije = aranzman.aktivneRezervacije();
-    Rezervacija rezervacija = rezervacije.stream()
-        .filter(e -> e.korisnik().equals(korisnik))
-        .findFirst().orElse(null);
-
-    if (rezervacija == null) {
-      rezervacije = new ArrayList<>();
-      rezervacije.addAll(aranzman.rezervacijeNaCekanju());
-      rezervacije.addAll(aranzman.odgodjeneRezervacije());
-      rezervacija = rezervacije.stream()
-          .filter(e -> e.korisnik().equals(korisnik))
-          .min(Comparator.comparing(Rezervacija::vrijemePrijema))
-          .orElse(null);
-    }
-
-    return rezervacija;
   }
 
 }

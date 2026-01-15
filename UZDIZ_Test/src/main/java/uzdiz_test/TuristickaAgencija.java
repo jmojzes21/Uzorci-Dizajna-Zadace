@@ -61,7 +61,7 @@ public class TuristickaAgencija {
     } catch (InterruptedException ignored) {}
   }
 
-  public void pokreni() throws Exception {
+  public void pokreni(List<String> args) throws Exception {
 
     readProperties();
 
@@ -73,8 +73,11 @@ public class TuristickaAgencija {
     String zadaca = properties.getProperty("ZADACA_DATOTEKA");
     String wdir = properties.getProperty("RADNI_DIREKTORIJ");
 
-    var builder = new ProcessBuilder("java", "-Dfile.encoding=UTF-8", "-Dsun.stdout.encoding=UTF-8", "-jar",
-        zadaca, "--ta", "aranzmani.csv", "--rta", "rezervacije.csv");
+    var processArgs = new ArrayList<String>();
+    processArgs.addAll(List.of("java", "-Dfile.encoding=UTF-8", "-Dsun.stdout.encoding=UTF-8", "-jar", zadaca));
+    processArgs.addAll(args);
+
+    var builder = new ProcessBuilder(processArgs);
     builder.directory(new File(wdir));
     process = builder.start();
 

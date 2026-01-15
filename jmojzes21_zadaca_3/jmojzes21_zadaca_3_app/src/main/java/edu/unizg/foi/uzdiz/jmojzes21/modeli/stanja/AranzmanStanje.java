@@ -4,21 +4,41 @@ import edu.unizg.foi.uzdiz.jmojzes21.modeli.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Aranzman.StanjeId;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
+import java.util.List;
 
-public interface AranzmanStanje {
+public abstract class AranzmanStanje {
 
-  void zaprimiRezervaciju(Aranzman aranzman, Rezervacija rezervacija) throws Exception;
+  public abstract void zaprimiRezervaciju(Aranzman aranzman, Rezervacija rezervacija);
 
-  void aktiviraj(Aranzman aranzman) throws Exception;
+  public abstract void aktiviraj(Aranzman aranzman);
 
-  void otkaziRezervaciju(Aranzman aranzman, Korisnik korisnik) throws Exception;
+  public abstract void otkaziRezervaciju(Aranzman aranzman, Korisnik korisnik);
 
-  void aktivirajRezervaciju(Aranzman aranzman, Rezervacija rezervacija);
+  public abstract void aktivirajRezervaciju(Aranzman aranzman, Rezervacija rezervacija);
 
-  void provjeriStanje(Aranzman aranzman);
+  public abstract void provjeriStanje(Aranzman aranzman);
 
-  StanjeId dajId();
+  public abstract StanjeId dajId();
 
-  String dajNaziv();
+  public abstract String dajNaziv();
+
+  public Rezervacija dajRezervacijuKorisnika(Aranzman aranzman, Korisnik korisnik,
+      List<Rezervacija.StanjeId> prioritet) {
+    var rezervacije = aranzman.rezervacije().stream()
+        .filter(e -> e.korisnik().equals(korisnik))
+        .toList();
+
+    for (Rezervacija.StanjeId stanjeId : prioritet) {
+      Rezervacija r = rezervacije.stream()
+          .filter(e -> e.idStanja() == stanjeId)
+          .findFirst().orElse(null);
+
+      if (r != null) {
+        return r;
+      }
+    }
+
+    return null;
+  }
 
 }

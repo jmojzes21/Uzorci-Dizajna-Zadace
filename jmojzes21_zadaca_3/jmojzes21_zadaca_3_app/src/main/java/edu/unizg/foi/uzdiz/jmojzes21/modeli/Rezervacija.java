@@ -50,12 +50,6 @@ public class Rezervacija extends PutovanjeComponent implements RezervacijaObserv
   }
 
   @Override
-  public boolean kadaRezervacijaPostajeAktivna(Rezervacija rezervacija) {
-    if (oznakaAranzmana == rezervacija.oznakaAranzmana) {return true;}
-    return stanje.kadaRezervacijaPostajeAktivna(this, rezervacija);
-  }
-
-  @Override
   public void kadaRezervacijaPostalaAktivna(Rezervacija aktivirana) {
     if (oznakaAranzmana == aktivirana.oznakaAranzmana) {return;}
     stanje.kadaRezervacijaPostalaAktivna(this, aktivirana);

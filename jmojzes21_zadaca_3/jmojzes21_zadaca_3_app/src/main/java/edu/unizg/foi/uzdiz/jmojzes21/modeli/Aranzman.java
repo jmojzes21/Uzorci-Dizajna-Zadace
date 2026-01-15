@@ -71,11 +71,11 @@ public class Aranzman extends PutovanjeComposite implements RezervacijaSubject, 
     postaviStanje(new AranzmanUPripremi());
   }
 
-  public void zaprimiRezervaciju(Rezervacija rezervacija) throws Exception {
+  public void zaprimiRezervaciju(Rezervacija rezervacija) {
     stanje.zaprimiRezervaciju(this, rezervacija);
   }
 
-  public void otkaziRezervaciju(Korisnik korisnik) throws Exception {
+  public void otkaziRezervaciju(Korisnik korisnik) {
     stanje.otkaziRezervaciju(this, korisnik);
   }
 
@@ -83,15 +83,15 @@ public class Aranzman extends PutovanjeComposite implements RezervacijaSubject, 
     stanje.aktivirajRezervaciju(this, rezervacija);
   }
 
-  public void aktiviraj() throws Exception {
+  public void aktiviraj() {
     stanje.aktiviraj(this);
   }
 
-  public void otkazi() throws Exception {
+  public void otkazi() {
 
     if (stanje instanceof AranzmanOtkazan) {
       String opis = String.format("Nije moguće otkazati aranžman %d jer je on već otkazan.", oznaka);
-      throw new Exception(opis);
+      throw new RuntimeException(opis);
     }
 
     List<Rezervacija> rezervacije = rezervacije();
@@ -106,17 +106,6 @@ public class Aranzman extends PutovanjeComposite implements RezervacijaSubject, 
 
   public void provjeriStanje() {
     stanje.provjeriStanje(this);
-  }
-
-  @Override
-  public boolean kadaRezervacijaPostajeAktivna(Rezervacija rezervacija) {
-    List<Rezervacija> rezervacije = aktivneRezervacije();
-    for (Rezervacija r : rezervacije) {
-      if (!r.kadaRezervacijaPostajeAktivna(rezervacija)) {
-        return false;
-      }
-    }
-    return true;
   }
 
   @Override
@@ -147,15 +136,6 @@ public class Aranzman extends PutovanjeComposite implements RezervacijaSubject, 
     promatraci.remove(promatrac);
   }
 
-  @Override
-  public boolean obavijestiRezervacijaPostajeAktivna(Rezervacija rezervacija) {
-    for (var promatrac : promatraci) {
-      if (!promatrac.kadaRezervacijaPostajeAktivna(rezervacija)) {
-        return false;
-      }
-    }
-    return true;
-  }
 
   @Override
   public void obavijestiRezervacijaPostalaAktivna(Rezervacija aktivirana) {
@@ -247,6 +227,10 @@ public class Aranzman extends PutovanjeComposite implements RezervacijaSubject, 
         .map(e -> (Rezervacija) e)
         .filter(e -> e.jeAktivna())
         .count());
+  }
+
+  public TuristickaAgencija dajAgenciju() {
+    return (TuristickaAgencija) dajRoditelja();
   }
 
   /**

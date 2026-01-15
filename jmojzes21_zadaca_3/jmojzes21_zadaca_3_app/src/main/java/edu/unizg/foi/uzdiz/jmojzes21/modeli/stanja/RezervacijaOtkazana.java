@@ -21,11 +21,6 @@ public class RezervacijaOtkazana implements RezervacijaStanje {
   public void otkazi(Rezervacija rezervacija) {}
 
   @Override
-  public boolean kadaRezervacijaPostajeAktivna(Rezervacija trenutna, Rezervacija postajeAktivna) {
-    return true;
-  }
-
-  @Override
   public void kadaRezervacijaPostalaAktivna(Rezervacija trenutna, Rezervacija aktivirana) {}
 
   @Override

@@ -32,25 +32,6 @@ public class RezervacijaAktivna implements RezervacijaStanje {
   }
 
   @Override
-  public boolean kadaRezervacijaPostajeAktivna(Rezervacija trenutna, Rezervacija postajeAktivna) {
-
-    if (trenutna.korisnik().equals(postajeAktivna.korisnik())) {
-
-      Aranzman aranzman1 = trenutna.dajAranzman();
-      Aranzman aranzman2 = postajeAktivna.dajAranzman();
-
-      if (aranzman1.preklapaSe(aranzman2)) {
-        if (postajeAktivna.vrijemePrijema().isAfter(trenutna.vrijemePrijema())) {
-          return false;
-        }
-      }
-
-    }
-
-    return true;
-  }
-
-  @Override
   public void kadaRezervacijaPostalaAktivna(Rezervacija rezervacija, Rezervacija aktivirana) {
 
     if (rezervacija.korisnik().equals(aktivirana.korisnik())) {
