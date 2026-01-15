@@ -3,24 +3,24 @@ package edu.unizg.foi.uzdiz.jmojzes21.modeli.stanja;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija.StanjeId;
 
-public interface RezervacijaStanje {
+public abstract class RezervacijaStanje {
 
-  void zaprimi(Rezervacija rezervacija);
+  public void zaprimi(Rezervacija rezervacija) {}
 
-  void aktiviraj(Rezervacija rezervacija);
+  public void aktiviraj(Rezervacija rezervacija) {}
 
-  void staviNaCekanje(Rezervacija rezervacija);
+  public void staviNaCekanje(Rezervacija rezervacija) {}
 
-  void odgodi(Rezervacija rezervacija);
+  public void odgodi(Rezervacija rezervacija) {}
 
-  void otkazi(Rezervacija rezervacija);
+  public void otkazi(Rezervacija rezervacija) {}
 
-  void kadaRezervacijaPostalaAktivna(Rezervacija trenutna, Rezervacija aktivirana);
+  public void kadaRezervacijaPostalaAktivna(Rezervacija trenutna, Rezervacija aktivirana) {}
 
-  void kadaRezervacijaPostalaOtkazana(Rezervacija trenutna, Rezervacija otkazana);
+  public void kadaRezervacijaPostalaOtkazana(Rezervacija trenutna, Rezervacija otkazana) {}
 
-  StanjeId dajId();
+  public abstract StanjeId dajId();
 
-  String dajNaziv();
+  public abstract String dajNaziv();
 
 }

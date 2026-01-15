@@ -5,7 +5,7 @@ import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija.StanjeId;
 import java.time.LocalDateTime;
 
-public class RezervacijaOdgodjena implements RezervacijaStanje {
+public class RezervacijaOdgodjena extends RezervacijaStanje {
 
   @Override
   public void zaprimi(Rezervacija rezervacija) {
@@ -22,17 +22,12 @@ public class RezervacijaOdgodjena implements RezervacijaStanje {
     rezervacija.postaviStanje(new RezervacijaNaCekanju());
   }
 
-  @Override
-  public void odgodi(Rezervacija rezervacija) {}
 
   @Override
   public void otkazi(Rezervacija rezervacija) {
     rezervacija.setVrijemeOtkaza(LocalDateTime.now());
     rezervacija.postaviStanje(new RezervacijaOtkazana());
   }
-
-  @Override
-  public void kadaRezervacijaPostalaAktivna(Rezervacija trenutna, Rezervacija aktivirana) {}
 
   @Override
   public void kadaRezervacijaPostalaOtkazana(Rezervacija trenutna, Rezervacija otkazana) {

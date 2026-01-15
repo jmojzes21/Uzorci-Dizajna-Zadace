@@ -1,30 +1,8 @@
 package edu.unizg.foi.uzdiz.jmojzes21.modeli.stanja;
 
-import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija.StanjeId;
 
-public class RezervacijaOtkazana implements RezervacijaStanje {
-
-  @Override
-  public void zaprimi(Rezervacija rezervacija) {}
-
-  @Override
-  public void aktiviraj(Rezervacija rezervacija) {}
-
-  @Override
-  public void staviNaCekanje(Rezervacija rezervacija) {}
-
-  @Override
-  public void odgodi(Rezervacija rezervacija) {}
-
-  @Override
-  public void otkazi(Rezervacija rezervacija) {}
-
-  @Override
-  public void kadaRezervacijaPostalaAktivna(Rezervacija trenutna, Rezervacija aktivirana) {}
-
-  @Override
-  public void kadaRezervacijaPostalaOtkazana(Rezervacija trenutna, Rezervacija otkazana) {}
+public class RezervacijaOtkazana extends RezervacijaStanje {
 
   @Override
   public StanjeId dajId() {
