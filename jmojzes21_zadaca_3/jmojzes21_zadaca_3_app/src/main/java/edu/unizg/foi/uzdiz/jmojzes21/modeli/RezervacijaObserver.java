@@ -2,8 +2,12 @@ package edu.unizg.foi.uzdiz.jmojzes21.modeli;
 
 public interface RezervacijaObserver {
 
-  void kadaRezervacijaPostalaAktivna(Rezervacija aktivirana);
+  default void kadaRezervacijaPostalaAktivna(Rezervacija aktivirana) {}
 
-  void kadaRezervacijaPostalaOtkazana(Rezervacija otkazana);
+  default void kadaRezervacijaPostalaOtkazana(Rezervacija otkazana) {}
+
+  default void kadaPromjenaStanjaAranzmana(Aranzman aranzman) {}
+
+  default void kadaPromjenaStanjaRezervacije(Rezervacija rezervacija) {}
 
 }
