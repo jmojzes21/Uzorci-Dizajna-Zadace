@@ -44,6 +44,18 @@ public class RezervacijeNullStrategyTest {
   // region Zaprimi rezervaciju
 
   @Test
+  public void primljeni_duplikat_aranzman_aktivan() {
+
+    agencija.izvrsiKomandu("DRTA Bruno Bruno 3 " + datumVrijeme("1.6.2025 10:00"));
+    // postaje odgođena
+
+    List<String> redci = rezervacijeAranzmana(agencija, "3");
+    postojiRedak(redci, "Bruno", "8:10", Rezervacija.aktivna);
+    postojiRedak(redci, "Bruno", "10:00", Rezervacija.odgodjena);
+
+  }
+
+  @Test
   public void preklapanje_1() {
 
     agencija.izvrsiKomandu("DRTA Bruno Bruno 4 " + datumVrijeme("2.6.2025 8:00"));

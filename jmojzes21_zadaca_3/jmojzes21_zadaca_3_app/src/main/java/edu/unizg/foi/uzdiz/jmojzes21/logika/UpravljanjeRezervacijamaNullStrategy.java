@@ -9,7 +9,7 @@ public class UpravljanjeRezervacijamaNullStrategy extends UpravljanjeRezervacija
   public boolean mozePostatiAktivna(TuristickaAgencija agencija, Rezervacija rezervacija) {
     return true;
   }
-
+  
   @Override
   public void kadaRezervacijaKorisnikaPostalaAktivna(TuristickaAgencija agencija, Rezervacija rezervacija,
       Rezervacija aktivirana) {}
