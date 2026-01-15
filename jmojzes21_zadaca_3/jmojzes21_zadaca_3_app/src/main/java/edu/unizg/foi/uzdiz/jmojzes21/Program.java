@@ -2,6 +2,10 @@ package edu.unizg.foi.uzdiz.jmojzes21;
 
 import edu.unizg.foi.uzdiz.jmojzes21.komande.IKomanda;
 import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaKreator;
+import edu.unizg.foi.uzdiz.jmojzes21.logika.UpravljanjeRezervacijamaJDRStrategy;
+import edu.unizg.foi.uzdiz.jmojzes21.logika.UpravljanjeRezervacijamaNullStrategy;
+import edu.unizg.foi.uzdiz.jmojzes21.logika.UpravljanjeRezervacijamaStrategy;
+import edu.unizg.foi.uzdiz.jmojzes21.logika.UpravljanjeRezervacijamaVDRStrategy;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.TuristickaAgencija;
@@ -40,6 +44,11 @@ public class Program {
 
     String putanjaAranzmani = opcije.get("--ta");
     String putanjaRezervacije = opcije.get("--rta");
+    boolean jdr = opcije.containsKey("--jdr");
+    boolean vdr = opcije.containsKey("--vdr");
+
+    var upravljanjeRezervacijama = dajUpravljanjeRezervacijamaStrategy(jdr, vdr);
+    agencija.setUpravljanjeRezervacijama(upravljanjeRezervacijama);
 
     if (putanjaAranzmani != null) {
       try {
@@ -65,6 +74,12 @@ public class Program {
 
     obradiKomandeKorisnika();
 
+  }
+
+  private UpravljanjeRezervacijamaStrategy dajUpravljanjeRezervacijamaStrategy(boolean jdr, boolean vdr) {
+    if (jdr) {return new UpravljanjeRezervacijamaJDRStrategy();}
+    if (vdr) {return new UpravljanjeRezervacijamaVDRStrategy();}
+    return new UpravljanjeRezervacijamaNullStrategy();
   }
 
   // endregion
@@ -161,14 +176,20 @@ public class Program {
     for (var opcija : opcije.keySet()) {
       switch (opcija) {
         case "--ta":
-          rezultat.put("--ta", citacOpcija.dajVrijednost(opcija));
-          break;
         case "--rta":
-          rezultat.put("--rta", citacOpcija.dajVrijednost(opcija));
+          rezultat.put(opcija, citacOpcija.dajVrijednost(opcija));
+          break;
+        case "--jdr":
+        case "--vdr":
+          rezultat.put(opcija, null);
           break;
         default:
           throw new Exception(String.format("Nepoznata opcija %s", opcija));
       }
+    }
+
+    if (rezultat.containsKey("--jdr") && rezultat.containsKey("--vdr")) {
+      throw new Exception("Nije moguće koristiti --jdr i --vdr istovremeno!");
     }
 
     return rezultat;

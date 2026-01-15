@@ -1,5 +1,6 @@
 package edu.unizg.foi.uzdiz.jmojzes21.modeli;
 
+import edu.unizg.foi.uzdiz.jmojzes21.logika.UpravljanjeRezervacijamaStrategy;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.statistika.StatistikaAranzmana;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,6 +11,8 @@ import java.util.List;
  * Turistička agencija.
  */
 public class TuristickaAgencija extends PutovanjeComposite {
+
+  private UpravljanjeRezervacijamaStrategy upravljanjeRezervacijama;
 
   @Override
   protected void dodaj(PutovanjeComponent r) {
@@ -216,4 +219,12 @@ public class TuristickaAgencija extends PutovanjeComposite {
   }
 
 
+  public UpravljanjeRezervacijamaStrategy upravljanjeRezervacijama() {
+    return upravljanjeRezervacijama;
+  }
+
+  public void setUpravljanjeRezervacijama(
+      UpravljanjeRezervacijamaStrategy upravljanjeRezervacijama) {
+    this.upravljanjeRezervacijama = upravljanjeRezervacijama;
+  }
 }
