@@ -22,17 +22,21 @@ public class KomandaUP implements IKomanda {
   }
 
   @Override
-  public void izvrsi(TuristickaAgencija agencija) throws Exception {
+  public void izvrsi(TuristickaAgencija agencija) {
 
     Path putanja = Path.of(this.putanja);
 
-    switch (odabir) {
-      case "A":
-        ucitajAranzmane(agencija, putanja);
-        break;
-      case "R":
-        ucitajRezervacije(agencija, putanja);
-        break;
+    try {
+      switch (odabir) {
+        case "A":
+          ucitajAranzmane(agencija, putanja);
+          break;
+        case "R":
+          ucitajRezervacije(agencija, putanja);
+          break;
+      }
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
     }
 
   }

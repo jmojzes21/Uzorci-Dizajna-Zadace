@@ -96,7 +96,7 @@ public class Program {
         try {
           obradiKomanduKorisnika(linija.trim());
         } catch (NepoznataKomanda e) {
-          System.out.println(e.getMessage());
+          System.out.println(e.getMessage() + " Komande:");
           pregledKomandi();
         } catch (NeispravnaKomandaGreska e) {
           System.out.println("Neispravna komanda! Ispravan format: " + e.getMessage());
@@ -130,20 +130,20 @@ public class Program {
   }
 
   private void pregledKomandi() {
-    System.out.println("Komande:");
-    System.out.println("ITAK - Pregled svih aranžmana, ITAK [od do]");
-    System.out.println("ITAP - Pregled pojedinog aranžmana, ITAP oznaka");
-    System.out.println("IRTA - Pregled rezervacija za aranžman, IRTA oznaka [PA|Č|O|OD]");
-    System.out.println("IRO  - Pregled rezervacija za korisnika, IRO ime prezime");
-    System.out.println("DRTA - Dodaj rezervaciju, DRTA ime prezime oznaka datum vrijeme");
-    System.out.println("ORTA - Otkaži rezervacije, ORTA ime prezime oznaka");
-    System.out.println("OTA  - Otkaži turistički aranžman, OTA oznaka");
-    System.out.println("IP   - Postavi način sortiranja podataka, IP [N|S]");
-    System.out.println("BP   - Brisanje podataka, BP [A|R]");
-    System.out.println("UP   - Učitavanje podataka, UP [A|R] nazivDatoteke");
-    System.out.println("ITAS - Ispis statističkih podataka, ITAS [od do]");
-    System.out.println("POTI - Postavi postavke tabličnog ispisa, POTI naziv vrijednost");
-    System.out.println("Q    - Izlaz");
+    System.out.println("ITAK [od do] - Pregled svih aranžmana");
+    System.out.println("ITAP oznaka - Pregled pojedinog aranžmana");
+    System.out.println("IRTA oznaka [PA|Č|O|OD] - Pregled rezervacija za aranžman");
+    System.out.println("IRO ime prezime - Pregled rezervacija za korisnika");
+    System.out.println("DRTA ime prezime oznaka datum vrijeme - Dodaj rezervaciju");
+    System.out.println("ORTA ime prezime oznaka - Otkaži rezervacije");
+    System.out.println("OTA oznaka - Otkaži turistički aranžman");
+    System.out.println("IP [N|S] - Postavi način sortiranja podataka");
+    System.out.println("BP [A|R] - Brisanje podataka");
+    System.out.println("UP [A|R] nazivDatoteke - Učitavanje podataka");
+    System.out.println("ITAS [od do] - Ispis statističkih podataka");
+    System.out.println("POTI naziv vrijednost - Postavi postavke tabličnog ispisa");
+    System.out.println("PPTAR [A|R] riječ - Pretraživanje aranžmana i rezervacija");
+    System.out.println("Q - Izlaz");
   }
 
   private void ispisiKomandu(String komanda) {

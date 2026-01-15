@@ -1,5 +1,6 @@
 package edu.unizg.foi.uzdiz.jmojzes21.modeli;
 
+import edu.unizg.foi.uzdiz.jmojzes21.logika.PutovanjeVisitor;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.stanja.RezervacijaNova;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.stanja.RezervacijaStanje;
 import java.time.LocalDateTime;
@@ -59,6 +60,11 @@ public class Rezervacija extends PutovanjeComponent implements RezervacijaObserv
   public void kadaRezervacijaPostalaOtkazana(Rezervacija otkazana) {
     if (oznakaAranzmana == otkazana.oznakaAranzmana) {return;}
     stanje.kadaRezervacijaPostalaOtkazana(this, otkazana);
+  }
+
+  @Override
+  public void prihvati(PutovanjeVisitor visitor) {
+    visitor.posjeti(this);
   }
 
   public RezervacijaStanje stanje() {

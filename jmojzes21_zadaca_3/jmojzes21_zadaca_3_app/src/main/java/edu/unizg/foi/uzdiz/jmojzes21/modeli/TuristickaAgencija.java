@@ -1,5 +1,6 @@
 package edu.unizg.foi.uzdiz.jmojzes21.modeli;
 
+import edu.unizg.foi.uzdiz.jmojzes21.logika.PutovanjeVisitor;
 import edu.unizg.foi.uzdiz.jmojzes21.logika.UpravljanjeRezervacijamaStrategy;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.statistika.StatistikaAranzmana;
 import java.time.LocalDate;
@@ -245,6 +246,11 @@ public class TuristickaAgencija extends PutovanjeComposite {
 
   }
 
+  @Override
+  public void prihvati(PutovanjeVisitor visitor) {
+    throw new RuntimeException(
+        getClass().getSimpleName() + " ne može prihvatiti " + visitor.getClass().getSimpleName());
+  }
 
   public UpravljanjeRezervacijamaStrategy upravljanjeRezervacijama() {
     return upravljanjeRezervacijama;

@@ -1,5 +1,6 @@
 package edu.unizg.foi.uzdiz.jmojzes21.modeli;
 
+import edu.unizg.foi.uzdiz.jmojzes21.logika.PutovanjeVisitor;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.stanja.AranzmanOtkazan;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.stanja.AranzmanStanje;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.stanja.AranzmanUPripremi;
@@ -149,6 +150,11 @@ public class Aranzman extends PutovanjeComposite implements RezervacijaSubject, 
     for (var promatrac : promatraci) {
       promatrac.kadaRezervacijaPostalaOtkazana(otkazana);
     }
+  }
+
+  @Override
+  public void prihvati(PutovanjeVisitor visitor) {
+    visitor.posjeti(this);
   }
 
   public AranzmanStanje stanje() {
