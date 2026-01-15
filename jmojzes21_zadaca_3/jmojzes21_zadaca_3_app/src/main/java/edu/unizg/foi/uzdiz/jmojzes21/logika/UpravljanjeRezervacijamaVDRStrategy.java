@@ -10,4 +10,8 @@ public class UpravljanjeRezervacijamaVDRStrategy extends UpravljanjeRezervacijam
     return true;
   }
 
+  @Override
+  public void kadaRezervacijaKorisnikaPostalaAktivna(TuristickaAgencija agencija, Rezervacija rezervacija,
+      Rezervacija aktivirana) {}
+
 }

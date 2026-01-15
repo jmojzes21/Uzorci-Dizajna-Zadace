@@ -29,4 +29,18 @@ public class UpravljanjeRezervacijamaJDRStrategy extends UpravljanjeRezervacijam
     return true;
   }
 
+  @Override
+  public void kadaRezervacijaKorisnikaPostalaAktivna(TuristickaAgencija agencija, Rezervacija rezervacija,
+      Rezervacija aktivirana) {
+
+    Aranzman aranzman1 = rezervacija.dajAranzman();
+    Aranzman aranzman2 = aktivirana.dajAranzman();
+
+    if (aranzman1.preklapaSe(aranzman2)) {
+      rezervacija.odgodi();
+      rezervacija.dajAranzman().provjeriStanje();
+    }
+
+  }
+
 }

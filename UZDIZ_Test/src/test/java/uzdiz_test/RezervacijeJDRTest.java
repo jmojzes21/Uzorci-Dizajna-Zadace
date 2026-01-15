@@ -1,9 +1,14 @@
 package uzdiz_test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static uzdiz_test.RezervacijeTestHelper.dajRedak;
+import static uzdiz_test.RezervacijeTestHelper.datum;
+import static uzdiz_test.RezervacijeTestHelper.datumVrijeme;
+import static uzdiz_test.RezervacijeTestHelper.nePostojiRedak;
+import static uzdiz_test.RezervacijeTestHelper.postojiRedak;
+import static uzdiz_test.RezervacijeTestHelper.provjeriStanjeAranzmana;
+import static uzdiz_test.RezervacijeTestHelper.rezervacijeAranzmana;
 
-import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -29,7 +34,10 @@ public class RezervacijeJDRTest {
 
   @BeforeEach
   public void prijeSvakoga() {
-    reset();
+    agencija.izvrsiKomandu("BP A");
+    agencija.izvrsiKomandu("UP A aranzmani.csv");
+    agencija.izvrsiKomandu("UP R rezervacije.csv");
+    agencija.readLines();
   }
 
   @AfterEach
@@ -150,9 +158,9 @@ public class RezervacijeJDRTest {
 
     agencija.izvrsiKomandu("OTA 1");
 
-    provjeriStanjeAranzmana("1", Aranzman.otkazan);
+    provjeriStanjeAranzmana(agencija, "1", Aranzman.otkazan);
 
-    List<String> redci = rezervacijeAranzmana("1");
+    List<String> redci = rezervacijeAranzmana(agencija, "1");
     postojiRedak(redci, "Bruno", Rezervacija.otkazana);
     nePostojiRedak(redci, Rezervacija.primljena);
 
@@ -221,22 +229,22 @@ public class RezervacijeJDRTest {
   @Test
   public void rezervacije_postaju_aktivne() {
 
-    List<String> redci = rezervacijeAranzmana("1");
+    List<String> redci = rezervacijeAranzmana(agencija, "1");
     postojiRedak(redci, Rezervacija.primljena);
     nePostojiRedak(redci, Rezervacija.aktivna);
 
     agencija.izvrsiKomandu("DRTA Zoran Zoran 1 " + datumVrijeme("2.6.2025 10:42"));
 
-    redci = rezervacijeAranzmana("1");
+    redci = rezervacijeAranzmana(agencija, "1");
     postojiRedak(redci, "Bruno", Rezervacija.aktivna);
     postojiRedak(redci, "Maja", Rezervacija.aktivna);
     postojiRedak(redci, "Zoran", Rezervacija.aktivna);
     nePostojiRedak(redci, Rezervacija.primljena);
-    provjeriStanjeAranzmana("1", Aranzman.aktivan);
+    provjeriStanjeAranzmana(agencija, "1", Aranzman.aktivan);
 
     agencija.izvrsiKomandu("DRTA Matej Matej 1 " + datumVrijeme("2.6.2025 11:00"));
 
-    redci = rezervacijeAranzmana("1");
+    redci = rezervacijeAranzmana(agencija, "1");
     postojiRedak(redci, "Matej", Rezervacija.aktivna);
 
   }
@@ -250,7 +258,7 @@ public class RezervacijeJDRTest {
     agencija.izvrsiKomandu("DRTA Bruno Bruno 5 " + datumVrijeme("1.7.2025 10:00"));
     // postaje odgođena
 
-    List<String> redci = rezervacijeAranzmana("5");
+    List<String> redci = rezervacijeAranzmana(agencija, "5");
     postojiRedak(redci, "Bruno", "8:00", Rezervacija.primljena);
     postojiRedak(redci, "Bruno", "10:00", Rezervacija.odgodjena);
     nePostojiRedak(redci, Rezervacija.aktivna);
@@ -263,12 +271,12 @@ public class RezervacijeJDRTest {
     agencija.izvrsiKomandu("DRTA Bruno Bruno 1 " + datumVrijeme("1.6.2025 10:00"));
     // postaje odgođena
 
-    List<String> redci = rezervacijeAranzmana("1");
+    List<String> redci = rezervacijeAranzmana(agencija, "1");
     postojiRedak(redci, "Bruno", "8:10", Rezervacija.primljena);
     postojiRedak(redci, "Bruno", "10:00", Rezervacija.odgodjena);
     nePostojiRedak(redci, Rezervacija.aktivna);
 
-    provjeriStanjeAranzmana("1", Aranzman.uPripremi);
+    provjeriStanjeAranzmana(agencija, "1", Aranzman.uPripremi);
 
   }
 
@@ -278,7 +286,7 @@ public class RezervacijeJDRTest {
     agencija.izvrsiKomandu("DRTA Bruno Bruno 3 " + datumVrijeme("1.6.2025 10:00"));
     // postaje odgođena
 
-    List<String> redci = rezervacijeAranzmana("3");
+    List<String> redci = rezervacijeAranzmana(agencija, "3");
     postojiRedak(redci, "Bruno", "8:10", Rezervacija.aktivna);
     postojiRedak(redci, "Bruno", "10:00", Rezervacija.odgodjena);
 
@@ -289,11 +297,11 @@ public class RezervacijeJDRTest {
 
     agencija.izvrsiKomandu("DRTA Darko Darko 10 " + datumVrijeme("2.8.2025 8:00"));
 
-    List<String> redci = rezervacijeAranzmana("10");
+    List<String> redci = rezervacijeAranzmana(agencija, "10");
     postojiRedak(redci, "Darko", Rezervacija.naCekanju);
     nePostojiRedak(redci, Rezervacija.primljena);
 
-    provjeriStanjeAranzmana("10", Aranzman.popunjen);
+    provjeriStanjeAranzmana(agencija, "10", Aranzman.popunjen);
 
   }
 
@@ -303,13 +311,13 @@ public class RezervacijeJDRTest {
     agencija.izvrsiKomandu("DRTA Bruno Bruno 4 " + datumVrijeme("2.6.2025 8:00"));
     // postaje odgođena
 
-    List<String> redci = rezervacijeAranzmana("4");
+    List<String> redci = rezervacijeAranzmana(agencija, "4");
     postojiRedak(redci, "Bruno", Rezervacija.odgodjena);
     postojiRedak(redci, Rezervacija.primljena);
     nePostojiRedak(redci, Rezervacija.aktivna);
 
     agencija.izvrsiKomandu("DRTA Nikola Nikola 4 " + datumVrijeme("2.6.2025 8:00"));
-    // rezervacije postaju aktivne
+    // postaje aktivna
 
     agencija.izvrsiKomandu("DRTA Matej Matej 4 " + datumVrijeme("2.6.2025 10:00"));
     // postaje odgođena
@@ -317,7 +325,7 @@ public class RezervacijeJDRTest {
     agencija.izvrsiKomandu("DRTA Zoran Zoran 4 " + datumVrijeme("2.6.2025 11:00"));
     // postaje odgođena
 
-    redci = rezervacijeAranzmana("4");
+    redci = rezervacijeAranzmana(agencija, "4");
     postojiRedak(redci, "Bruno", Rezervacija.odgodjena);
     postojiRedak(redci, "Matej", Rezervacija.odgodjena);
     postojiRedak(redci, "Zoran", Rezervacija.odgodjena);
@@ -332,7 +340,7 @@ public class RezervacijeJDRTest {
     agencija.izvrsiKomandu("OTA 1");
     agencija.izvrsiKomandu("DRTA Zoran Zoran 1 " + datumVrijeme("2.6.2025 10:00"));
 
-    List<String> redci = rezervacijeAranzmana("1");
+    List<String> redci = rezervacijeAranzmana(agencija, "1");
     nePostojiRedak(redci, "Zoran", Rezervacija.primljena);
     nePostojiRedak(redci, "Zoran", Rezervacija.aktivna);
 
@@ -347,7 +355,7 @@ public class RezervacijeJDRTest {
 
     agencija.izvrsiKomandu("ORTA Bruno Bruno 1");
 
-    List<String> redci = rezervacijeAranzmana("1");
+    List<String> redci = rezervacijeAranzmana(agencija, "1");
     postojiRedak(redci, "Bruno", Rezervacija.otkazana);
     postojiRedak(redci, Rezervacija.primljena);
 
@@ -361,7 +369,7 @@ public class RezervacijeJDRTest {
 
     agencija.izvrsiKomandu("ORTA Bruno Bruno 1");
 
-    List<String> redci = rezervacijeAranzmana("1");
+    List<String> redci = rezervacijeAranzmana(agencija, "1");
     postojiRedak(redci, "Bruno", "8:10", Rezervacija.otkazana);
     postojiRedak(redci, "Bruno", "10:00", Rezervacija.primljena);
 
@@ -372,7 +380,7 @@ public class RezervacijeJDRTest {
 
     agencija.izvrsiKomandu("ORTA Bruno Bruno 3");
 
-    List<String> redci = rezervacijeAranzmana("3");
+    List<String> redci = rezervacijeAranzmana(agencija, "3");
     postojiRedak(redci, "Bruno", Rezervacija.otkazana);
     postojiRedak(redci, "Maja", Rezervacija.aktivna);
 
@@ -382,16 +390,16 @@ public class RezervacijeJDRTest {
   public void otkazi_aktivnu_aranzman_postaje_u_pripremi() {
 
     agencija.izvrsiKomandu("DRTA Zoran Zoran 1 " + datumVrijeme("3.6.2025 10:00"));
-    provjeriStanjeAranzmana("1", Aranzman.aktivan);
+    provjeriStanjeAranzmana(agencija, "1", Aranzman.aktivan);
 
     agencija.izvrsiKomandu("ORTA Zoran Zoran 1");
 
-    List<String> redci = rezervacijeAranzmana("1");
+    List<String> redci = rezervacijeAranzmana(agencija, "1");
     postojiRedak(redci, "Zoran", Rezervacija.otkazana);
     postojiRedak(redci, "Maja", Rezervacija.primljena);
     nePostojiRedak(redci, Rezervacija.aktivna);
 
-    provjeriStanjeAranzmana("1", Aranzman.uPripremi);
+    provjeriStanjeAranzmana(agencija, "1", Aranzman.uPripremi);
   }
 
   @Test
@@ -402,7 +410,7 @@ public class RezervacijeJDRTest {
 
     agencija.izvrsiKomandu("ORTA Bruno Bruno 3");
 
-    List<String> redci = rezervacijeAranzmana("3");
+    List<String> redci = rezervacijeAranzmana(agencija, "3");
     postojiRedak(redci, "Bruno", "8:10", Rezervacija.otkazana);
     postojiRedak(redci, "Bruno", "10:00", Rezervacija.aktivna);
     nePostojiRedak(redci, "Bruno", Rezervacija.odgodjena);
@@ -415,12 +423,12 @@ public class RezervacijeJDRTest {
     agencija.izvrsiKomandu("DRTA Darko Darko 10 " + datumVrijeme("2.8.2025 8:00"));
     // na cekanju
 
-    List<String> redci = rezervacijeAranzmana("10");
+    List<String> redci = rezervacijeAranzmana(agencija, "10");
     postojiRedak(redci, "Darko", Rezervacija.naCekanju);
 
     agencija.izvrsiKomandu("ORTA Bruno Bruno 10");
 
-    redci = rezervacijeAranzmana("10");
+    redci = rezervacijeAranzmana(agencija, "10");
     postojiRedak(redci, "Bruno", Rezervacija.otkazana);
     postojiRedak(redci, "Darko", Rezervacija.aktivna);
 
@@ -470,12 +478,12 @@ public class RezervacijeJDRTest {
     postojiRedak(redci, "Putovanje 15", Rezervacija.odgodjena);
     postojiRedak(redci, "Putovanje 17", Rezervacija.odgodjena);
 
-    redci = rezervacijeAranzmana("16");
+    redci = rezervacijeAranzmana(agencija, "16");
     postojiRedak(redci, "Matej", Rezervacija.naCekanju);
 
     agencija.izvrsiKomandu("ORTA Bruno Bruno 16");
 
-    redci = rezervacijeAranzmana("16");
+    redci = rezervacijeAranzmana(agencija, "16");
     postojiRedak(redci, "Bruno", Rezervacija.otkazana);
     postojiRedak(redci, "Matej", Rezervacija.aktivna);
 
@@ -491,7 +499,7 @@ public class RezervacijeJDRTest {
     agencija.izvrsiKomandu("DRTA Nikola Nikola 10 " + datumVrijeme("2.8.2025 8:00"));
     agencija.izvrsiKomandu("ORTA Nikola Nikola 10");
 
-    List<String> redci = rezervacijeAranzmana("10");
+    List<String> redci = rezervacijeAranzmana(agencija, "10");
     postojiRedak(redci, "Nikola", Rezervacija.otkazana);
 
   }
@@ -504,7 +512,7 @@ public class RezervacijeJDRTest {
 
     agencija.izvrsiKomandu("ORTA Bruno Bruno 4");
 
-    List<String> redci = rezervacijeAranzmana("4");
+    List<String> redci = rezervacijeAranzmana(agencija, "4");
     postojiRedak(redci, "Bruno", Rezervacija.otkazana);
 
   }
@@ -523,7 +531,7 @@ public class RezervacijeJDRTest {
 
     agencija.izvrsiKomandu("ORTA Bruno Bruno 15");
 
-    List<String> redci = rezervacijeAranzmana("16");
+    List<String> redci = rezervacijeAranzmana(agencija, "16");
     nePostojiRedak(redci, "Bruno", Rezervacija.aktivna);
 
   }
@@ -547,67 +555,6 @@ public class RezervacijeJDRTest {
     postojiRedak(redci, "Putovanje 15", Rezervacija.aktivna);
     postojiRedak(redci, "Putovanje 17", Rezervacija.aktivna);
 
-  }
-
-  // endregion
-
-  // region Ostalo
-
-  private List<String> rezervacijeAranzmana(String oznaka) {
-    return agencija.izvrsiKomandu("IRTA " + oznaka + " PAČODO");
-  }
-
-  private int dajRedak(List<String> redci, Object... elementi) {
-    var redak = redci.stream().filter(e -> redakSadrziElemente(e, elementi)).findFirst().orElse(null);
-    if (redak == null) {return -1;}
-    return redci.indexOf(redak);
-  }
-
-  private void postojiRedak(List<String> redci, Object... elementi) {
-    assertTrue(redci.stream().anyMatch(e -> redakSadrziElemente(e, elementi)),
-        () -> "Ne postoji redak: " + String.join(", ", Arrays.stream(elementi).map(e -> e.toString()).toList()));
-  }
-
-  private void nePostojiRedak(List<String> redci, Object... elementi) {
-    assertFalse(redci.stream().anyMatch(e -> redakSadrziElemente(e, elementi)),
-        () -> "Redak ne smije postojati: " + String.join(", ",
-            Arrays.stream(elementi).map(e -> e.toString()).toList()));
-  }
-
-  private boolean redakSadrziElemente(String redak, Object... elementi) {
-    return Arrays.stream(elementi).allMatch(e -> switch (e) {
-      case String tekst -> redak.contains(tekst);
-      case MultiValues mv -> mv.contains(redak.toLowerCase());
-      default -> true;
-    });
-  }
-
-  private void provjeriStanjeAranzmana(String oznaka, Aranzman aranzman) {
-    List<String> redci = agencija.izvrsiKomandu("ITAP " + oznaka);
-
-    assertTrue(redci.stream().anyMatch(e -> {
-      String redak = e.trim().toLowerCase();
-      if (redak.startsWith("status")) {
-        return aranzman.contains(redak);
-      }
-      return false;
-    }), () -> "Turistički aranžman treba biti u stanju " + aranzman.toString());
-
-  }
-
-  private String datum(String datum) {
-    return datum;
-  }
-
-  private String datumVrijeme(String vrijeme) {
-    return vrijeme;
-  }
-
-  private void reset() {
-    agencija.izvrsiKomandu("BP A");
-    agencija.izvrsiKomandu("UP A aranzmani.csv");
-    agencija.izvrsiKomandu("UP R rezervacije.csv");
-    agencija.readLines();
   }
 
   // endregion

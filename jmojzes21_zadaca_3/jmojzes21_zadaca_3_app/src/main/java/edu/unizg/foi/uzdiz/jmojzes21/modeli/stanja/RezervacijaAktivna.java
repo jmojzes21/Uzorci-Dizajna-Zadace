@@ -1,6 +1,5 @@
 package edu.unizg.foi.uzdiz.jmojzes21.modeli.stanja;
 
-import edu.unizg.foi.uzdiz.jmojzes21.modeli.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija.StanjeId;
 import java.time.LocalDateTime;
@@ -30,16 +29,10 @@ public class RezervacijaAktivna extends RezervacijaStanje {
 
   @Override
   public void kadaRezervacijaPostalaAktivna(Rezervacija rezervacija, Rezervacija aktivirana) {
-
     if (rezervacija.korisnik().equals(aktivirana.korisnik())) {
-
-      Aranzman aranzman1 = rezervacija.dajAranzman();
-      Aranzman aranzman2 = aktivirana.dajAranzman();
-
-      if (aranzman1.preklapaSe(aranzman2)) {
-        rezervacija.odgodi();
-        rezervacija.dajAranzman().provjeriStanje();
-      }
+      var agencija = rezervacija.dajAranzman().dajAgenciju();
+      var ur = agencija.upravljanjeRezervacijama();
+      ur.kadaRezervacijaKorisnikaPostalaAktivna(agencija, rezervacija, aktivirana);
     }
   }
 

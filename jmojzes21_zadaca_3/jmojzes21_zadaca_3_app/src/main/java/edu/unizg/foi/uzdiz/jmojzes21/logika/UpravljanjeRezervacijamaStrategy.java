@@ -4,7 +4,10 @@ import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.TuristickaAgencija;
 
 public abstract class UpravljanjeRezervacijamaStrategy {
-  
+
   public abstract boolean mozePostatiAktivna(TuristickaAgencija agencija, Rezervacija rezervacija);
+
+  public abstract void kadaRezervacijaKorisnikaPostalaAktivna(TuristickaAgencija agencija, Rezervacija rezervacija,
+      Rezervacija aktivirana);
 
 }
