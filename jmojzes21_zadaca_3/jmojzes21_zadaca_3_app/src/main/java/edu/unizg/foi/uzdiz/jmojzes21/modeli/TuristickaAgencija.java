@@ -184,7 +184,7 @@ public class TuristickaAgencija extends PutovanjeComposite {
    * @param oznaka  oznaka aranžmana
    * @throws Exception otkazivanje rezervacije nije uspjelo
    */
-  public void otkaziRezervaciju(String ime, String prezime, int oznaka) throws Exception {
+  public void otkaziRezervaciju(String ime, String prezime, int oznaka) {
 
     Aranzman aranzman = dajAranzman(oznaka);
     if (aranzman == null) {
