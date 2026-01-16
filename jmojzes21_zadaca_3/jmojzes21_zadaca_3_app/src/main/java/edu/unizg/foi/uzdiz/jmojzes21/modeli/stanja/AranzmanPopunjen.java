@@ -58,7 +58,7 @@ public class AranzmanPopunjen extends AranzmanStanje {
   private void otkaziAktivnu(Aranzman aranzman, Rezervacija rezervacija) {
 
     rezervacija.otkazi();
-    aranzman.obavijestiRezervacijaPostalaOtkazana(rezervacija);
+    aranzman.obavijestiRezervacijaNijeViseAktivna(rezervacija);
 
     List<Rezervacija> kandidati = new ArrayList<>();
     kandidati.addAll(aranzman.rezervacijeNaCekanju());

@@ -102,7 +102,7 @@ public class Aranzman extends PutovanjeComposite implements RezervacijaSubject, 
     List<Rezervacija> rezervacije = rezervacije();
     for (var r : rezervacije) {
       r.otkazi();
-      obavijestiRezervacijaPostalaOtkazana(r);
+      obavijestiRezervacijaNijeViseAktivna(r);
     }
 
     postaviStanje(new AranzmanOtkazan());
@@ -122,10 +122,10 @@ public class Aranzman extends PutovanjeComposite implements RezervacijaSubject, 
   }
 
   @Override
-  public void kadaRezervacijaPostalaOtkazana(Rezervacija otkazana) {
+  public void kadaRezervacijaNijeViseAktivna(Rezervacija rezervacija) {
     List<Rezervacija> rezervacije = odgodjeneRezervacije();
     for (Rezervacija r : rezervacije) {
-      r.kadaRezervacijaPostalaOtkazana(otkazana);
+      r.kadaRezervacijaNijeViseAktivna(rezervacija);
     }
   }
 
@@ -154,9 +154,9 @@ public class Aranzman extends PutovanjeComposite implements RezervacijaSubject, 
   }
 
   @Override
-  public void obavijestiRezervacijaPostalaOtkazana(Rezervacija otkazana) {
+  public void obavijestiRezervacijaNijeViseAktivna(Rezervacija rezervacija) {
     for (var promatrac : promatraci) {
-      promatrac.kadaRezervacijaPostalaOtkazana(otkazana);
+      promatrac.kadaRezervacijaNijeViseAktivna(rezervacija);
     }
   }
 

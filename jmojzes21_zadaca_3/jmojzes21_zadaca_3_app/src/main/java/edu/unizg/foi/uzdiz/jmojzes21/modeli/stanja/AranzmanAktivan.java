@@ -63,7 +63,7 @@ public class AranzmanAktivan extends AranzmanStanje {
   private void otkaziAktivnu(Aranzman aranzman, Rezervacija rezervacija) {
 
     rezervacija.otkazi();
-    aranzman.obavijestiRezervacijaPostalaOtkazana(rezervacija);
+    aranzman.obavijestiRezervacijaNijeViseAktivna(rezervacija);
 
     Rezervacija odgodjena = dajRezervacijuKorisnika(aranzman, rezervacija.korisnik(),
         List.of(Rezervacija.StanjeId.odgodjena));

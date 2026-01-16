@@ -12,7 +12,7 @@ public interface RezervacijaSubject {
 
   void obavijestiRezervacijaPostalaAktivna(Rezervacija aktivirana);
 
-  void obavijestiRezervacijaPostalaOtkazana(Rezervacija otkazana);
+  void obavijestiRezervacijaNijeViseAktivna(Rezervacija rezervacija);
 
   void obavijestiPromjenuStanjaAranzmana(Aranzman aranzman);
 

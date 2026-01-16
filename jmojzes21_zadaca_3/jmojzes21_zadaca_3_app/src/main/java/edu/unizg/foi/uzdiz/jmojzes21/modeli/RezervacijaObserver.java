@@ -4,7 +4,7 @@ public interface RezervacijaObserver {
 
   default void kadaRezervacijaPostalaAktivna(Rezervacija aktivirana) {}
 
-  default void kadaRezervacijaPostalaOtkazana(Rezervacija otkazana) {}
+  default void kadaRezervacijaNijeViseAktivna(Rezervacija rezervacija) {}
 
   default void kadaPromjenaStanjaAranzmana(Aranzman aranzman) {}
 

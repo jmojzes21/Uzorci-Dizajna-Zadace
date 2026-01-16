@@ -17,7 +17,7 @@ public abstract class RezervacijaStanje {
 
   public void kadaRezervacijaPostalaAktivna(Rezervacija trenutna, Rezervacija aktivirana) {}
 
-  public void kadaRezervacijaPostalaOtkazana(Rezervacija trenutna, Rezervacija otkazana) {}
+  public void kadaRezervacijaNijeViseAktivna(Rezervacija trenutna, Rezervacija nijeAktivna) {}
 
   public abstract StanjeId dajId();
 

@@ -30,9 +30,9 @@ public class RezervacijaOdgodjena extends RezervacijaStanje {
   }
 
   @Override
-  public void kadaRezervacijaPostalaOtkazana(Rezervacija trenutna, Rezervacija otkazana) {
+  public void kadaRezervacijaNijeViseAktivna(Rezervacija trenutna, Rezervacija nijeAktivna) {
 
-    if (trenutna.korisnik().equals(otkazana.korisnik())) {
+    if (trenutna.korisnik().equals(nijeAktivna.korisnik())) {
       Aranzman aranzman = trenutna.dajAranzman();
       aranzman.aktivirajRezervaciju(trenutna);
     }
