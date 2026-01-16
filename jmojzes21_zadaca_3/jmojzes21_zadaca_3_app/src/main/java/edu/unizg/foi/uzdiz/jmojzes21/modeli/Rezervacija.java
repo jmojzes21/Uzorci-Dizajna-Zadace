@@ -73,6 +73,7 @@ public class Rezervacija extends PutovanjeComponent implements RezervacijaObserv
 
   public void postaviStanje(RezervacijaStanje stanje) {
     this.stanje = stanje;
+    dajAranzman().obavijestiPromjenuStanjaRezervacije(this);
   }
 
   public StanjeId idStanja() {

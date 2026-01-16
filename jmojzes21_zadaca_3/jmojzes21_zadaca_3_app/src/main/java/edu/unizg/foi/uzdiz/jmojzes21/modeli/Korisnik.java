@@ -1,5 +1,6 @@
 package edu.unizg.foi.uzdiz.jmojzes21.modeli;
 
+import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.Formati;
 import java.util.Objects;
 
 /**
@@ -17,12 +18,14 @@ public class Korisnik implements RezervacijaObserver {
 
   @Override
   public void kadaPromjenaStanjaAranzmana(Aranzman aranzman) {
-    
+    System.out.printf("%s: Aranžman %d postao %s\n", punoIme(), aranzman.oznaka(), aranzman.nazivStanja());
   }
 
   @Override
   public void kadaPromjenaStanjaRezervacije(Rezervacija rezervacija) {
-
+    var f = Formati.dajInstancu();
+    System.out.printf("%s: Aranžman %d, rezervacija %s %s postala %s\n", punoIme(), rezervacija.oznakaAranzmana(),
+        rezervacija.korisnik().punoIme(), f.formatiraj(rezervacija.vrijemePrijema()), rezervacija.nazivStanja());
   }
 
   public String punoIme() {return ime + " " + prezime;}

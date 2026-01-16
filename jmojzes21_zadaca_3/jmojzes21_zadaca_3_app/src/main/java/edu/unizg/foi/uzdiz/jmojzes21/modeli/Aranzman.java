@@ -7,6 +7,7 @@ import edu.unizg.foi.uzdiz.jmojzes21.modeli.stanja.AranzmanUPripremi;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -126,17 +127,21 @@ public class Aranzman extends PutovanjeComposite implements RezervacijaSubject, 
   }
 
   @Override
-  public void dodajPromatraca(RezervacijaObserver promatrac) {
-    if (!promatraci.contains(promatrac)) {
-      promatraci.add(promatrac);
-    }
+  public List<RezervacijaObserver> dajPromatrace() {
+    return Collections.unmodifiableList(promatraci);
   }
 
   @Override
-  public void ukloniPromatraca(RezervacijaObserver promatrac) {
-    promatraci.remove(promatrac);
+  public boolean dodajPromatraca(RezervacijaObserver promatrac) {
+    if (promatraci.contains(promatrac)) {return false;}
+    promatraci.add(promatrac);
+    return true;
   }
 
+  @Override
+  public boolean ukloniPromatraca(RezervacijaObserver promatrac) {
+    return promatraci.remove(promatrac);
+  }
 
   @Override
   public void obavijestiRezervacijaPostalaAktivna(Rezervacija aktivirana) {
@@ -177,6 +182,7 @@ public class Aranzman extends PutovanjeComposite implements RezervacijaSubject, 
 
   public void postaviStanje(AranzmanStanje stanje) {
     this.stanje = stanje;
+    obavijestiPromjenuStanjaAranzmana(this);
   }
 
   public StanjeId idStanja() {

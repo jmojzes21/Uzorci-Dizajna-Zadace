@@ -1,5 +1,7 @@
 package edu.unizg.foi.uzdiz.jmojzes21.komande;
 
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.Aranzman;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.TuristickaAgencija;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.NeispravnaKomandaGreska;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.RegexKomandeGraditelj;
@@ -18,6 +20,20 @@ public class KomandaPTAR implements IKomanda {
 
   @Override
   public void izvrsi(TuristickaAgencija agencija) {
+
+    Aranzman aranzman = agencija.dajAranzman(oznaka);
+    if (aranzman == null) {
+      throw new RuntimeException("Aranžman s oznakom " + oznaka + " ne postoji!");
+    }
+
+    var korisnik = new Korisnik(ime, prezime);
+    boolean uspjeh = aranzman.dodajPromatraca(korisnik);
+
+    if (uspjeh) {
+      System.out.printf("Korisnik %s se uspješno pretplatio za aranžman %d.\n", korisnik.punoIme(), oznaka);
+    } else {
+      System.out.printf("Korisnik %s je već pretplaćen za aranžman %d.\n", korisnik.punoIme(), oznaka);
+    }
 
   }
 

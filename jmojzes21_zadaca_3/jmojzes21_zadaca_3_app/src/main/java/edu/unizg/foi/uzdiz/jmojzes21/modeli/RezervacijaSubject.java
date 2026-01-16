@@ -1,10 +1,14 @@
 package edu.unizg.foi.uzdiz.jmojzes21.modeli;
 
+import java.util.List;
+
 public interface RezervacijaSubject {
 
-  void dodajPromatraca(RezervacijaObserver promatrac);
+  List<RezervacijaObserver> dajPromatrace();
 
-  void ukloniPromatraca(RezervacijaObserver promatrac);
+  boolean dodajPromatraca(RezervacijaObserver promatrac);
+
+  boolean ukloniPromatraca(RezervacijaObserver promatrac);
 
   void obavijestiRezervacijaPostalaAktivna(Rezervacija aktivirana);
 
