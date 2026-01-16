@@ -58,8 +58,7 @@ public class KomandaIRTA implements IKomanda {
     List<Rezervacija> rezervacije = agencija.dajRezervacijeAranzmana(oznaka, prikaziStanja);
 
     if (rezervacije == null) {
-      System.out.println("Aranžman ne postoji.");
-      return;
+      throw new RuntimeException("Aranžman s oznakom " + oznaka + " ne postoji!");
     }
 
     if (rezervacije.isEmpty()) {

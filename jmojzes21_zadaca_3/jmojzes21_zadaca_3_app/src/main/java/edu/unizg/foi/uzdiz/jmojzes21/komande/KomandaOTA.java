@@ -17,10 +17,8 @@ public class KomandaOTA implements IKomanda {
   public void izvrsi(TuristickaAgencija agencija) {
 
     Aranzman aranzman = agencija.dajAranzman(oznaka);
-
     if (aranzman == null) {
-      System.out.println("Aranžman ne postoji.");
-      return;
+      throw new RuntimeException("Aranžman s oznakom " + oznaka + " ne postoji!");
     }
 
     try {

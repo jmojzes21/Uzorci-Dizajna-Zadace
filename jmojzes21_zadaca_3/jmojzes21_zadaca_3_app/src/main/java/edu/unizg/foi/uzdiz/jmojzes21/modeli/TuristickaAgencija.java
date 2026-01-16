@@ -146,12 +146,11 @@ public class TuristickaAgencija extends PutovanjeComposite {
    * @param rezervacija rezervacija
    * @throws Exception zaprimanje rezervacije nije uspjelo
    */
-  public void zaprimiRezervaciju(Rezervacija rezervacija) throws Exception {
+  public void zaprimiRezervaciju(Rezervacija rezervacija) {
 
     Aranzman aranzman = dajAranzman(rezervacija.oznakaAranzmana());
     if (aranzman == null) {
-      String opis = String.format("Ne postoji aranžam oznake %d.", rezervacija.oznakaAranzmana());
-      throw new Exception(opis);
+      throw new RuntimeException("Aranžman s oznakom " + rezervacija.oznakaAranzmana() + " ne postoji!");
     }
 
     aranzman.zaprimiRezervaciju(rezervacija);
@@ -189,8 +188,7 @@ public class TuristickaAgencija extends PutovanjeComposite {
 
     Aranzman aranzman = dajAranzman(oznaka);
     if (aranzman == null) {
-      String opis = String.format("Ne postoji aranžam oznake %d.\n", oznaka);
-      throw new Exception(opis);
+      throw new RuntimeException("Aranžman s oznakom " + oznaka + " ne postoji!");
     }
 
     var korisnik = new Korisnik(ime, prezime);
