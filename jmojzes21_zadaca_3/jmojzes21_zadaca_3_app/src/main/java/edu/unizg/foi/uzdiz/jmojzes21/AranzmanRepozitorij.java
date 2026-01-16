@@ -56,7 +56,7 @@ public class AranzmanRepozitorij {
     String minPutnika = stupci.get(index++);
     String maxPutnika = stupci.get(index++);
     String brojNocenja = stupci.get(index++);
-    String doplataJednokrevetnaSoba = stupci.get(index++);
+    String setDoplataJKS = stupci.get(index++);
     String prijevoz = stupci.get(index++);
     String brojDorucka = stupci.get(index++);
     String brojRuckova = stupci.get(index++);
@@ -85,8 +85,8 @@ public class AranzmanRepozitorij {
       graditelj.setBrojNocenja(Integer.parseInt(brojNocenja));
     }
 
-    if (doplataJednokrevetnaSoba != null) {
-      graditelj.setDoplataZaJednokrevetnuSobu(Float.parseFloat(doplataJednokrevetnaSoba));
+    if (setDoplataJKS != null) {
+      graditelj.setDoplataJKS(Float.parseFloat(setDoplataJKS));
     }
 
     if (prijevoz != null) {

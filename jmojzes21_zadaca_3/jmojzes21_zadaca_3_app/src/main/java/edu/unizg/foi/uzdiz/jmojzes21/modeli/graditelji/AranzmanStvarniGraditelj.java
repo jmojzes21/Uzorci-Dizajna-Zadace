@@ -79,8 +79,8 @@ public class AranzmanStvarniGraditelj implements AranzmanGraditelj {
     return this;
   }
 
-  public AranzmanStvarniGraditelj setDoplataZaJednokrevetnuSobu(float doplataZaJednokrevetnuSobu) {
-    aranzman.setDoplataZaJednokrevetnuSobu(doplataZaJednokrevetnuSobu);
+  public AranzmanStvarniGraditelj setDoplataJKS(float doplataJKS) {
+    aranzman.setDoplataJKS(doplataJKS);
     return this;
   }
 

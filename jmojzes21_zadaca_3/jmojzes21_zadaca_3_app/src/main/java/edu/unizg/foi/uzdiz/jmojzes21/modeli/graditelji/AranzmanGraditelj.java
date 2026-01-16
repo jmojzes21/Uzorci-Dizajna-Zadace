@@ -36,7 +36,7 @@ public interface AranzmanGraditelj {
 
   AranzmanGraditelj setBrojVecera(int brojVecera);
 
-  AranzmanGraditelj setDoplataZaJednokrevetnuSobu(float doplataZaJednokrevetnuSobu);
+  AranzmanGraditelj setDoplataJKS(float doplataJKS);
 
   AranzmanGraditelj setPrijevoz(List<String> prijevoz);
 

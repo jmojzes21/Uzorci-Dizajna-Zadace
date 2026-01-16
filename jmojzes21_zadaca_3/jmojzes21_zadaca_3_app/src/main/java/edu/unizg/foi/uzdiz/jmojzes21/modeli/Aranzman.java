@@ -40,7 +40,10 @@ public class Aranzman extends PutovanjeComposite implements RezervacijaSubject, 
   private int brojRuckova;
   private int brojVecera;
 
-  private float doplataZaJednokrevetnuSobu;
+  /**
+   * Doplata za jedno krevetnu sobu
+   */
+  private float doplataJKS;
   private List<String> prijevoz;
 
   private AranzmanStanje stanje;
@@ -321,7 +324,7 @@ public class Aranzman extends PutovanjeComposite implements RezervacijaSubject, 
 
   public int brojVecera() {return brojVecera;}
 
-  public float doplataZaJednokrevetnuSobu() {return doplataZaJednokrevetnuSobu;}
+  public float doplataJKS() {return doplataJKS;}
 
   public List<String> prijevoz() {return prijevoz;}
 
@@ -355,8 +358,7 @@ public class Aranzman extends PutovanjeComposite implements RezervacijaSubject, 
 
   public void setBrojVecera(int brojVecera) {this.brojVecera = brojVecera;}
 
-  public void setDoplataZaJednokrevetnuSobu(
-      float doplataZaJednokrevetnuSobu) {this.doplataZaJednokrevetnuSobu = doplataZaJednokrevetnuSobu;}
+  public void setDoplataJKS(float doplataJKS) {this.doplataJKS = doplataJKS;}
 
   public void setPrijevoz(List<String> prijevoz) {this.prijevoz = prijevoz;}
 

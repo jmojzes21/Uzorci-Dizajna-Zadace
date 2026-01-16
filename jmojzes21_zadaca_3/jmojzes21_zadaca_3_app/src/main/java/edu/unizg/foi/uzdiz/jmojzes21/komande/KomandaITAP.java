@@ -40,7 +40,7 @@ public class KomandaITAP implements IKomanda {
     System.out.printf("Min broj putnika: %d\n", a.minBrojPutnika());
     System.out.printf("Max broj putnika: %d\n", a.maxBrojPutnika());
     System.out.printf("Broj noćenja: %d\n", a.brojNocenja());
-    System.out.printf("Doplata za jednokrevetnu sobu: %s\n", f.formatiraj(a.doplataZaJednokrevetnuSobu()));
+    System.out.printf("Doplata za jednokrevetnu sobu: %s\n", f.formatiraj(a.doplataJKS()));
     System.out.printf("Prijevoz: %s\n", a.prijevoz() != null ? String.join(", ", a.prijevoz()) : "nema");
     System.out.printf("Broj doručka: %d\n", a.brojDorucka());
     System.out.printf("Broj ručkova: %d\n", a.brojRuckova());
