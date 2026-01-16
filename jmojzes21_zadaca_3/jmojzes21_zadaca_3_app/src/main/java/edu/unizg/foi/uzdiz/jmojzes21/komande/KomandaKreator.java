@@ -27,6 +27,8 @@ public abstract class KomandaKreator {
       case "PPTAR" -> new KomandaPPTAR.Kreator();
       case "PTAR" -> new KomandaPTAR.Kreator();
       case "UPTAR" -> new KomandaUPTAR.Kreator();
+      case "PSTAR" -> new KomandaPSTAR.Kreator();
+      case "VSTAR" -> new KomandaVSTAR.Kreator();
       default -> throw new NepoznataKomanda();
     };
   }
