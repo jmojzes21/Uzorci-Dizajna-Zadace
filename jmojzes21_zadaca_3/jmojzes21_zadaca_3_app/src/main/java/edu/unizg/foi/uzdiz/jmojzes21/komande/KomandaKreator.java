@@ -25,6 +25,8 @@ public abstract class KomandaKreator {
       case "ITAS" -> new KomandaITAS.Kreator();
       case "POTI" -> new KomandaPOTI.Kreator();
       case "PPTAR" -> new KomandaPPTAR.Kreator();
+      case "PTAR" -> new KomandaPTAR.Kreator();
+      case "UPTAR" -> new KomandaUPTAR.Kreator();
       default -> throw new NepoznataKomanda();
     };
   }

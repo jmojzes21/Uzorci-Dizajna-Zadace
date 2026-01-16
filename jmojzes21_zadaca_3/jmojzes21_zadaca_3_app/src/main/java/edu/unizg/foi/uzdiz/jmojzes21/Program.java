@@ -143,6 +143,8 @@ public class Program {
     System.out.println("ITAS [od do] - Ispis statističkih podataka");
     System.out.println("POTI naziv vrijednost - Postavi postavke tabličnog ispisa");
     System.out.println("PPTAR [A|R] riječ - Pretraživanje aranžmana i rezervacija");
+    System.out.println("PTAR ime prezime oznaka - Pretplata za informacije o promjenama");
+    System.out.println("UPTAR [ime prezime oznaka] | [oznaka] - Ukidanje pretplata za informacije o promjenama");
     System.out.println("Q - Izlaz");
   }
 

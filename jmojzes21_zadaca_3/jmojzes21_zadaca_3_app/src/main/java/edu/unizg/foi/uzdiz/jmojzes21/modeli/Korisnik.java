@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * Sadrži podatke o korisniku (osobi).
  */
-public class Korisnik {
+public class Korisnik implements RezervacijaObserver {
 
   private String ime;
   private String prezime;
@@ -13,6 +13,16 @@ public class Korisnik {
   public Korisnik(String ime, String prezime) {
     this.ime = ime;
     this.prezime = prezime;
+  }
+
+  @Override
+  public void kadaPromjenaStanjaAranzmana(Aranzman aranzman) {
+    
+  }
+
+  @Override
+  public void kadaPromjenaStanjaRezervacije(Rezervacija rezervacija) {
+
   }
 
   public String punoIme() {return ime + " " + prezime;}

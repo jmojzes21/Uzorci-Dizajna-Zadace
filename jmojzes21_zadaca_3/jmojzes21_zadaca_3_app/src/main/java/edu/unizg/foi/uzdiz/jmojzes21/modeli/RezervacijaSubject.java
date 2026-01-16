@@ -10,4 +10,9 @@ public interface RezervacijaSubject {
 
   void obavijestiRezervacijaPostalaOtkazana(Rezervacija otkazana);
 
+  void obavijestiPromjenuStanjaAranzmana(Aranzman aranzman);
+
+  void obavijestiPromjenuStanjaRezervacije(Rezervacija rezervacija);
+
+
 }

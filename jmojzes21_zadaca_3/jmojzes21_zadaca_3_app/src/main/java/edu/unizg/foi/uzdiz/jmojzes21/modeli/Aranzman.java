@@ -153,6 +153,20 @@ public class Aranzman extends PutovanjeComposite implements RezervacijaSubject, 
   }
 
   @Override
+  public void obavijestiPromjenuStanjaAranzmana(Aranzman aranzman) {
+    for (var promatrac : promatraci) {
+      promatrac.kadaPromjenaStanjaAranzmana(aranzman);
+    }
+  }
+
+  @Override
+  public void obavijestiPromjenuStanjaRezervacije(Rezervacija rezervacija) {
+    for (var promatrac : promatraci) {
+      promatrac.kadaPromjenaStanjaRezervacije(rezervacija);
+    }
+  }
+
+  @Override
   public void prihvati(PutovanjeVisitor visitor) {
     visitor.posjeti(this);
   }
