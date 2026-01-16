@@ -2,10 +2,10 @@ package edu.unizg.foi.uzdiz.jmojzes21;
 
 import edu.unizg.foi.uzdiz.jmojzes21.komande.IKomanda;
 import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaKreator;
-import edu.unizg.foi.uzdiz.jmojzes21.logika.UpravljanjeRezervacijamaJDRStrategy;
-import edu.unizg.foi.uzdiz.jmojzes21.logika.UpravljanjeRezervacijamaNullStrategy;
-import edu.unizg.foi.uzdiz.jmojzes21.logika.UpravljanjeRezervacijamaStrategy;
-import edu.unizg.foi.uzdiz.jmojzes21.logika.UpravljanjeRezervacijamaVDRStrategy;
+import edu.unizg.foi.uzdiz.jmojzes21.logika.strategy.UpravljanjeRezervacijamaJDRStrategy;
+import edu.unizg.foi.uzdiz.jmojzes21.logika.strategy.UpravljanjeRezervacijamaNullStrategy;
+import edu.unizg.foi.uzdiz.jmojzes21.logika.strategy.UpravljanjeRezervacijamaStrategy;
+import edu.unizg.foi.uzdiz.jmojzes21.logika.strategy.UpravljanjeRezervacijamaVDRStrategy;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.TuristickaAgencija;

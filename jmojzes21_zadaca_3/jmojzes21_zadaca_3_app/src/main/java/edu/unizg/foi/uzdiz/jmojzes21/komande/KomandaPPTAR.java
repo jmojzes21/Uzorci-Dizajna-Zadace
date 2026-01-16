@@ -1,7 +1,7 @@
 package edu.unizg.foi.uzdiz.jmojzes21.komande;
 
 import edu.unizg.foi.uzdiz.jmojzes21.PostavkeSustava;
-import edu.unizg.foi.uzdiz.jmojzes21.logika.PretrazivanjePutovanjaVisitor;
+import edu.unizg.foi.uzdiz.jmojzes21.logika.visitor.PretrazivanjePutovanjaVisitor;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.TuristickaAgencija;

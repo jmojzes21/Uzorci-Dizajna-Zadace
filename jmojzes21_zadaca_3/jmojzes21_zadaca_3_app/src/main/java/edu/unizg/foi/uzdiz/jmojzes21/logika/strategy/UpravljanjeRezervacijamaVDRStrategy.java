@@ -1,4 +1,4 @@
-package edu.unizg.foi.uzdiz.jmojzes21.logika;
+package edu.unizg.foi.uzdiz.jmojzes21.logika.strategy;
 
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
@@ -19,7 +19,7 @@ public class UpravljanjeRezervacijamaVDRStrategy extends UpravljanjeRezervacijam
     int maxBrojRezervacija = dajMaxBrojRezervacija(aranzman);
     return brojRezervacija < maxBrojRezervacija;
   }
- 
+
   @Override
   public void kadaRezervacijaKorisnikaPostalaAktivna(TuristickaAgencija agencija, Rezervacija rezervacija,
       Rezervacija aktivirana) {}

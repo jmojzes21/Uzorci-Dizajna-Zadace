@@ -1,6 +1,6 @@
 package edu.unizg.foi.uzdiz.jmojzes21.modeli;
 
-import edu.unizg.foi.uzdiz.jmojzes21.logika.PutovanjeVisitor;
+import edu.unizg.foi.uzdiz.jmojzes21.logika.visitor.PutovanjeVisitor;
 
 public abstract class PutovanjeComponent {
 
