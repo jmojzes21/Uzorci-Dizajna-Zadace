@@ -52,10 +52,10 @@ public class RezervacijeJDRTest {
 
     List<String> redci = agencija.izvrsiKomandu("ITAK");
 
-    postojiRedak(redci, "Putovanje 1", Aranzman.uPripremi);
-    postojiRedak(redci, "Putovanje 2", Aranzman.uPripremi);
-    postojiRedak(redci, "Putovanje 3", Aranzman.aktivan);
-    postojiRedak(redci, "Putovanje 4", Aranzman.uPripremi);
+    postojiRedak(redci, "Putovanje 1 Azija", Aranzman.uPripremi);
+    postojiRedak(redci, "Putovanje 2 Afrika", Aranzman.uPripremi);
+    postojiRedak(redci, "Putovanje 3 Južna Amerika", Aranzman.aktivan);
+    postojiRedak(redci, "Putovanje 4 Australija", Aranzman.uPripremi);
 
     postojiRedak(redci, "Putovanje 10", Aranzman.popunjen);
     postojiRedak(redci, "Putovanje 15", Aranzman.aktivan);
@@ -65,11 +65,11 @@ public class RezervacijeJDRTest {
 
     redci = agencija.izvrsiKomandu(String.format("ITAK %s %s", datum("1.7.2025"), datum("30.7.2025")));
 
-    nePostojiRedak(redci, "Putovanje 1");
-    nePostojiRedak(redci, "Putovanje 2");
+    nePostojiRedak(redci, "Putovanje 1 Azija");
+    nePostojiRedak(redci, "Putovanje 2 Afrika");
 
-    postojiRedak(redci, "Putovanje 3");
-    postojiRedak(redci, "Putovanje 4");
+    postojiRedak(redci, "Putovanje 3 Južna Amerik");
+    postojiRedak(redci, "Putovanje 4 Australija");
 
     nePostojiRedak(redci, "Putovanje 10");
     nePostojiRedak(redci, "Putovanje 15");
@@ -146,8 +146,8 @@ public class RezervacijeJDRTest {
     agencija.izvrsiKomandu("DRTA Bruno Bruno 15 " + datumVrijeme("1.9.2025 8:00"));
 
     List<String> redci = agencija.izvrsiKomandu("IRO Bruno Bruno");
-    postojiRedak(redci, "Putovanje 1", Rezervacija.primljena);
-    postojiRedak(redci, "Putovanje 3", Rezervacija.aktivna);
+    postojiRedak(redci, "Putovanje 1 Azija", Rezervacija.primljena);
+    postojiRedak(redci, "Putovanje 3 Južna Amerika", Rezervacija.aktivna);
     postojiRedak(redci, "Putovanje 10", Rezervacija.aktivna);
     postojiRedak(redci, "Putovanje 15", Rezervacija.aktivna);
 
@@ -179,7 +179,7 @@ public class RezervacijeJDRTest {
     assertTrue(dajRedak(redci, datum("1.06.2025")) < dajRedak(redci, datum("1.08.2025")));
 
     redci = agencija.izvrsiKomandu("ITAS");
-    assertTrue(dajRedak(redci, "Putovanje 1 ") < dajRedak(redci, datum("Putovanje 2 ")));
+    assertTrue(dajRedak(redci, "Putovanje 1 Azija") < dajRedak(redci, datum("Putovanje 2 Afrika")));
 
     agencija.izvrsiKomandu("IP N"); // kronološki
 
@@ -193,7 +193,7 @@ public class RezervacijeJDRTest {
     assertTrue(dajRedak(redci, datum("1.06.2025")) < dajRedak(redci, datum("1.08.2025")));
 
     redci = agencija.izvrsiKomandu("ITAS");
-    assertTrue(dajRedak(redci, "Putovanje 1 ") < dajRedak(redci, datum("Putovanje 2 ")));
+    assertTrue(dajRedak(redci, "Putovanje 1 Azija") < dajRedak(redci, datum("Putovanje 2 Afrika")));
 
     agencija.izvrsiKomandu("IP S"); // obrnuto kronološki
 
@@ -207,7 +207,7 @@ public class RezervacijeJDRTest {
     assertTrue(dajRedak(redci, datum("1.06.2025")) > dajRedak(redci, datum("1.08.2025")));
 
     redci = agencija.izvrsiKomandu("ITAS");
-    assertTrue(dajRedak(redci, "Putovanje 1 ") > dajRedak(redci, datum("Putovanje 2 ")));
+    assertTrue(dajRedak(redci, "Putovanje 1 Azija") > dajRedak(redci, datum("Putovanje 2 Afrika")));
 
     agencija.izvrsiKomandu("IP N");
 
