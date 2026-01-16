@@ -217,7 +217,92 @@ public class RezervacijeJDRTest {
   public void komandaITAS() {
 
     List<String> redci = agencija.izvrsiKomandu("ITAS");
-    postojiRedak(redci, "8", "8.000,00");
+    postojiRedak(redci, "Putovanje 3 Južna Amerika", "6.000,00");
+    postojiRedak(redci, "Putovanje 10", "8.000,00");
+
+  }
+
+  @Test
+  public void komandaPPTAR() {
+
+    List<String> redci = agencija.izvrsiKomandu("PPTAR A Azija");
+    postojiRedak(redci, "Putovanje 1 Azija");
+    nePostojiRedak(redci, "Putovanje 2 Afrika");
+
+    redci = agencija.izvrsiKomandu("PPTAR A planinarenje");
+    postojiRedak(redci, "Putovanje 1 Azija");
+    nePostojiRedak(redci, "Putovanje 2 Afrika");
+
+    agencija.izvrsiKomandu("DRTA Bruno Brunić 2 " + datumVrijeme("2.6.2025. 10:00"));
+
+    redci = agencija.izvrsiKomandu("PPTAR R Bruno");
+    postojiRedak(redci, "Putovanje 1 Azija");
+    postojiRedak(redci, "Putovanje 2 Afrika");
+    postojiRedak(redci, "Putovanje 3 Južna Amerika");
+    nePostojiRedak(redci, "Putovanje 4 Australija");
+
+    redci = agencija.izvrsiKomandu("PPTAR R Brunić");
+    postojiRedak(redci, "Putovanje 2 Afrika");
+    nePostojiRedak(redci, "Putovanje 1 Azija");
+    nePostojiRedak(redci, "Putovanje 3 Južna Amerika");
+
+  }
+
+  @Test
+  public void komandaPTAR() {
+
+    agencija.izvrsiKomandu("PTAR Bruno Bruno 3");
+    agencija.izvrsiKomandu("PTAR Maja Maja 4");
+    agencija.izvrsiKomandu("PTAR Bruno Bruno 4");
+
+    List<String> redci = agencija.izvrsiKomandu("DRTA Bruno Bruno 4 " + datumVrijeme("2.6.2025 8:00"));
+    // postaje odgođena
+
+    postojiRedak(redci, "Bruno", "4", Rezervacija.odgodjena);
+
+    redci = agencija.izvrsiKomandu("DRTA Nikola Nikola 4 " + datumVrijeme("2.6.2025 8:00"));
+    // postaje aktivna
+
+    postojiRedak(redci, "Bruno", "Nikola", "4", Rezervacija.aktivna);
+    postojiRedak(redci, "Bruno", "4", Aranzman.aktivan);
+
+    redci = agencija.izvrsiKomandu("DRTA Zoran Zoran 4 " + datumVrijeme("2.6.2025 11:00"));
+    // postaje odgođena
+
+    postojiRedak(redci, "Bruno", "Zoran", "4", Rezervacija.odgodjena);
+
+    redci = agencija.izvrsiKomandu("ORTA Bruno Bruno 3");
+
+    postojiRedak(redci, "Bruno", "3", Rezervacija.otkazana);
+    postojiRedak(redci, "Bruno", "4", Rezervacija.aktivna);
+    postojiRedak(redci, "Maja", "Bruno", "4", Rezervacija.aktivna);
+
+  }
+
+  @Test
+  public void komandaUPTAR() {
+
+    agencija.izvrsiKomandu("PTAR Maja Maja 15");
+
+    List<String> redci = agencija.izvrsiKomandu("DRTA Matej Matej 15 " + datumVrijeme("1.9.2025 8:00"));
+    // postaje aktivna
+
+    postojiRedak(redci, "Maja", "Matej", "15", Rezervacija.aktivna);
+
+    agencija.izvrsiKomandu("UPTAR Maja Maja 15");
+
+    redci = agencija.izvrsiKomandu("DRTA Zoran Zoran 15 " + datumVrijeme("1.9.2025 8:00"));
+    // postaje aktivna
+
+    nePostojiRedak(redci, "Maja", "Zoran", "15", Rezervacija.aktivna);
+
+    agencija.izvrsiKomandu("PTAR Tanja Tanja 15");
+    agencija.izvrsiKomandu("UPTAR 15");
+
+    redci = agencija.izvrsiKomandu("DRTA Nikola Nikola 15 " + datumVrijeme("1.9.2025 8:00"));
+    // postaje aktivna
+
+    nePostojiRedak(redci, "Tanja", "Nikola", "15", Rezervacija.aktivna);
 
   }
 
