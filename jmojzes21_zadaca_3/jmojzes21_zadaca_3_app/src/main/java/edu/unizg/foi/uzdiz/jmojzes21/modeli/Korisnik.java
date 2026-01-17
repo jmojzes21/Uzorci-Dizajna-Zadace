@@ -1,12 +1,13 @@
 package edu.unizg.foi.uzdiz.jmojzes21.modeli;
 
+import edu.unizg.foi.uzdiz.jmojzes21.logika.prototype.Prototype;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.Formati;
 import java.util.Objects;
 
 /**
  * Sadrži podatke o korisniku (osobi).
  */
-public class Korisnik implements RezervacijaObserver {
+public class Korisnik implements RezervacijaObserver, Prototype<Korisnik> {
 
   private String ime;
   private String prezime;
@@ -44,6 +45,11 @@ public class Korisnik implements RezervacijaObserver {
   @Override
   public String toString() {
     return punoIme();
+  }
+
+  @Override
+  public Korisnik kopiraj() {
+    return new Korisnik(ime, prezime);
   }
 
   public String ime() {return ime;}

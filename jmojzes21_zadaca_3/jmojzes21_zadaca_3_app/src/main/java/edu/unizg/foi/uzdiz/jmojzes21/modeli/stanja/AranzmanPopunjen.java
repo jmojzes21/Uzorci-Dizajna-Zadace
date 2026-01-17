@@ -5,6 +5,7 @@ import edu.unizg.foi.uzdiz.jmojzes21.modeli.Aranzman.StanjeId;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class AranzmanPopunjen extends AranzmanStanje {
@@ -15,7 +16,7 @@ public class AranzmanPopunjen extends AranzmanStanje {
     aranzman.dodaj(rezervacija);
 
     List<Rezervacija> aktivne = aranzman.aktivneRezervacije();
-    Rezervacija najnovijaAktivna = aranzman.dajNajnovijuRezervaciju(aktivne);
+    Rezervacija najnovijaAktivna = dajNajnovijuRezervaciju(aktivne);
 
     if (rezervacija.vrijemePrijema().isBefore(najnovijaAktivna.vrijemePrijema())) {
       boolean mozePostatiAktivna = aranzman.dajAgenciju().rezervacijaMozePostatiAktivna(rezervacija);
@@ -106,6 +107,10 @@ public class AranzmanPopunjen extends AranzmanStanje {
   @Override
   public String dajNaziv() {
     return "Popunjen";
+  }
+
+  private Rezervacija dajNajnovijuRezervaciju(List<Rezervacija> rezervacije) {
+    return rezervacije.stream().max(Comparator.comparing(Rezervacija::vrijemePrijema)).orElse(null);
   }
 
 }

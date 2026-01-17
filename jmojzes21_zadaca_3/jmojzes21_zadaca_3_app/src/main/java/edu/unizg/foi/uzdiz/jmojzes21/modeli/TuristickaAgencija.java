@@ -1,5 +1,7 @@
 package edu.unizg.foi.uzdiz.jmojzes21.modeli;
 
+import edu.unizg.foi.uzdiz.jmojzes21.logika.memento.StanjeAranzmanaCaretaker;
+import edu.unizg.foi.uzdiz.jmojzes21.logika.strategy.UpravljanjeRezervacijamaNullStrategy;
 import edu.unizg.foi.uzdiz.jmojzes21.logika.strategy.UpravljanjeRezervacijamaStrategy;
 import edu.unizg.foi.uzdiz.jmojzes21.logika.visitor.PutovanjeVisitor;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.statistika.StatistikaAranzmana;
@@ -7,6 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Turistička agencija.
@@ -14,6 +17,12 @@ import java.util.List;
 public class TuristickaAgencija extends PutovanjeComposite {
 
   private UpravljanjeRezervacijamaStrategy upravljanjeRezervacijama;
+  private final StanjeAranzmanaCaretaker stanjeAranzmanaSpremnik;
+
+  public TuristickaAgencija() {
+    upravljanjeRezervacijama = new UpravljanjeRezervacijamaNullStrategy();
+    stanjeAranzmanaSpremnik = new StanjeAranzmanaCaretaker();
+  }
 
   @Override
   protected void dodaj(PutovanjeComponent r) {
@@ -254,8 +263,11 @@ public class TuristickaAgencija extends PutovanjeComposite {
     return upravljanjeRezervacijama;
   }
 
-  public void setUpravljanjeRezervacijama(
-      UpravljanjeRezervacijamaStrategy upravljanjeRezervacijama) {
-    this.upravljanjeRezervacijama = upravljanjeRezervacijama;
+  public void setUpravljanjeRezervacijama(UpravljanjeRezervacijamaStrategy upravljanjeRezervacijama) {
+    this.upravljanjeRezervacijama = Objects.requireNonNullElseGet(upravljanjeRezervacijama,
+        UpravljanjeRezervacijamaNullStrategy::new);
   }
+
+  public StanjeAranzmanaCaretaker stanjeAranzmanaSpremnik() {return stanjeAranzmanaSpremnik;}
+
 }

@@ -1,6 +1,7 @@
 package uzdiz_test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static uzdiz_test.RezervacijeTestHelper.TAG_MEMENTO;
 import static uzdiz_test.RezervacijeTestHelper.dajRedak;
 import static uzdiz_test.RezervacijeTestHelper.datum;
 import static uzdiz_test.RezervacijeTestHelper.datumVrijeme;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 public class RezervacijeJDRTest {
@@ -639,6 +641,148 @@ public class RezervacijeJDRTest {
     postojiRedak(redci, "Putovanje 16", Rezervacija.otkazana);
     postojiRedak(redci, "Putovanje 15", Rezervacija.aktivna);
     postojiRedak(redci, "Putovanje 17", Rezervacija.aktivna);
+
+  }
+
+  // endregion
+
+  // region Memento - Spremanje i vraćanje stanja
+
+  @Test
+  @Tag(TAG_MEMENTO)
+  public void memento_dodaj_rezervaciju_ne_mijenja_stanje() {
+
+    agencija.izvrsiKomandu("PSTAR 3");
+
+    agencija.izvrsiKomandu("DRTA Anja Anja 3 " + datumVrijeme("1.6.2025. 10:00"));
+    // postaje aktivna
+
+    List<String> redci = rezervacijeAranzmana(agencija, "3");
+    postojiRedak(redci, "Anja", Rezervacija.aktivna);
+
+    agencija.izvrsiKomandu("VSTAR 3");
+
+    redci = rezervacijeAranzmana(agencija, "3");
+    postojiRedak(redci, "Maja", Rezervacija.aktivna);
+    nePostojiRedak(redci, "Anja");
+
+    provjeriStanjeAranzmana(agencija, "3", Aranzman.aktivan);
+
+  }
+
+  @Test
+  @Tag(TAG_MEMENTO)
+  public void memento_dodaj_rezervaciju_mijenja_stanje() {
+
+    agencija.izvrsiKomandu("PSTAR 1");
+
+    agencija.izvrsiKomandu("DRTA Matej Matej 1 " + datumVrijeme("1.6.2025. 10:00"));
+    // postaje aktivna
+
+    List<String> redci = rezervacijeAranzmana(agencija, "1");
+    postojiRedak(redci, "Matej", Rezervacija.aktivna);
+
+    agencija.izvrsiKomandu("VSTAR 1");
+
+    redci = rezervacijeAranzmana(agencija, "1");
+    postojiRedak(redci, "Maja", Rezervacija.primljena);
+    nePostojiRedak(redci, "Matej");
+
+    provjeriStanjeAranzmana(agencija, "1", Aranzman.uPripremi);
+
+  }
+
+  @Test
+  @Tag(TAG_MEMENTO)
+  public void memento_dodaj_rezervaciju_na_drugom_postaje_odgodjena() {
+
+    agencija.izvrsiKomandu("PSTAR 15");
+
+    agencija.izvrsiKomandu("DRTA Bruno Bruno 15 " + datumVrijeme("1.9.2025. 10:00"));
+    // postaje aktivna
+
+    agencija.izvrsiKomandu("DRTA Bruno Bruno 16 " + datumVrijeme("1.9.2025. 10:30"));
+    // postaje odgođena
+
+    List<String> redci = agencija.izvrsiKomandu("IRO Bruno Bruno");
+    postojiRedak(redci, "Putovanje 15", Rezervacija.aktivna);
+    postojiRedak(redci, "Putovanje 16", Rezervacija.odgodjena);
+
+    agencija.izvrsiKomandu("VSTAR 15");
+
+    redci = agencija.izvrsiKomandu("IRO Bruno Bruno");
+    nePostojiRedak(redci, "Putovanje 15");
+    postojiRedak(redci, "Putovanje 16", Rezervacija.aktivna);
+
+  }
+
+  @Test
+  @Tag(TAG_MEMENTO)
+  public void memento_otkazi_rezervaciju_ne_mijenja_stanje() {
+
+    agencija.izvrsiKomandu("PSTAR 3");
+
+    agencija.izvrsiKomandu("ORTA Zoran Zoran 3");
+    // postaje otkazana
+
+    List<String> redci = rezervacijeAranzmana(agencija, "3");
+    postojiRedak(redci, "Zoran", Rezervacija.otkazana);
+
+    agencija.izvrsiKomandu("VSTAR 3");
+
+    redci = rezervacijeAranzmana(agencija, "3");
+    postojiRedak(redci, "Zoran", Rezervacija.aktivna);
+    nePostojiRedak(redci, "Zoran", Rezervacija.otkazana);
+
+    provjeriStanjeAranzmana(agencija, "3", Aranzman.aktivan);
+
+  }
+
+  @Test
+  @Tag(TAG_MEMENTO)
+  public void memento_otkazi_rezervaciju_mijenja_stanje() {
+
+    agencija.izvrsiKomandu("PSTAR 3");
+
+    agencija.izvrsiKomandu("ORTA Zoran Zoran 3");
+    agencija.izvrsiKomandu("ORTA Lana Lana 3");
+    agencija.izvrsiKomandu("ORTA Marko Marko 3");
+
+    provjeriStanjeAranzmana(agencija, "3", Aranzman.uPripremi);
+
+    agencija.izvrsiKomandu("VSTAR 3");
+
+    List<String> redci = rezervacijeAranzmana(agencija, "3");
+    nePostojiRedak(redci, Rezervacija.otkazana);
+
+    provjeriStanjeAranzmana(agencija, "3", Aranzman.aktivan);
+
+  }
+
+  @Test
+  @Tag(TAG_MEMENTO)
+  public void memento_otkazi_rezervaciju_na_drugom_postaje_aktivna() {
+
+    agencija.izvrsiKomandu("DRTA Bruno Bruno 15 " + datumVrijeme("1.9.2025. 10:00"));
+    // postaje aktivna
+
+    agencija.izvrsiKomandu("DRTA Bruno Bruno 16 " + datumVrijeme("1.9.2025. 10:30"));
+    // postaje odgođena
+
+    agencija.izvrsiKomandu("PSTAR 15");
+
+    agencija.izvrsiKomandu("ORTA Bruno Bruno 15");
+
+    List<String> redci = agencija.izvrsiKomandu("IRO Bruno Bruno");
+    postojiRedak(redci, "Putovanje 15", Rezervacija.otkazana);
+    postojiRedak(redci, "Putovanje 16", Rezervacija.aktivna);
+
+    agencija.izvrsiKomandu("VSTAR 15");
+
+    redci = agencija.izvrsiKomandu("IRO Bruno Bruno");
+    postojiRedak(redci, "Putovanje 15", Rezervacija.aktivna);
+    postojiRedak(redci, "Putovanje 16", Rezervacija.odgodjena);
+    nePostojiRedak(redci, Rezervacija.otkazana);
 
   }
 

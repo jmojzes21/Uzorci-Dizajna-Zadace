@@ -1,5 +1,6 @@
 package edu.unizg.foi.uzdiz.jmojzes21.modeli;
 
+import edu.unizg.foi.uzdiz.jmojzes21.logika.memento.StanjeAranzmanaMemento;
 import edu.unizg.foi.uzdiz.jmojzes21.logika.visitor.PutovanjeVisitor;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.stanja.AranzmanOtkazan;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.stanja.AranzmanStanje;
@@ -276,9 +277,35 @@ public class Aranzman extends PutovanjeComposite implements RezervacijaSubject, 
     }
   }
 
-  public Rezervacija dajNajnovijuRezervaciju(List<Rezervacija> rezervacije) {
-    return rezervacije.stream().max(Comparator.comparing(Rezervacija::vrijemePrijema)).orElse(null);
+  // region Memento
+
+  public StanjeAranzmanaMemento spremiStanje() {
+    return new StanjeAranzmanaMemento(this);
   }
+
+  public void obnoviStanje(StanjeAranzmanaMemento memento) {
+
+    stanje = memento.stanje();
+
+    List<Rezervacija> aktivne = aktivneRezervacije();
+    for (var rezervacija : aktivne) {
+      rezervacija.otkazi();
+      obavijestiRezervacijaNijeViseAktivna(rezervacija);
+    }
+
+    djeca.clear();
+    for (var rezervacija : memento.rezervacije()) {
+      dodaj(rezervacija);
+    }
+
+    aktivne = aktivneRezervacije();
+    for (var rezervacija : aktivne) {
+      obavijestiRezervacijaPostalaAktivna(rezervacija);
+    }
+
+  }
+
+  // endregion
 
   /**
    * Sortira turističke aranžmane prema datumu početka.

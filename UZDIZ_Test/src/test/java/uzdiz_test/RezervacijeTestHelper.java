@@ -8,6 +8,8 @@ import java.util.List;
 
 public class RezervacijeTestHelper {
 
+  public static final String TAG_MEMENTO = "memento";
+
   public static List<String> rezervacijeAranzmana(TuristickaAgencija agencija, String oznaka) {
     return agencija.izvrsiKomandu("IRTA " + oznaka + " PAČODO");
   }
@@ -57,5 +59,5 @@ public class RezervacijeTestHelper {
   public static String datumVrijeme(String vrijeme) {
     return vrijeme;
   }
- 
+
 }

@@ -1,5 +1,6 @@
 package edu.unizg.foi.uzdiz.jmojzes21.modeli;
 
+import edu.unizg.foi.uzdiz.jmojzes21.logika.prototype.Prototype;
 import edu.unizg.foi.uzdiz.jmojzes21.logika.visitor.PutovanjeVisitor;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.stanja.RezervacijaNova;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.stanja.RezervacijaStanje;
@@ -7,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
-public class Rezervacija extends PutovanjeComponent implements RezervacijaObserver {
+public class Rezervacija extends PutovanjeComponent implements RezervacijaObserver, Prototype<Rezervacija> {
 
   public enum StanjeId {
     nova, primljena, aktivna, naCekanju, odgodjena, otkazana
@@ -28,6 +29,15 @@ public class Rezervacija extends PutovanjeComponent implements RezervacijaObserv
     vrijemeOtkaza = null;
 
     stanje = new RezervacijaNova();
+  }
+
+  public Rezervacija(Rezervacija r) {
+    korisnik = r.korisnik.kopiraj();
+    oznakaAranzmana = r.oznakaAranzmana;
+    vrijemePrijema = r.vrijemePrijema;
+    vrijemeOtkaza = r.vrijemeOtkaza;
+
+    stanje = r.stanje;
   }
 
   public void zaprimi() {
@@ -106,6 +116,11 @@ public class Rezervacija extends PutovanjeComponent implements RezervacijaObserv
 
   public Aranzman dajAranzman() {
     return (Aranzman) dajRoditelja();
+  }
+
+  @Override
+  public Rezervacija kopiraj() {
+    return new Rezervacija(this);
   }
 
   /**
