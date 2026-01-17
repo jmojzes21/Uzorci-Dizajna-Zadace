@@ -844,6 +844,30 @@ public class RezervacijeJDRTest {
 
   @Test
   @Tag(TAG_MEMENTO)
+  public void memento_odgodjena_moze_postati_aktivna() {
+
+    agencija.izvrsiKomandu("DRTA Bruno Bruno 15 " + datumVrijeme("1.9.2025. 10:00"));
+    // postaje aktivna
+
+    agencija.izvrsiKomandu("DRTA Bruno Bruno 16 " + datumVrijeme("1.9.2025. 10:30"));
+    // postaje odgođena
+
+    agencija.izvrsiKomandu("PSTAR 16");
+
+    agencija.izvrsiKomandu("ORTA Bruno Bruno 15");
+
+    List<String> redci = rezervacijeAranzmana(agencija, "16");
+    postojiRedak(redci, "Bruno", Rezervacija.aktivna);
+
+    agencija.izvrsiKomandu("VSTAR 16");
+
+    redci = rezervacijeAranzmana(agencija, "16");
+    postojiRedak(redci, "Bruno", Rezervacija.aktivna);
+ 
+  }
+
+  @Test
+  @Tag(TAG_MEMENTO)
   public void memento_pretplate() {
 
     agencija.izvrsiKomandu("PTAR Maja Majić 3");

@@ -86,6 +86,9 @@ public class Aranzman extends PutovanjeComposite implements RezervacijaSubject, 
   }
 
   public void aktivirajRezervaciju(Rezervacija rezervacija) {
+    if (rezervacija.oznakaAranzmana() != oznaka) {
+      throw new RuntimeException("Nije moguće aktivirati rezervaciju drugog aranžmana!");
+    }
     stanje.aktivirajRezervaciju(this, rezervacija);
   }
 
@@ -293,10 +296,17 @@ public class Aranzman extends PutovanjeComposite implements RezervacijaSubject, 
   }
 
   public void obnoviStanje(StanjeAranzmanaMemento memento) {
+
     ukloniPretplaceneKorisnike();
     obnoviOsnovneInformacije(memento);
     obnoviRezervacija(memento);
     obnoviPretplaceneKorisnike(memento);
+
+    List<Rezervacija> odgodjene = odgodjeneRezervacije();
+    for (Rezervacija rezervacija : odgodjene) {
+      aktivirajRezervaciju(rezervacija);
+    }
+
   }
 
   private void obnoviOsnovneInformacije(StanjeAranzmanaMemento memento) {
