@@ -35,7 +35,7 @@ public class RezervacijeTestHelper {
     return Arrays.stream(elementi).allMatch(e -> switch (e) {
       case String tekst -> redak.contains(tekst);
       case MultiValues mv -> mv.contains(redak.toLowerCase());
-      default -> true;
+      default -> throw new IllegalArgumentException("Element nije podržan " + e.getClass().getName());
     });
   }
 
