@@ -5,7 +5,12 @@ import java.util.List;
 
 public abstract class PutovanjeComposite extends PutovanjeComponent {
 
-  protected List<PutovanjeComponent> djeca = new ArrayList<>();
+  protected List<PutovanjeComponent> djeca;
+
+  public PutovanjeComposite() {
+    super();
+    djeca = new ArrayList<>();
+  }
 
   protected abstract void dodaj(PutovanjeComponent r);
 

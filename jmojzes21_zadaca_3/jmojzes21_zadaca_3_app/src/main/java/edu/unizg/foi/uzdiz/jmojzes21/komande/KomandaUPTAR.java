@@ -55,20 +55,14 @@ public class KomandaUPTAR implements IKomanda {
 
   private void ukiniPretplatuSvihKorisnika(Aranzman aranzman) {
 
-    List<Korisnik> korisnici = aranzman.dajPromatrace().stream()
-        .filter(e -> e instanceof Korisnik)
-        .map(e -> (Korisnik) e)
-        .toList();
+    List<Korisnik> korisnici = aranzman.dajPretplaceneKorisnike();
 
     if (korisnici.isEmpty()) {
       System.out.printf("Aranžman %d nema pretplate korisnika.\n", oznaka);
       return;
     }
 
-    for (var korisnik : korisnici) {
-      aranzman.ukloniPromatraca(korisnik);
-    }
-
+    aranzman.ukloniPretplaceneKorisnike();
     System.out.printf("Ukinute sve pretplate za aranžman %d.\n", oznaka);
 
   }

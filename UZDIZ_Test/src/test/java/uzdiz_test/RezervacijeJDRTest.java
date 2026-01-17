@@ -85,7 +85,8 @@ public class RezervacijeJDRTest {
   public void komandaITAP() {
 
     List<String> redci = agencija.izvrsiKomandu("ITAP 3");
-    postojiRedak(redci, "Putovanje 3");
+    postojiRedak(redci, "Putovanje 3 Južna Amerika");
+    postojiRedak(redci, "Putovanje u Južnu Ameriku");
     postojiRedak(redci, Aranzman.aktivan);
 
   }
@@ -783,6 +784,84 @@ public class RezervacijeJDRTest {
     postojiRedak(redci, "Putovanje 15", Rezervacija.aktivna);
     postojiRedak(redci, "Putovanje 16", Rezervacija.odgodjena);
     nePostojiRedak(redci, Rezervacija.otkazana);
+
+  }
+
+  @Test
+  @Tag(TAG_MEMENTO)
+  public void memento_komanda_bp() {
+
+    agencija.izvrsiKomandu("DRTA Anja Anja 1 " + datumVrijeme("1.6.2025. 10:00"));
+
+    agencija.izvrsiKomandu("PSTAR 1");
+
+    agencija.izvrsiKomandu("BP A");
+
+    List<String> redci = agencija.izvrsiKomandu("ITAK");
+    nePostojiRedak(redci, "Putovanje 1 Azija");
+
+    agencija.izvrsiKomandu("VSTAR 1");
+
+    redci = agencija.izvrsiKomandu("ITAK");
+    postojiRedak(redci, "Putovanje 1 Azija");
+
+    redci = agencija.izvrsiKomandu("ITAP 1");
+    postojiRedak(redci, "Putovanje u Aziju, planinarenje na Himalaju");
+    postojiRedak(redci, "helikopter");
+
+    redci = rezervacijeAranzmana(agencija, "1");
+    postojiRedak(redci, "Bruno", Rezervacija.aktivna);
+    postojiRedak(redci, "Anja", Rezervacija.aktivna);
+
+  }
+
+  @Test
+  @Tag(TAG_MEMENTO)
+  public void memento_komanda_bp_up() {
+
+    agencija.izvrsiKomandu("DRTA Anja Anja 1 " + datumVrijeme("1.6.2025. 10:00"));
+
+    agencija.izvrsiKomandu("PSTAR 1");
+
+    agencija.izvrsiKomandu("BP A");
+    agencija.izvrsiKomandu("UP A aranzmani.csv");
+    agencija.izvrsiKomandu("UP R rezervacije.csv");
+
+    provjeriStanjeAranzmana(agencija, "1", Aranzman.uPripremi);
+
+    agencija.izvrsiKomandu("VSTAR 1");
+
+    List<String> redci = agencija.izvrsiKomandu("ITAK");
+    postojiRedak(redci, "Putovanje 1 Azija");
+
+    redci = rezervacijeAranzmana(agencija, "1");
+    postojiRedak(redci, "Bruno", Rezervacija.aktivna);
+    postojiRedak(redci, "Anja", Rezervacija.aktivna);
+
+    provjeriStanjeAranzmana(agencija, "1", Aranzman.aktivan);
+
+  }
+
+  @Test
+  @Tag(TAG_MEMENTO)
+  public void memento_pretplate() {
+
+    agencija.izvrsiKomandu("PTAR Maja Majić 3");
+
+    agencija.izvrsiKomandu("PSTAR 3");
+
+    agencija.izvrsiKomandu("PTAR Lana Lanić 3");
+    agencija.izvrsiKomandu("UPTAR Maja Majić 3");
+
+    List<String> redci = agencija.izvrsiKomandu("ORTA Marko Marko 3");
+    postojiRedak(redci, "Lanić", "Marko");
+    nePostojiRedak(redci, "Majić", "Marko");
+
+    agencija.izvrsiKomandu("VSTAR 3");
+
+    redci = agencija.izvrsiKomandu("ORTA Marko Marko 3");
+    postojiRedak(redci, "Majić", "Marko");
+    nePostojiRedak(redci, "Lanić", "Marko");
 
   }
 

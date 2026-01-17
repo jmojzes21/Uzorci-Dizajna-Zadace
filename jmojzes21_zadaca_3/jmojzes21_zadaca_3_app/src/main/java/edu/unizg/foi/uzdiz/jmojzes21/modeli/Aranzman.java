@@ -8,7 +8,6 @@ import edu.unizg.foi.uzdiz.jmojzes21.modeli.stanja.AranzmanUPripremi;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -52,6 +51,7 @@ public class Aranzman extends PutovanjeComposite implements RezervacijaSubject, 
   private final List<RezervacijaObserver> promatraci = new ArrayList<>();
 
   public Aranzman(int oznaka, String naziv) {
+    super();
     this.oznaka = oznaka;
     this.naziv = naziv;
     stanje = new AranzmanUPripremi();
@@ -131,11 +131,6 @@ public class Aranzman extends PutovanjeComposite implements RezervacijaSubject, 
   }
 
   @Override
-  public List<RezervacijaObserver> dajPromatrace() {
-    return Collections.unmodifiableList(promatraci);
-  }
-
-  @Override
   public boolean dodajPromatraca(RezervacijaObserver promatrac) {
     if (promatraci.contains(promatrac)) {return false;}
     promatraci.add(promatrac);
@@ -145,6 +140,20 @@ public class Aranzman extends PutovanjeComposite implements RezervacijaSubject, 
   @Override
   public boolean ukloniPromatraca(RezervacijaObserver promatrac) {
     return promatraci.remove(promatrac);
+  }
+
+  public List<Korisnik> dajPretplaceneKorisnike() {
+    return promatraci.stream()
+        .filter(e -> e instanceof Korisnik)
+        .map(e -> (Korisnik) e)
+        .toList();
+  }
+
+  public void ukloniPretplaceneKorisnike() {
+    var korisnici = dajPretplaceneKorisnike();
+    for (var korisnik : korisnici) {
+      ukloniPromatraca(korisnik);
+    }
   }
 
   @Override
@@ -284,8 +293,36 @@ public class Aranzman extends PutovanjeComposite implements RezervacijaSubject, 
   }
 
   public void obnoviStanje(StanjeAranzmanaMemento memento) {
+    ukloniPretplaceneKorisnike();
+    obnoviOsnovneInformacije(memento);
+    obnoviRezervacija(memento);
+    obnoviPretplaceneKorisnike(memento);
+  }
 
-    stanje = memento.stanje();
+  private void obnoviOsnovneInformacije(StanjeAranzmanaMemento memento) {
+
+    naziv = memento.naziv();
+    program = memento.program();
+
+    pocetniDatum = memento.pocetniDatum();
+    zavrsniDatum = memento.zavrsniDatum();
+    vrijemeKretanja = memento.vrijemeKretanja();
+    vrijemePovratka = memento.vrijemePovratka();
+
+    cijena = memento.cijena();
+    minBrojPutnika = memento.minBrojPutnika();
+    maxBrojPutnika = memento.maxBrojPutnika();
+
+    brojNocenja = memento.brojNocenja();
+    brojDorucka = memento.brojDorucka();
+    brojRuckova = memento.brojRuckova();
+    brojVecera = memento.brojVecera();
+    doplataJKS = memento.doplataJKS();
+    prijevoz = memento.prijevoz();
+
+  }
+
+  private void obnoviRezervacija(StanjeAranzmanaMemento memento) {
 
     List<Rezervacija> aktivne = aktivneRezervacije();
     for (var rezervacija : aktivne) {
@@ -303,6 +340,15 @@ public class Aranzman extends PutovanjeComposite implements RezervacijaSubject, 
       obavijestiRezervacijaPostalaAktivna(rezervacija);
     }
 
+    stanje = memento.stanje();
+
+  }
+
+  private void obnoviPretplaceneKorisnike(StanjeAranzmanaMemento memento) {
+    var korisnici = memento.pretplaceniKorisnici();
+    for (var korisnik : korisnici) {
+      dodajPromatraca(korisnik);
+    }
   }
 
   // endregion

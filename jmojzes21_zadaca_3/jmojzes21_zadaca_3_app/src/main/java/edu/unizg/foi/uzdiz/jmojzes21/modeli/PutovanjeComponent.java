@@ -6,6 +6,8 @@ public abstract class PutovanjeComponent {
 
   private PutovanjeComponent roditelj;
 
+  public PutovanjeComponent() {}
+
   public PutovanjeComponent dajRoditelja() {
     return roditelj;
   }

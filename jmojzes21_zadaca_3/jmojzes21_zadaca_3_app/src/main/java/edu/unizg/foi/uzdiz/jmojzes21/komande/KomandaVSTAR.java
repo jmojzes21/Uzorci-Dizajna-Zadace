@@ -18,17 +18,23 @@ public class KomandaVSTAR implements IKomanda {
   @Override
   public void izvrsi(TuristickaAgencija agencija) {
 
-    Aranzman aranzman = agencija.dajAranzman(oznaka);
-    if (aranzman == null) {
-      throw new RuntimeException("Aranžman s oznakom " + oznaka + " ne postoji!");
-    }
-
     StanjeAranzmanaCaretaker spremnik = agencija.stanjeAranzmanaSpremnik();
 
     try {
       StanjeAranzmanaMemento memento = spremnik.dajMemento(oznaka);
+
+      Aranzman aranzman = agencija.dajAranzman(oznaka);
+
+      if (aranzman == null) {
+        aranzman = new Aranzman(memento.oznaka(), memento.naziv());
+        agencija.dodajAranzman(aranzman);
+      }
+
       aranzman.obnoviStanje(memento);
+
       System.out.println("Stanje aranžmana je uspješno vraćeno.");
+
+
     } catch (Exception e) {
       System.out.println(e.getMessage());
     }
