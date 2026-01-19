@@ -254,58 +254,58 @@ public class RezervacijeJDRTest {
   @Test
   public void komandaPTAR() {
 
-    agencija.izvrsiKomandu("PTAR Bruno Bruno 3");
-    agencija.izvrsiKomandu("PTAR Maja Maja 4");
-    agencija.izvrsiKomandu("PTAR Bruno Bruno 4");
-
-    List<String> redci = agencija.izvrsiKomandu("DRTA Bruno Bruno 4 " + datumVrijeme("2.6.2025 8:00"));
+    agencija.izvrsiKomandu("DRTA Bruno Bruno 4 " + datumVrijeme("2.6.2025 8:00"));
     // postaje odgođena
 
-    postojiRedak(redci, "Bruno", "4", Rezervacija.odgodjena);
+    agencija.izvrsiKomandu("PTAR Bruno Brunić 4");
+    agencija.izvrsiKomandu("PTAR Maja Majić 4");
 
-    redci = agencija.izvrsiKomandu("DRTA Nikola Nikola 4 " + datumVrijeme("2.6.2025 8:00"));
+    List<String> redci = agencija.izvrsiKomandu("DRTA Nikola Nikola 4 " + datumVrijeme("2.6.2025 8:00"));
     // postaje aktivna
 
-    postojiRedak(redci, "Bruno", "Nikola", "4", Rezervacija.aktivna);
-    postojiRedak(redci, "Bruno", "4", Aranzman.aktivan);
+    postojiRedak(redci, "Brunić", "4", Rezervacija.aktivna);
+    postojiRedak(redci, "Majić", "4", Rezervacija.aktivna);
+    postojiRedak(redci, "Brunić", "4", Aranzman.aktivan);
+    postojiRedak(redci, "Majić", "4", Aranzman.aktivan);
 
-    redci = agencija.izvrsiKomandu("DRTA Zoran Zoran 4 " + datumVrijeme("2.6.2025 11:00"));
-    // postaje odgođena
+    agencija.izvrsiKomandu("PTAR Zoran Zorić 3");
 
-    postojiRedak(redci, "Bruno", "Zoran", "4", Rezervacija.odgodjena);
+    redci = agencija.izvrsiKomandu("DRTA Anja Anja 3 " + datumVrijeme("2.6.2025. 10:00"));
+
+    postojiRedak(redci, "Zorić", "3", Rezervacija.aktivna);
 
     redci = agencija.izvrsiKomandu("ORTA Bruno Bruno 3");
 
-    postojiRedak(redci, "Bruno", "3", Rezervacija.otkazana);
-    postojiRedak(redci, "Bruno", "4", Rezervacija.aktivna);
-    postojiRedak(redci, "Maja", "Bruno", "4", Rezervacija.aktivna);
+    postojiRedak(redci, "Zorić", "3", Rezervacija.otkazana);
+    postojiRedak(redci, "Brunić", "4", Rezervacija.aktivna);
+    postojiRedak(redci, "Majić", "4", Rezervacija.aktivna);
 
   }
 
   @Test
   public void komandaUPTAR() {
 
-    agencija.izvrsiKomandu("PTAR Maja Maja 15");
+    agencija.izvrsiKomandu("PTAR Maja Majić 15");
 
     List<String> redci = agencija.izvrsiKomandu("DRTA Matej Matej 15 " + datumVrijeme("1.9.2025 8:00"));
     // postaje aktivna
 
-    postojiRedak(redci, "Maja", "Matej", "15", Rezervacija.aktivna);
+    postojiRedak(redci, "Majić", "15", Rezervacija.aktivna);
 
-    agencija.izvrsiKomandu("UPTAR Maja Maja 15");
+    agencija.izvrsiKomandu("UPTAR Maja Majić 15");
 
     redci = agencija.izvrsiKomandu("DRTA Zoran Zoran 15 " + datumVrijeme("1.9.2025 8:00"));
     // postaje aktivna
 
-    nePostojiRedak(redci, "Maja", "Zoran", "15", Rezervacija.aktivna);
+    nePostojiRedak(redci, "Majić", "15", Rezervacija.aktivna);
 
-    agencija.izvrsiKomandu("PTAR Tanja Tanja 15");
+    agencija.izvrsiKomandu("PTAR Tanja Tanjić 15");
     agencija.izvrsiKomandu("UPTAR 15");
 
     redci = agencija.izvrsiKomandu("DRTA Nikola Nikola 15 " + datumVrijeme("1.9.2025 8:00"));
     // postaje aktivna
 
-    nePostojiRedak(redci, "Tanja", "Nikola", "15", Rezervacija.aktivna);
+    nePostojiRedak(redci, "Tanjić", "15", Rezervacija.aktivna);
 
   }
 
@@ -863,7 +863,7 @@ public class RezervacijeJDRTest {
 
     redci = rezervacijeAranzmana(agencija, "16");
     postojiRedak(redci, "Bruno", Rezervacija.aktivna);
- 
+
   }
 
   @Test
@@ -877,15 +877,15 @@ public class RezervacijeJDRTest {
     agencija.izvrsiKomandu("PTAR Lana Lanić 3");
     agencija.izvrsiKomandu("UPTAR Maja Majić 3");
 
-    List<String> redci = agencija.izvrsiKomandu("ORTA Marko Marko 3");
-    postojiRedak(redci, "Lanić", "Marko");
-    nePostojiRedak(redci, "Majić", "Marko");
+    List<String> redci = agencija.izvrsiKomandu("DRTA Anja Anja 3 " + datumVrijeme("2.6.2025. 10:00"));
+    postojiRedak(redci, "Lanić", "3", Rezervacija.aktivna);
+    nePostojiRedak(redci, "Majić", "3", Rezervacija.aktivna);
 
     agencija.izvrsiKomandu("VSTAR 3");
 
-    redci = agencija.izvrsiKomandu("ORTA Marko Marko 3");
-    postojiRedak(redci, "Majić", "Marko");
-    nePostojiRedak(redci, "Lanić", "Marko");
+    redci = agencija.izvrsiKomandu("DRTA Anja Anja 3 " + datumVrijeme("2.6.2025. 10:00"));
+    postojiRedak(redci, "Majić", "3", Rezervacija.aktivna);
+    nePostojiRedak(redci, "Lanić", "3", Rezervacija.aktivna);
 
   }
 
