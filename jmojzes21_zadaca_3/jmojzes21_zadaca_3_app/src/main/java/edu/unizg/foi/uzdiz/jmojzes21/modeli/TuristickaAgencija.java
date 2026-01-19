@@ -206,7 +206,8 @@ public class TuristickaAgencija extends PutovanjeComposite {
   }
 
   public boolean rezervacijaMozePostatiAktivna(Rezervacija postajeAktivna) {
-    return upravljanjeRezervacijama.mozePostatiAktivna(this, postajeAktivna);
+    var aranzman = postajeAktivna.dajAranzman();
+    return upravljanjeRezervacijama.mozePostatiAktivna(aranzman, postajeAktivna);
   }
 
   public List<StatistikaAranzmana> dajStatistikuAranzmana(List<Aranzman> aranzmani) {

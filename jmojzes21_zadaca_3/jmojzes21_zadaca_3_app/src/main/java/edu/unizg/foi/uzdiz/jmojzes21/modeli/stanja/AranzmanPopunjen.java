@@ -37,7 +37,7 @@ public class AranzmanPopunjen extends AranzmanStanje {
   @Override
   public void otkaziRezervaciju(Aranzman aranzman, Korisnik korisnik) {
 
-    Rezervacija rezervacija = dajRezervacijuKorisnika(aranzman, korisnik,
+    Rezervacija rezervacija = aranzman.dajRezervacijuKorisnika(korisnik,
         List.of(Rezervacija.StanjeId.aktivna, Rezervacija.StanjeId.odgodjena, Rezervacija.StanjeId.naCekanju));
 
     if (rezervacija == null) {

@@ -11,17 +11,16 @@ public class AranzmanUPripremi extends AranzmanStanje {
   @Override
   public void zaprimiRezervaciju(Aranzman aranzman, Rezervacija rezervacija) {
 
-    Rezervacija postojeca = dajRezervacijuKorisnika(aranzman, rezervacija.korisnik(), List.of(StanjeId.primljena));
+    var ur = aranzman.dajAgenciju().upravljanjeRezervacijama();
 
-    if (postojeca != null) {
-      aranzman.dodaj(rezervacija);
+    aranzman.dodaj(rezervacija);
+    
+    if (!ur.mozeZaprimiti(aranzman, rezervacija)) {
       rezervacija.odgodi();
       return;
     }
 
-    aranzman.dodaj(rezervacija);
     rezervacija.zaprimi();
-
     provjeriStanje(aranzman);
 
   }
@@ -60,7 +59,7 @@ public class AranzmanUPripremi extends AranzmanStanje {
   @Override
   public void otkaziRezervaciju(Aranzman aranzman, Korisnik korisnik) {
 
-    Rezervacija rezervacija = dajRezervacijuKorisnika(aranzman, korisnik,
+    Rezervacija rezervacija = aranzman.dajRezervacijuKorisnika(korisnik,
         List.of(StanjeId.primljena, StanjeId.odgodjena));
 
     if (rezervacija == null) {
@@ -82,7 +81,7 @@ public class AranzmanUPripremi extends AranzmanStanje {
 
     primljena.otkazi();
 
-    Rezervacija odgodjena = dajRezervacijuKorisnika(aranzman, primljena.korisnik(), List.of(StanjeId.odgodjena));
+    Rezervacija odgodjena = aranzman.dajRezervacijuKorisnika(primljena.korisnik(), List.of(StanjeId.odgodjena));
     if (odgodjena != null) {
       odgodjena.zaprimi();
     }

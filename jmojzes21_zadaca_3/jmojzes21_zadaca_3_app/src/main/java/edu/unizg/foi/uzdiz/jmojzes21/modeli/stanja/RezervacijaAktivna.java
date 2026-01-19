@@ -10,7 +10,7 @@ public class RezervacijaAktivna extends RezervacijaStanje {
     if (rezervacija.korisnik().equals(aktivirana.korisnik())) {
       var agencija = rezervacija.dajAranzman().dajAgenciju();
       var ur = agencija.upravljanjeRezervacijama();
-      ur.kadaRezervacijaKorisnikaPostalaAktivna(agencija, rezervacija, aktivirana);
+      ur.kadaRezervacijaKorisnikaPostalaAktivna(rezervacija, aktivirana);
     }
   }
 

@@ -271,6 +271,24 @@ public class Aranzman extends PutovanjeComposite implements RezervacijaSubject, 
         .count());
   }
 
+  public Rezervacija dajRezervacijuKorisnika(Korisnik korisnik, List<Rezervacija.StanjeId> prioritet) {
+    var rezervacije = rezervacije().stream()
+        .filter(e -> e.korisnik().equals(korisnik))
+        .toList();
+
+    for (Rezervacija.StanjeId stanjeId : prioritet) {
+      Rezervacija r = rezervacije.stream()
+          .filter(e -> e.idStanja() == stanjeId)
+          .findFirst().orElse(null);
+
+      if (r != null) {
+        return r;
+      }
+    }
+
+    return null;
+  }
+
   public TuristickaAgencija dajAgenciju() {
     return (TuristickaAgencija) dajRoditelja();
   }
@@ -299,7 +317,7 @@ public class Aranzman extends PutovanjeComposite implements RezervacijaSubject, 
 
     ukloniPretplaceneKorisnike();
     obnoviOsnovneInformacije(memento);
-    obnoviRezervacija(memento);
+    obnoviRezervacije(memento);
     obnoviPretplaceneKorisnike(memento);
 
     List<Rezervacija> odgodjene = odgodjeneRezervacije();
@@ -332,7 +350,7 @@ public class Aranzman extends PutovanjeComposite implements RezervacijaSubject, 
 
   }
 
-  private void obnoviRezervacija(StanjeAranzmanaMemento memento) {
+  private void obnoviRezervacije(StanjeAranzmanaMemento memento) {
 
     List<Rezervacija> aktivne = aktivneRezervacije();
     for (var rezervacija : aktivne) {

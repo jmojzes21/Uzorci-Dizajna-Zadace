@@ -3,13 +3,26 @@ package edu.unizg.foi.uzdiz.jmojzes21.logika.strategy;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija.StanjeId;
-import edu.unizg.foi.uzdiz.jmojzes21.modeli.TuristickaAgencija;
 import java.util.List;
 
 public class UpravljanjeRezervacijamaJDRStrategy extends UpravljanjeRezervacijamaStrategy {
 
   @Override
-  public boolean mozePostatiAktivna(TuristickaAgencija agencija, Rezervacija postajeAktivna) {
+  public boolean mozeZaprimiti(Aranzman aranzman, Rezervacija rezervacija) {
+    Rezervacija postojeca = aranzman.dajRezervacijuKorisnika(rezervacija.korisnik(), List.of(StanjeId.primljena));
+    return postojeca == null;
+  }
+
+  @Override
+  public boolean mozePostatiAktivna(Aranzman aranzman, Rezervacija postajeAktivna) {
+
+    Rezervacija postojeca = aranzman.dajRezervacijuKorisnika(postajeAktivna.korisnik(), List.of(StanjeId.aktivna));
+
+    if (postojeca != null) {
+      return false;
+    }
+
+    var agencija = aranzman.dajAgenciju();
 
     var ime = postajeAktivna.korisnik().ime();
     var prezime = postajeAktivna.korisnik().prezime();
@@ -30,8 +43,7 @@ public class UpravljanjeRezervacijamaJDRStrategy extends UpravljanjeRezervacijam
   }
 
   @Override
-  public void kadaRezervacijaKorisnikaPostalaAktivna(TuristickaAgencija agencija, Rezervacija rezervacija,
-      Rezervacija aktivirana) {
+  public void kadaRezervacijaKorisnikaPostalaAktivna(Rezervacija rezervacija, Rezervacija aktivirana) {
 
     Aranzman aranzman1 = rezervacija.dajAranzman();
     Aranzman aranzman2 = aktivirana.dajAranzman();

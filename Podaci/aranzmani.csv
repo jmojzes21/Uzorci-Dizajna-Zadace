@@ -13,7 +13,8 @@ Oznaka, Naziv, Program, Početni datum, Završni datum, Vrijeme kretanja, Vrijem
 
 5, "Putovanje 5", "Putovanje 5",20.7.2025.,24.7.2025.,08:00,21:00,1000,4,8,10,,avion; bus; bicikl, , ,
 6, "Putovanje 6", "Putovanje 6",20.7.2025.,24.7.2025.,10:00,21:00,1000,4,8,10,,avion; bus; bicikl, , ,
-7, "Putovanje 7", "Putovanje 7",20.7.2025.,24.7.2025., , ,1000,4,8,10,,avion; bus; bicikl, , ,
+7, "Putovanje 7", "Putovanje 7",20.7.2025.,24.7.2025., , ,1000,4,20,10,,avion; bus; bicikl, , ,
+8, "Putovanje 8", "Putovanje 8",20.7.2025.,24.7.2025., , ,1000,4,30,10,,avion; bus; bicikl, , ,
 
 10, "Putovanje 10", "Putovanje 10",10.8.2025.,20.8.2025.,10:00,21:00,1000,4,8,10,,avion; bus; bicikl, , ,
 
