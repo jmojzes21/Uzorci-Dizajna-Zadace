@@ -21,7 +21,6 @@ public class AranzmanAktivan extends AranzmanStanje {
     }
 
     aranzman.dodaj(rezervacija);
-    rezervacija.zaprimi();
 
     boolean mozePostatiAktivna = aranzman.dajAgenciju().rezervacijaMozePostatiAktivna(rezervacija);
     if (!mozePostatiAktivna) {

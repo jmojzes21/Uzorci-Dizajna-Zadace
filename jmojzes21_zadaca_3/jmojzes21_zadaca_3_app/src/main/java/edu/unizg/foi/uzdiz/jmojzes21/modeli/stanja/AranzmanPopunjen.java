@@ -22,7 +22,6 @@ public class AranzmanPopunjen extends AranzmanStanje {
       boolean mozePostatiAktivna = aranzman.dajAgenciju().rezervacijaMozePostatiAktivna(rezervacija);
       if (mozePostatiAktivna) {
         najnovijaAktivna.staviNaCekanje();
-        rezervacija.zaprimi();
         rezervacija.aktiviraj();
         return;
       }
