@@ -271,6 +271,20 @@ public class Aranzman extends PutovanjeComposite implements RezervacijaSubject, 
         .count());
   }
 
+
+  /**
+   * Dohvati sve rezervacije koje zadovoljavaju postavljeni filter.
+   *
+   * @param filter prikaži samo rezervacije čije je stanje uključeno u filter
+   * @return lista rezervacija
+   */
+  public List<Rezervacija> dajRezervacijeAranzmana(List<Rezervacija.StanjeId> filter) {
+    List<Rezervacija> rezervacije = rezervacije();
+    return rezervacije.stream()
+        .filter(e -> filter.contains(e.idStanja()))
+        .toList();
+  }
+
   public Rezervacija dajRezervacijuKorisnika(Korisnik korisnik, List<Rezervacija.StanjeId> prioritet) {
     var rezervacije = rezervacije().stream()
         .filter(e -> e.korisnik().equals(korisnik))

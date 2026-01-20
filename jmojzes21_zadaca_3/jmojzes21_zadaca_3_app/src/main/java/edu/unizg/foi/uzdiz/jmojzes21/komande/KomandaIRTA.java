@@ -1,6 +1,7 @@
 package edu.unizg.foi.uzdiz.jmojzes21.komande;
 
 import edu.unizg.foi.uzdiz.jmojzes21.PostavkeSustava;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija.StanjeId;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.TuristickaAgencija;
@@ -55,7 +56,12 @@ public class KomandaIRTA implements IKomanda {
       prikaziStanja.add(StanjeId.otkazana);
     }
 
-    List<Rezervacija> rezervacije = agencija.dajRezervacijeAranzmana(oznaka, prikaziStanja);
+    Aranzman aranzman = agencija.dajAranzman(oznaka);
+    if (aranzman == null) {
+      throw new RuntimeException("Aranžman s oznakom " + oznaka + " ne postoji!");
+    }
+
+    List<Rezervacija> rezervacije = aranzman.dajRezervacijeAranzmana(prikaziStanja);
 
     if (rezervacije == null) {
       throw new RuntimeException("Aranžman s oznakom " + oznaka + " ne postoji!");
