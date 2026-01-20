@@ -1,47 +1,86 @@
 package edu.unizg.foi.uzdiz.jmojzes21.komande;
 
 import edu.unizg.foi.uzdiz.jmojzes21.PostavkeSustava;
+import edu.unizg.foi.uzdiz.jmojzes21.logika.cor.FilterRezervacije;
+import edu.unizg.foi.uzdiz.jmojzes21.logika.cor.RezervacijeAranzmanaFilter;
+import edu.unizg.foi.uzdiz.jmojzes21.logika.cor.RezervacijeKorisnikaFilter;
+import edu.unizg.foi.uzdiz.jmojzes21.logika.cor.StanjeRezervacijeFilter;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Aranzman;
+import edu.unizg.foi.uzdiz.jmojzes21.modeli.Korisnik;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.TuristickaAgencija;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.Formati;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.NeispravnaKomandaGreska;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.RegexKomandeGraditelj;
+import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.StanjeRezervacijeParser;
 import edu.unizg.foi.uzdiz.jmojzes21.tablicni_ispis.TablicniIspisGraditelj;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class KomandaIRO implements IKomanda {
 
   private final String ime;
   private final String prezime;
-  private final Map<String, String> filter;
+
+  private final Integer oznaka;
+  private final String filterStanja;
 
   public KomandaIRO(String ime, String prezime) {
-    this(ime, prezime, null);
-  }
-
-  public KomandaIRO(String ime, String prezime, Map<String, String> filter) {
     this.ime = ime;
     this.prezime = prezime;
-    this.filter = filter;
+    this.oznaka = null;
+    this.filterStanja = null;
+  }
+
+  public KomandaIRO(String ime, String prezime, Integer oznaka, String filterStanja) {
+    this.ime = ime;
+    this.prezime = prezime;
+    this.oznaka = oznaka;
+    this.filterStanja = filterStanja;
   }
 
   @Override
   public void izvrsi(TuristickaAgencija agencija) {
-    prikaziRezervacijeKorisnika(agencija, ime, prezime);
-  }
 
-  private void prikaziRezervacijeKorisnika(TuristickaAgencija agencija, String ime, String prezime) {
+    FilterRezervacije lanacFiltera = napraviLanacFiltera();
+    List<Rezervacija> rezervacije = new ArrayList<>();
 
-    List<Rezervacija> rezervacije = agencija.dajRezervacijeKorisnika(ime, prezime);
+    var aranzmani = agencija.dajAranzmane();
+    for (var aranzman : aranzmani) {
+      rezervacije.addAll(aranzman.rezervacije().stream()
+          .filter(r -> lanacFiltera.zadovoljava(r))
+          .toList());
+    }
+
     if (rezervacije.isEmpty()) {
       System.out.println("Korisnik nema rezervacija.");
       return;
     }
 
     prikaziRezervacije(rezervacije);
+  }
+
+  private FilterRezervacije napraviLanacFiltera() {
+
+    var korisnik = new Korisnik(ime, prezime);
+    var graditelj = new FilterRezervacije.Graditelj();
+
+    graditelj.dodaj(new RezervacijeKorisnikaFilter(korisnik));
+
+    if (oznaka != null) {
+      graditelj.dodaj(new RezervacijeAranzmanaFilter(oznaka));
+    }
+
+    if (filterStanja != null) {
+      var sr = new StanjeRezervacijeParser();
+      var stanja = sr.parsiraj(filterStanja);
+      graditelj.dodaj(new StanjeRezervacijeFilter(stanja));
+    }
+
+    return graditelj.napraviLanac();
+
   }
 
   private void prikaziRezervacije(List<Rezervacija> rezervacije) {
@@ -98,7 +137,11 @@ public class KomandaIRO implements IKomanda {
 
       if (filter != null) {
         var filterMap = parsirajFiltre(filter.trim());
-        return new KomandaIRO(ime, prezime, filterMap);
+
+        Integer oznaka = filterMap.containsKey("A") ? Integer.parseInt(filterMap.get("A")) : null;
+        String filterStanja = filterMap.get("R");
+
+        return new KomandaIRO(ime, prezime, oznaka, filterStanja);
       }
 
       return new KomandaIRO(ime, prezime);
@@ -106,16 +149,28 @@ public class KomandaIRO implements IKomanda {
 
     private Map<String, String> parsirajFiltre(String filtri) {
 
-      Map<String, String> filterMap = new TreeMap<>();
+      Map<String, String> filterMap = new HashMap<>();
 
       String[] filtriDijelovi = filtri.split("\\s+");
       for (String filter : filtriDijelovi) {
         String[] v = filter.split("=");
         if (v.length != 2) {continue;}
-
         filterMap.put(v[0], v[1]);
       }
 
+      for (var e : filterMap.entrySet()) {
+        switch (e.getKey()) {
+          case "A":
+            if (!e.getValue().matches("\\d+")) {
+              throw new RuntimeException("Filter A zahtjeva broj kao vrijednost!");
+            }
+            break;
+          case "R":
+            break;
+          default:
+            throw new NeispravnaKomandaGreska("Nepoznati filter " + e.getKey() + "!");
+        }
+      }
       return filterMap;
     }
 

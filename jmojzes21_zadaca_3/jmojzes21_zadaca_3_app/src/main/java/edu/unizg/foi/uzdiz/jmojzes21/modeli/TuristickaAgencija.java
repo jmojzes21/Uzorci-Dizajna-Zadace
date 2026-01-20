@@ -86,46 +86,6 @@ public class TuristickaAgencija extends PutovanjeComposite {
   }
 
   /**
-   * Dohvati sve rezervacije određenog aranžmana koje zadovoljavaju postavljeni filter.
-   *
-   * @param oznaka oznaka aranžmana
-   * @param filter prikaži samo rezervacije čije je stanje uključeno u filter
-   * @return lista rezervacija
-   */
-  public List<Rezervacija> dajRezervacijeAranzmana(int oznaka, List<Rezervacija.StanjeId> filter) {
-
-    Aranzman aranzman = dajAranzman(oznaka);
-    if (aranzman == null) {return null;}
-
-    List<Rezervacija> rezervacije = aranzman.rezervacije();
-    return rezervacije.stream()
-        .filter(e -> filter.contains(e.idStanja()))
-        .toList();
-  }
-
-  /**
-   * Dohvati sve rezervacije sa svih aranžmana određenog korisnika.
-   *
-   * @param ime     ime korisnika
-   * @param prezime prezime korisnika
-   * @return rezervacije korisnika
-   */
-  public List<Rezervacija> dajRezervacijeKorisnika(String ime, String prezime) {
-    var korisnik = new Korisnik(ime, prezime);
-    List<Rezervacija> rezervacijeKorisnika = new ArrayList<>();
-
-    List<Aranzman> aranzmani = dajAranzmane();
-    for (var aranzman : aranzmani) {
-      List<Rezervacija> rezervacije = aranzman.rezervacije();
-      rezervacijeKorisnika.addAll(rezervacije.stream()
-          .filter(e -> e.korisnik().equals(korisnik))
-          .toList());
-    }
-
-    return rezervacijeKorisnika;
-  }
-
-  /**
    * Dohvati sve rezervacije sa svih aranžmana određenog korisnika.
    *
    * @param ime     ime korisnika

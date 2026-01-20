@@ -3,13 +3,12 @@ package edu.unizg.foi.uzdiz.jmojzes21.komande;
 import edu.unizg.foi.uzdiz.jmojzes21.PostavkeSustava;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
-import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija.StanjeId;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.TuristickaAgencija;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.Formati;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.NeispravnaKomandaGreska;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.RegexKomandeGraditelj;
+import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.StanjeRezervacijeParser;
 import edu.unizg.foi.uzdiz.jmojzes21.tablicni_ispis.TablicniIspisGraditelj;
-import java.util.ArrayList;
 import java.util.List;
 
 public class KomandaIRTA implements IKomanda {
@@ -26,35 +25,9 @@ public class KomandaIRTA implements IKomanda {
   @Override
   public void izvrsi(TuristickaAgencija agencija) {
 
-    String filter = this.filter;
+    var sr = new StanjeRezervacijeParser();
 
-    boolean prikaziPrimljeneAktivne = filter.contains("PA");
-    boolean prikaziNaCekanju = filter.contains("Č");
-    boolean prikaziOdgodjene = false;
-    if (filter.contains("OD")) {
-      prikaziOdgodjene = true;
-      filter = filter.replace("OD", "");
-    }
-    boolean prikaziOtkazane = filter.contains("O");
-
-    List<StanjeId> prikaziStanja = new ArrayList<>();
-
-    if (prikaziPrimljeneAktivne) {
-      prikaziStanja.add(StanjeId.primljena);
-      prikaziStanja.add(StanjeId.aktivna);
-    }
-
-    if (prikaziNaCekanju) {
-      prikaziStanja.add(StanjeId.naCekanju);
-    }
-
-    if (prikaziOdgodjene) {
-      prikaziStanja.add(StanjeId.odgodjena);
-    }
-
-    if (prikaziOtkazane) {
-      prikaziStanja.add(StanjeId.otkazana);
-    }
+    List<Rezervacija.StanjeId> prikaziStanja = sr.parsiraj(filter);
 
     Aranzman aranzman = agencija.dajAranzman(oznaka);
     if (aranzman == null) {
@@ -72,6 +45,7 @@ public class KomandaIRTA implements IKomanda {
       return;
     }
 
+    var prikaziOtkazane = prikaziStanja.contains(Rezervacija.StanjeId.otkazana);
     prikaziRezervacije(rezervacije, prikaziOtkazane);
   }
 
