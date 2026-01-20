@@ -34,22 +34,23 @@ public class RegexKomandeGraditelj {
    * @return graditelj
    */
   public RegexKomandeGraditelj dodajTekst(String naziv) {
-    if (!regex.isEmpty()) {regex.append(razmakArgumenata);}
-    regex.append(String.format("(?<%s>[\\w\\.\\,\\\\\\/]+)", naziv));
-    return this;
+    return dodajTekst(naziv, false);
   }
 
   /**
    * Dodaj sljedeći argument koji je tipa tekst koji je opcionalan.
    *
-   * @param naziv naziv matcher grupe
+   * @param naziv      naziv matcher grupe
+   * @param opcionalno
    * @return graditelj
    */
-  public RegexKomandeGraditelj dodajTekstOpcionalno(String naziv) {
-    regex.append("(");
-    regex.append(razmakArgumenata);
+  public RegexKomandeGraditelj dodajTekst(String naziv, boolean opcionalno) {
+    if (opcionalno) {regex.append("(");}
+
+    if (!regex.isEmpty()) {regex.append(razmakArgumenata);}
     regex.append(String.format("(?<%s>[\\w\\.\\,\\\\\\/]+)", naziv));
-    regex.append(")?");
+
+    if (opcionalno) {regex.append(")?");}
     return this;
   }
 
@@ -84,8 +85,24 @@ public class RegexKomandeGraditelj {
    * @return graditelj
    */
   public RegexKomandeGraditelj dodajIzraz(String naziv, String izraz) {
+    return dodajIzraz(naziv, izraz, false);
+  }
+
+  /**
+   * Dodaj regularni izraz.
+   *
+   * @param naziv      naziv matcher grupe
+   * @param izraz      regularni izraz
+   * @param opcionalno
+   * @return graditelj
+   */
+  public RegexKomandeGraditelj dodajIzraz(String naziv, String izraz, boolean opcionalno) {
+    if (opcionalno) {regex.append("(");}
+
     if (!regex.isEmpty()) {regex.append(razmakArgumenata);}
     regex.append(String.format("(?<%s>(%s))", naziv, izraz));
+
+    if (opcionalno) {regex.append(")?");}
     return this;
   }
 

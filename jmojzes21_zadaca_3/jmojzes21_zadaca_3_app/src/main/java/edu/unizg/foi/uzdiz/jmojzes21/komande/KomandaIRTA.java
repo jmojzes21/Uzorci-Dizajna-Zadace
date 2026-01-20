@@ -108,7 +108,7 @@ public class KomandaIRTA implements IKomanda {
 
       var uzorak = new RegexKomandeGraditelj()
           .dodajBroj("oznaka")
-          .dodajTekstOpcionalno("filter")
+          .dodajTekst("filter", true)
           .dajUzorak();
 
       var matcher = uzorak.matcher(args);

@@ -133,7 +133,7 @@ public class Program {
     System.out.println("ITAK [od do] - Pregled svih aranžmana");
     System.out.println("ITAP oznaka - Pregled pojedinog aranžmana");
     System.out.println("IRTA oznaka [PA|Č|O|OD] - Pregled rezervacija za aranžman");
-    System.out.println("IRO ime prezime - Pregled rezervacija za korisnika");
+    System.out.println("IRO ime prezime [filter] - Pregled rezervacija za korisnika");
     System.out.println("DRTA ime prezime oznaka datum vrijeme - Dodaj rezervaciju");
     System.out.println("ORTA ime prezime oznaka - Otkaži rezervacije");
     System.out.println("OTA oznaka - Otkaži turistički aranžman");

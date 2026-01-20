@@ -9,15 +9,23 @@ import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.NeispravnaKomandaGreska;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.RegexKomandeGraditelj;
 import edu.unizg.foi.uzdiz.jmojzes21.tablicni_ispis.TablicniIspisGraditelj;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class KomandaIRO implements IKomanda {
 
   private final String ime;
   private final String prezime;
+  private final Map<String, String> filter;
 
   public KomandaIRO(String ime, String prezime) {
+    this(ime, prezime, null);
+  }
+
+  public KomandaIRO(String ime, String prezime, Map<String, String> filter) {
     this.ime = ime;
     this.prezime = prezime;
+    this.filter = filter;
   }
 
   @Override
@@ -75,19 +83,42 @@ public class KomandaIRO implements IKomanda {
       var uzorak = new RegexKomandeGraditelj()
           .dodajTekst("ime")
           .dodajTekst("prezime")
+          .dodajIzraz("filter", "(\\s?\\w+\\=\\w+)+", true)
           .dajUzorak();
 
       var matcher = uzorak.matcher(args);
       if (!matcher.matches()) {
-        String opis = "IRO ime prezime";
+        String opis = "IRO ime prezime [A=oznaka] | [R=PA|Č|O|OD]";
         throw new NeispravnaKomandaGreska(opis);
       }
 
       String ime = matcher.group("ime");
       String prezime = matcher.group("prezime");
+      String filter = matcher.group("filter");
+
+      if (filter != null) {
+        var filterMap = parsirajFiltre(filter.trim());
+        return new KomandaIRO(ime, prezime, filterMap);
+      }
 
       return new KomandaIRO(ime, prezime);
     }
+
+    private Map<String, String> parsirajFiltre(String filtri) {
+
+      Map<String, String> filterMap = new TreeMap<>();
+
+      String[] filtriDijelovi = filtri.split("\\s+");
+      for (String filter : filtriDijelovi) {
+        String[] v = filter.split("=");
+        if (v.length != 2) {continue;}
+
+        filterMap.put(v[0], v[1]);
+      }
+
+      return filterMap;
+    }
+
   }
 
 }
