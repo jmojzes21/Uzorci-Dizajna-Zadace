@@ -2,6 +2,8 @@ package edu.unizg.foi.uzdiz.jmojzes21.komande;
 
 import edu.unizg.foi.uzdiz.jmojzes21.PostavkeSustava;
 import edu.unizg.foi.uzdiz.jmojzes21.PostavkeSustava.NacinSortiranja;
+import edu.unizg.foi.uzdiz.jmojzes21.komande.glavno.IKomanda;
+import edu.unizg.foi.uzdiz.jmojzes21.komande.glavno.KomandaKreator;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.TuristickaAgencija;
 import edu.unizg.foi.uzdiz.jmojzes21.pomocnici.NeispravnaKomandaGreska;
 

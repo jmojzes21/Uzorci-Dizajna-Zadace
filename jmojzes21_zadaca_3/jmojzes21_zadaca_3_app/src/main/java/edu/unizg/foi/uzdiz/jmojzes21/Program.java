@@ -1,7 +1,8 @@
 package edu.unizg.foi.uzdiz.jmojzes21;
 
-import edu.unizg.foi.uzdiz.jmojzes21.komande.IKomanda;
-import edu.unizg.foi.uzdiz.jmojzes21.komande.KomandaKreator;
+import edu.unizg.foi.uzdiz.jmojzes21.komande.glavno.IKomanda;
+import edu.unizg.foi.uzdiz.jmojzes21.komande.glavno.KomandaKreator;
+import edu.unizg.foi.uzdiz.jmojzes21.komande.glavno.ObradaKomandi;
 import edu.unizg.foi.uzdiz.jmojzes21.logika.strategy.UpravljanjeRezervacijamaJDRStrategy;
 import edu.unizg.foi.uzdiz.jmojzes21.logika.strategy.UpravljanjeRezervacijamaNullStrategy;
 import edu.unizg.foi.uzdiz.jmojzes21.logika.strategy.UpravljanjeRezervacijamaStrategy;
@@ -35,10 +36,12 @@ public class Program {
 
   private boolean zaprimajKomandeKorisnika = true;
   private TuristickaAgencija agencija;
+  private ObradaKomandi obradaKomandi;
 
   public void pokreni(String[] args) throws Exception {
 
     agencija = new TuristickaAgencija();
+    obradaKomandi = new ObradaKomandi();
 
     Map<String, String> opcije = ucitajOpcije(args);
 
@@ -124,8 +127,10 @@ public class Program {
       return;
     }
 
-    IKomanda komanda = KomandaKreator.parsirajKomandu(naziv, args);
-    komanda.izvrsi(agencija);
+    KomandaKreator kreatorKomande = obradaKomandi.dajKreatora(naziv);
+    IKomanda komanda = kreatorKomande.parsiraj(args);
+
+    obradaKomandi.izvrsiKomandu(komanda, agencija);
 
   }
 
