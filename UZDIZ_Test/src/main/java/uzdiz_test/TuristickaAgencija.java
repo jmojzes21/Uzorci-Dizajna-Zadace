@@ -126,6 +126,10 @@ public class TuristickaAgencija {
     lines = lines.stream().map(e -> e.trim()).filter(e -> !e.isEmpty()).toList();
 
     for (String line : lines) {
+      if (line.startsWith("#")) {
+        continue;
+      }
+
       int i = line.indexOf('=');
       if (i == -1) {continue;}
       String key = line.substring(0, i).trim();
