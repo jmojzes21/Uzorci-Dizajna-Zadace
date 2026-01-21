@@ -5,7 +5,7 @@ import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija.StanjeId;
 import java.util.List;
 
-public class UpravljanjeRezervacijamaJDRStrategy extends UpravljanjeRezervacijamaStrategy {
+public class UpravljanjeRezervacijamaJDR extends UpravljanjeRezervacijamaStrategy {
 
   @Override
   public boolean mozeZaprimiti(Aranzman aranzman, Rezervacija rezervacija) {

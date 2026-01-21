@@ -3,10 +3,10 @@ package edu.unizg.foi.uzdiz.jmojzes21;
 import edu.unizg.foi.uzdiz.jmojzes21.komande.glavno.IKomanda;
 import edu.unizg.foi.uzdiz.jmojzes21.komande.glavno.KomandaKreator;
 import edu.unizg.foi.uzdiz.jmojzes21.komande.glavno.ObradaKomandi;
-import edu.unizg.foi.uzdiz.jmojzes21.logika.strategy.UpravljanjeRezervacijamaJDRStrategy;
-import edu.unizg.foi.uzdiz.jmojzes21.logika.strategy.UpravljanjeRezervacijamaNullStrategy;
+import edu.unizg.foi.uzdiz.jmojzes21.logika.strategy.UpravljanjeRezervacijamaJDR;
+import edu.unizg.foi.uzdiz.jmojzes21.logika.strategy.UpravljanjeRezervacijamaNull;
 import edu.unizg.foi.uzdiz.jmojzes21.logika.strategy.UpravljanjeRezervacijamaStrategy;
-import edu.unizg.foi.uzdiz.jmojzes21.logika.strategy.UpravljanjeRezervacijamaVDRStrategy;
+import edu.unizg.foi.uzdiz.jmojzes21.logika.strategy.UpravljanjeRezervacijamaVDR;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.TuristickaAgencija;
@@ -80,9 +80,9 @@ public class Program {
   }
 
   private UpravljanjeRezervacijamaStrategy dajUpravljanjeRezervacijamaStrategy(boolean jdr, boolean vdr) {
-    if (jdr) {return new UpravljanjeRezervacijamaJDRStrategy();}
-    if (vdr) {return new UpravljanjeRezervacijamaVDRStrategy();}
-    return new UpravljanjeRezervacijamaNullStrategy();
+    if (jdr) {return new UpravljanjeRezervacijamaJDR();}
+    if (vdr) {return new UpravljanjeRezervacijamaVDR();}
+    return new UpravljanjeRezervacijamaNull();
   }
 
   // endregion

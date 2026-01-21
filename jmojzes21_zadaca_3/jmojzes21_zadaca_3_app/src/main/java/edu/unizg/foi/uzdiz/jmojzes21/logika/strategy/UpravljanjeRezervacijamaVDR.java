@@ -3,7 +3,7 @@ package edu.unizg.foi.uzdiz.jmojzes21.logika.strategy;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
 
-public class UpravljanjeRezervacijamaVDRStrategy extends UpravljanjeRezervacijamaStrategy {
+public class UpravljanjeRezervacijamaVDR extends UpravljanjeRezervacijamaStrategy {
 
 
   @Override

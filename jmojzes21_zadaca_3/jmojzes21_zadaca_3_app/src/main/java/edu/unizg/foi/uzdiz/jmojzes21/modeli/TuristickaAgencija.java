@@ -1,7 +1,7 @@
 package edu.unizg.foi.uzdiz.jmojzes21.modeli;
 
 import edu.unizg.foi.uzdiz.jmojzes21.logika.memento.StanjeAranzmanaCaretaker;
-import edu.unizg.foi.uzdiz.jmojzes21.logika.strategy.UpravljanjeRezervacijamaNullStrategy;
+import edu.unizg.foi.uzdiz.jmojzes21.logika.strategy.UpravljanjeRezervacijamaNull;
 import edu.unizg.foi.uzdiz.jmojzes21.logika.strategy.UpravljanjeRezervacijamaStrategy;
 import edu.unizg.foi.uzdiz.jmojzes21.logika.visitor.PutovanjeVisitor;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.statistika.StatistikaAranzmana;
@@ -20,7 +20,7 @@ public class TuristickaAgencija extends PutovanjeComposite {
   private final StanjeAranzmanaCaretaker stanjeAranzmanaSpremnik;
 
   public TuristickaAgencija() {
-    upravljanjeRezervacijama = new UpravljanjeRezervacijamaNullStrategy();
+    upravljanjeRezervacijama = new UpravljanjeRezervacijamaNull();
     stanjeAranzmanaSpremnik = new StanjeAranzmanaCaretaker();
   }
 
@@ -226,7 +226,7 @@ public class TuristickaAgencija extends PutovanjeComposite {
 
   public void setUpravljanjeRezervacijama(UpravljanjeRezervacijamaStrategy upravljanjeRezervacijama) {
     this.upravljanjeRezervacijama = Objects.requireNonNullElseGet(upravljanjeRezervacijama,
-        UpravljanjeRezervacijamaNullStrategy::new);
+        UpravljanjeRezervacijamaNull::new);
   }
 
   public StanjeAranzmanaCaretaker stanjeAranzmanaSpremnik() {return stanjeAranzmanaSpremnik;}

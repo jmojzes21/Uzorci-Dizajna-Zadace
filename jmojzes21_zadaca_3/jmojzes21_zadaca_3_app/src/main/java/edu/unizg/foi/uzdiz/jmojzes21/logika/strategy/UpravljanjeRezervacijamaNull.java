@@ -3,7 +3,7 @@ package edu.unizg.foi.uzdiz.jmojzes21.logika.strategy;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Aranzman;
 import edu.unizg.foi.uzdiz.jmojzes21.modeli.Rezervacija;
 
-public class UpravljanjeRezervacijamaNullStrategy extends UpravljanjeRezervacijamaStrategy {
+public class UpravljanjeRezervacijamaNull extends UpravljanjeRezervacijamaStrategy {
 
   @Override
   public boolean mozeZaprimiti(Aranzman aranzman, Rezervacija rezervacija) {
