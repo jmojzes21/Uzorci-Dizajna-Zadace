@@ -38,7 +38,7 @@ public class AranzmanRepozitorij {
 
   private Aranzman parsirajAranzman(List<String> stupci) throws Exception {
 
-    if (stupci.size() != 16) {
+    if (stupci.size() < 16) {
       String opis = String.format("Broj stupaca aranžmana mora biti 16! Trenutno: %d", stupci.size());
       throw new Exception(opis);
     }

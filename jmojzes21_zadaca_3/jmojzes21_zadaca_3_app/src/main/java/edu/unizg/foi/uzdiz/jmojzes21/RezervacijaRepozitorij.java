@@ -37,7 +37,7 @@ public class RezervacijaRepozitorij {
 
   private Rezervacija parsirajRezervaciju(List<String> stupci) throws Exception {
 
-    if (stupci.size() != 4) {
+    if (stupci.size() < 4) {
       String opis = String.format("Broj stupaca rezervacije mora biti 4! Trenutno: %d", stupci.size());
       throw new Exception(opis);
     }

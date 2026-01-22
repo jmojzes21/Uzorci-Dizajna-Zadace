@@ -16,8 +16,7 @@ public class UcitavacAranzmana extends UcitavacCsvPodataka {
 
   @Override
   protected void provjeriRedak(CsvRedak redak) throws CsvFormatGreska {
-
-    if (redak.brojElemenata() != 16) {
+    if (redak.brojElemenata() < 16) {
       String opis = String.format("Csv redak za aranžmane treba imati 16 stupaca, trenutno: %d!",
           redak.brojElemenata());
       throw new CsvFormatGreska(opis, redak);

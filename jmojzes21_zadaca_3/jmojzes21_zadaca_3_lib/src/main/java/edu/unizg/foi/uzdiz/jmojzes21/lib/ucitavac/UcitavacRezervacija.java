@@ -15,7 +15,7 @@ public class UcitavacRezervacija extends UcitavacCsvPodataka {
   @Override
   protected void provjeriRedak(CsvRedak redak) throws CsvFormatGreska {
 
-    if (redak.brojElemenata() != 4) {
+    if (redak.brojElemenata() < 4) {
       String opis = String.format("Csv redak za rezervacije treba imati 4 stupca, trenutno: %d!",
           redak.brojElemenata());
       throw new CsvFormatGreska(opis, redak);
