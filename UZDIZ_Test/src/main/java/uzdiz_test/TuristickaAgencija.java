@@ -19,7 +19,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TuristickaAgencija {
 
-  private final Properties properties = new Properties();
+  private Properties properties;
+
+  private boolean running = false;
   private Process process;
   private PrintWriter writer;
   private BufferedReader reader;
@@ -33,6 +35,7 @@ public class TuristickaAgencija {
   }
 
   public List<String> izvrsiKomandu(String komanda) {
+    System.out.println("#>" + komanda);
     writer.println(komanda);
     writer.flush();
     return readLines();
@@ -63,11 +66,12 @@ public class TuristickaAgencija {
 
   public void pokreni(List<String> args) throws Exception {
 
-    readProperties();
+    if (running) {
+      zaustavi();
+    }
 
-    var p = properties.entrySet();
-    for (var e : p) {
-      System.out.println(e.getKey() + ": " + e.getValue());
+    if (properties == null) {
+      readProperties();
     }
 
     String zadaca = properties.getProperty("ZADACA_DATOTEKA");
@@ -76,6 +80,11 @@ public class TuristickaAgencija {
     var processArgs = new ArrayList<String>();
     processArgs.addAll(List.of("java", "-Dfile.encoding=UTF-8", "-Dsun.stdout.encoding=UTF-8", "-jar", zadaca));
     processArgs.addAll(args);
+
+    System.out.printf("Pokreni %s %s\n", Path.of(zadaca).getFileName().toString(), String.join(" ", args));
+
+    inputQueue.clear();
+    readingInput.set(true);
 
     var builder = new ProcessBuilder(processArgs);
     builder.directory(new File(wdir));
@@ -86,6 +95,7 @@ public class TuristickaAgencija {
 
     readInputThread = new Thread(this::readInputThreadTask);
     readInputThread.start();
+    running = true;
 
     sleep(200);
     readLines();
@@ -109,6 +119,8 @@ public class TuristickaAgencija {
 
   public void zaustavi() throws Exception {
 
+    if (!running) {return;}
+
     readingInput.set(false);
 
     writer.println("Q");
@@ -118,9 +130,17 @@ public class TuristickaAgencija {
       process.destroy();
     }
 
+    running = false;
+
+  }
+
+  public void provjeriStatus() {
+    System.out.println("Proces aktivan: " + process.isAlive());
   }
 
   private void readProperties() throws IOException {
+
+    properties = new Properties();
 
     var lines = Files.readAllLines(Path.of("postavke.txt"));
     lines = lines.stream().map(e -> e.trim()).filter(e -> !e.isEmpty()).toList();
